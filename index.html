@@ -392,6 +392,11 @@
         <p class="hint">Este formulario no envía nada por sí solo ni guarda datos: redacta un correo en tu
         dispositivo y solo se envía si tú lo mandas desde tu propio correo.</p>
         <button class="btn" id="c-btn" onclick="enviarContacto()">Preparar correo</button>
+        <!-- Cal.com añadido 11-07-2026 (enlaces facilitados por Pablo). Enlaces de navegación directa,
+        NO fetch/XHR: no los bloquea la CSP (connect-src) porque no son peticiones desde esta página. -->
+        <p class="hint" style="margin-top:12px">¿Prefieres hablar directamente?
+        <a href="https://cal.com/pablo-jvlegal/15min" target="_blank" rel="noopener">Reserva una consulta de 15 min</a>
+        (o <a href="https://cal.com/pablo-jvlegal/30min" target="_blank" rel="noopener">30 min</a> si necesitas más tiempo).</p>
         <!-- URL del perfil facilitada por Pablo el 10-07-2026 -->
         <p class="hint" style="margin-top:12px">También estoy en <a href="https://www.linkedin.com/in/pablo-andres-martinez-ricote-8279b0384" target="_blank" rel="noopener">LinkedIn</a>.</p>
         <div class="error" id="c-error"></div>
@@ -501,7 +506,9 @@
         al mismo correo. También puedes reclamar ante la AEPD (aepd.es).</li>
       </ul>
       <p>Si eliges «Gmail» u «Outlook» en el modal de envío, se abre tu propio webmail en una pestaña nueva:
-      esa navegación se rige por la política de privacidad de tu proveedor de correo, no por la de este sitio.</p>
+      esa navegación se rige por la política de privacidad de tu proveedor de correo, no por la de este sitio.
+      Lo mismo si reservas una consulta por el enlace de Cal.com: esa página es de un tercero (Cal.com) y se
+      rige por su propia política de privacidad, no por la de esta web — este sitio solo enlaza a ella.</p>
       <p><b>Alojamiento.</b> Este sitio se sirve como página estática desde GitHub Pages (GitHub, Inc.).
       Como cualquier alojamiento web, GitHub puede registrar temporalmente direcciones IP en sus registros
       técnicos por motivos de seguridad; el titular de este sitio no accede a esos registros ni los utiliza.

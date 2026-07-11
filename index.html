@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JV Legal — Tu despacho electrónico · by Pablo Andrés Martínez</title>
+<meta name="description" content="JV Legal — Tu despacho electrónico: herramientas y automatizaciones para despachos. Calculadora de plazos procesales (5 órdenes + LPAC) y del efecto de los MASC (LO 1/2025) sobre prescripción y caducidad. Cada resultado, con su artículo. Funciona sin conexión y no guarda tus datos.">
+<!-- Open Graph / Twitter: HOY apuntan a la URL real de Pages (publicado 10-07-2026). Al comprar jvlegal.app: cambiar og:url, og:image y twitter:image al dominio + añadir CNAME al repo. -->
+<meta property="og:title" content="JV Legal — Tu despacho electrónico">
+<meta property="og:description" content="Herramientas y automatizaciones para despachos: plazos procesales (5 órdenes + LPAC) y efecto MASC (LO 1/2025). Cada resultado, con su artículo. Sin conexión y sin guardar tus datos.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pablolietor22.github.io/jvlegal/">
+<meta property="og:image" content="https://pablolietor22.github.io/jvlegal/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="JV Legal — Tu despacho electrónico">
+<meta name="twitter:description" content="Herramientas y automatizaciones para despachos: plazos procesales y efecto MASC (LO 1/2025), con su artículo en cada paso.">
+<meta name="twitter:image" content="https://pablolietor22.github.io/jvlegal/og.png">
+<meta name="theme-color" content="#F1ECE2">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23F1ECE2'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-weight='700' font-size='30' fill='%236354C8' text-anchor='middle'%3EJV%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#F1ECE2; --panel:#FBF8F1; --panel2:#FFFFFF; --linea:#D9CFBE;
+    --tinta:#2A2620; --gris:#6E6657; --gris2:#9C9384;
+    --azul:#6354C8; --acc:#6354C8;
+    --verde:#2E9E57; --ambar:#C2871D; --rojo:#C53D38;
+    --mono:ui-monospace,"Cascadia Mono",Consolas,Menlo,monospace;
+    --serif:Georgia,"Times New Roman",serif;
+    --sans:system-ui,-apple-system,"Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--tinta);font-family:var(--sans);line-height:1.55;min-height:100vh}
+  .wrap{max-width:880px;margin:0 auto;padding:0 20px 72px}
+
+  header{padding:30px 0 0;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px}
+  .marca{font-family:var(--serif);font-size:1.8rem;letter-spacing:.01em;font-weight:700}
+  .marca em{font-style:italic;color:var(--azul)}
+  .exp{font-family:var(--mono);font-size:.68rem;color:var(--gris2);text-transform:uppercase;letter-spacing:.12em;text-align:right;line-height:1.5}
+
+  /* Selector de herramienta */
+  nav{display:flex;gap:4px;margin:24px 0 4px;border-bottom:1px solid var(--linea);flex-wrap:wrap}
+  .tab{font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;
+    background:transparent;color:var(--gris);border:0;border-bottom:2px solid transparent;
+    padding:12px 18px;cursor:pointer;margin-bottom:-1px}
+  .tab:hover{color:var(--tinta)}
+  .tab[aria-selected="true"]{color:var(--azul);border-bottom-color:var(--azul);font-weight:700}
+  .tab:focus-visible,.btn:focus-visible,.ej:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
+  .tagline{font-family:var(--mono);font-size:.72rem;color:var(--gris2);letter-spacing:.1em;text-transform:uppercase;margin:14px 0 22px}
+
+  .tool{display:none}
+  .tool.activa{display:block}
+
+  .grid{display:grid;grid-template-columns:1fr;gap:20px}
+  @media(min-width:760px){ .grid.dos{grid-template-columns:1fr 1fr} }
+
+  .card{background:var(--panel);border:1px solid var(--linea);border-radius:10px;padding:20px}
+  .card h2{font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tinta);margin-bottom:16px;font-weight:700}
+
+  label{display:block;font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gris);margin:14px 0 6px}
+  label:first-of-type{margin-top:0}
+  input,select,textarea{width:100%;padding:10px 12px;background:var(--panel2);border:1px solid var(--linea);
+    color:var(--tinta);font-family:var(--sans);font-size:.92rem;border-radius:6px}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--azul);outline-offset:0;border-color:var(--azul)}
+  textarea{min-height:170px;resize:vertical;line-height:1.6}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .chk{display:flex;align-items:flex-start;gap:8px;margin:8px 0;font-family:var(--sans);font-size:.86rem;color:var(--tinta);text-transform:none;letter-spacing:0}
+  .chk input{width:auto;margin-top:3px}
+  .hint{font-size:.78rem;color:var(--gris2);margin-top:5px;line-height:1.5}
+  .oculto{display:none}
+
+  .btn{font-family:var(--mono);font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;background:var(--azul);
+    color:#FFFFFF;border:0;padding:13px 26px;cursor:pointer;border-radius:6px;margin-top:20px;font-weight:600}
+  .btn:hover{background:#51429F}
+  .btn[disabled]{opacity:.5;cursor:wait}
+  .ejs{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .ej{font-family:var(--mono);font-size:.7rem;letter-spacing:.04em;padding:6px 11px;border:1px dashed var(--gris2);
+    background:transparent;color:var(--gris);cursor:pointer;border-radius:5px}
+  .ej:hover{border-color:var(--azul);color:var(--azul)}
+
+  /* Resultados */
+  .res{margin-top:2px}
+  .vac{color:var(--gris2);font-size:.9rem;font-style:italic}
+  .dato{display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--linea);align-items:baseline}
+  .dato:last-child{border-bottom:0}
+  .dato .k{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--gris)}
+  .dato .v{font-family:var(--mono);font-size:1.02rem;color:var(--tinta);text-align:right;font-weight:600}
+  .dato .v.big{font-size:1.22rem;color:var(--azul);font-weight:700}
+  .blq{margin-top:18px}
+  .blq h3{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gris2);margin-bottom:8px}
+  .pasos{list-style:none;counter-reset:p}
+  .pasos li{counter-increment:p;position:relative;padding:6px 0 6px 26px;font-size:.86rem;color:var(--tinta);border-bottom:1px dotted var(--linea)}
+  .pasos li::before{content:counter(p);position:absolute;left:0;top:6px;font-family:var(--mono);font-size:.7rem;color:var(--azul);font-weight:700}
+  .avisos li,.verif li{list-style:none;padding:8px 10px;margin-bottom:6px;font-size:.84rem;border-radius:5px}
+  .avisos li{background:rgba(194,135,29,.12);border-left:3px solid var(--ambar);color:#7A5310}
+  .verif li{background:rgba(99,84,200,.10);border-left:3px solid var(--azul);color:#3B2F86}
+
+  /* Semáforo */
+  .aviso{margin:0 0 16px;padding:10px 13px;border-left:3px solid var(--rojo);background:rgba(197,61,56,.09);font-size:.83rem;color:#8A2A26}
+  .aviso b{color:var(--rojo)}
+  .sello{display:inline-block;font-family:var(--mono);font-weight:700;font-size:1.35rem;letter-spacing:.16em;text-transform:uppercase;
+    padding:9px 22px;border:3px double currentColor;transform:rotate(-2deg);margin-bottom:20px;border-radius:4px}
+  .s-verde{color:var(--verde)} .s-ambar{color:var(--ambar)} .s-rojo{color:var(--rojo)}
+  @media (prefers-reduced-motion:no-preference){
+    .sello{animation:estampar .26s cubic-bezier(.2,1.6,.4,1) both}
+    @keyframes estampar{from{transform:rotate(-2deg) scale(1.6);opacity:0}to{transform:rotate(-2deg) scale(1);opacity:1}}
+  }
+  .campo{margin-bottom:14px}
+  .campo h3{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gris2);margin-bottom:5px}
+  .campo p,.campo li{font-size:.92rem}
+  .campo ul{list-style:none}
+  .campo li{padding-left:18px;position:relative;margin-bottom:5px}
+  .campo li::before{content:"—";position:absolute;left:0;color:var(--gris2)}
+  .estado{margin-top:18px;font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;color:var(--azul);display:none}
+  .estado .crono{color:var(--tinta);margin-left:6px}
+  .estado small{display:block;color:var(--gris2);font-size:.7rem;letter-spacing:.06em;margin-top:6px;text-transform:none}
+  .error{margin-top:18px;padding:11px 13px;border:1px solid var(--rojo);color:#8A2A26;font-size:.85rem;display:none;background:rgba(197,61,56,.09);border-radius:6px}
+  .meta{margin-top:14px;padding:8px 11px;background:rgba(99,84,200,.08);border-left:3px solid var(--azul);border-radius:4px;font-family:var(--mono);font-size:.7rem;color:var(--gris);letter-spacing:.04em;line-height:1.7}
+  .meta b{color:var(--tinta);font-weight:600}
+
+  footer{margin-top:48px;border-top:1px solid var(--linea);padding-top:16px;font-family:var(--mono);font-size:.66rem;letter-spacing:.04em;color:var(--gris2);line-height:1.8}
+  footer b{color:var(--gris)}
+
+  /* ---- Contacto: campos guiados y vista previa editable ---- */
+  .campos-guia{margin-top:4px}
+  .preview-edit input,.preview-edit textarea{font-family:var(--sans)}
+  #c-asunto-edit{font-weight:600}
+  #c-cuerpo-edit{min-height:230px}
+  .para-pill{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.8rem;
+    background:rgba(99,84,200,.10);border:1px solid var(--linea);color:var(--tinta);padding:7px 12px;border-radius:20px}
+  .para-pill b{color:var(--azul);font-weight:700}
+  .btn.btn-enviar{width:100%;text-align:center;display:flex;align-items:center;justify-content:center;gap:8px}
+
+  /* ---- Modal de envío ---- */
+  .modal-fondo{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:20px;
+    background:rgba(42,38,32,.42);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+  .modal-fondo.abierto{display:flex}
+  .modal{background:var(--panel);border:1px solid var(--linea);border-radius:14px;width:100%;max-width:440px;
+    padding:26px 24px 22px;box-shadow:0 24px 60px rgba(42,38,32,.30);position:relative}
+  @media (prefers-reduced-motion:no-preference){
+    .modal-fondo.abierto .modal{animation:modalIn .22s cubic-bezier(.2,1.1,.3,1) both}
+    @keyframes modalIn{from{transform:translateY(14px) scale(.97);opacity:0}to{transform:none;opacity:1}}
+  }
+  .modal h3{font-family:var(--serif);font-size:1.28rem;font-weight:700;color:var(--tinta);margin-bottom:4px;padding-right:28px}
+  .modal .sub{font-size:.86rem;color:var(--gris);margin-bottom:18px}
+  .modal-x{position:absolute;top:14px;right:14px;width:30px;height:30px;border:0;border-radius:7px;cursor:pointer;
+    background:transparent;color:var(--gris);font-size:1.3rem;line-height:1;display:flex;align-items:center;justify-content:center}
+  .modal-x:hover{background:rgba(42,38,32,.07);color:var(--tinta)}
+  .opt-envio{display:grid;gap:10px}
+  .opt{display:flex;align-items:center;gap:13px;width:100%;text-align:left;cursor:pointer;
+    background:var(--panel2);border:1px solid var(--linea);border-radius:9px;padding:13px 15px;
+    font-family:var(--sans);color:var(--tinta);text-decoration:none;transition:border-color .12s,transform .06s}
+  .opt:hover{border-color:var(--azul);transform:translateX(2px)}
+  .opt:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
+  .opt .ico{flex:0 0 38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+    background:rgba(99,84,200,.10);font-size:1.15rem}
+  .opt .txt{display:flex;flex-direction:column;gap:1px}
+  .opt .txt b{font-size:.95rem;font-weight:600}
+  .opt .txt span{font-size:.76rem;color:var(--gris2)}
+  .modal-pie{margin-top:16px;font-family:var(--mono);font-size:.68rem;color:var(--gris2);letter-spacing:.03em;
+    text-align:center;line-height:1.6}
+  .modal-pie b{color:var(--gris)}
+  #c-copia-modal{font-size:.78rem;color:var(--verde);text-align:center;margin-top:12px;min-height:1.2em;font-weight:600}
+
+  /* ---- Branding ---- */
+  .firma{font-family:var(--mono);font-size:.66rem;color:var(--gris2);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+  .vigencia{font-family:var(--mono);font-size:.64rem;color:var(--gris2);letter-spacing:.06em;margin:10px 0 0;text-transform:uppercase}
+
+  /* ---- Credibilidad: "Cómo se ha verificado" ---- */
+  details.verificado{margin-top:22px;border:1px dashed var(--linea);border-radius:8px;padding:10px 14px;background:rgba(251,248,241,.6)}
+  details.verificado summary{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gris);cursor:pointer}
+  details.verificado summary:hover{color:var(--azul)}
+  details.verificado summary:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
+  details.verificado p{font-size:.84rem;color:var(--tinta);margin-top:10px;line-height:1.6}
+
+  /* ---- Footer: enlaces legales como botones-enlace ---- */
+  .flink{background:none;border:0;padding:0;cursor:pointer;font:inherit;color:var(--gris);text-decoration:underline;letter-spacing:inherit}
+  .flink:hover{color:var(--azul)}
+  .flink:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
+  .sobre{margin-top:10px;color:var(--gris2);text-transform:none;letter-spacing:.02em}
+
+  /* ---- Modal legal (aviso legal / privacidad) ---- */
+  .modal.modal-legal{max-width:640px;max-height:86vh;overflow:auto}
+  .legal-cuerpo{font-size:.88rem;color:var(--tinta);line-height:1.65}
+  .legal-cuerpo h4{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gris);margin:16px 0 6px}
+  .legal-cuerpo p{margin-bottom:10px}
+  .legal-cuerpo ul{list-style:none;margin-bottom:10px}
+  .legal-cuerpo li{padding-left:16px;position:relative;margin-bottom:4px}
+  .legal-cuerpo li::before{content:"—";position:absolute;left:0;color:var(--gris2)}
+  .legal-fecha{font-family:var(--mono);font-size:.68rem;color:var(--gris2);margin-top:14px}
+
+  /* ---- Robustez móvil: textos largos en la tabla de resultado ---- */
+  .dato .v{overflow-wrap:anywhere}
+
+  /* ---- Impresión: resultado limpio (los juristas imprimen) ---- */
+  @media print{
+    body{background:#fff;color:#000}
+    .wrap{max-width:100%;padding:0}
+    nav,.btn,.ejs,.modal-fondo,.error,details.verificado,.flink,.hint{display:none!important}
+    .grid.dos{grid-template-columns:1fr}
+    .grid.dos>.card:first-child{display:none}
+    .card{border:1px solid #999;background:#fff;break-inside:avoid}
+    .avisos li{background:#fff;border:1px solid #C2871D}
+    .verif li{background:#fff;border:1px solid #6354C8}
+    footer{color:#333}
+    footer b{color:#000}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="marca">JV Legal <em>· tu despacho electrónico</em></div>
+      <div class="firma">by Pablo Andrés Martínez</div>
+    </div>
+    <div class="exp">Herramientas y automatizaciones<br>para despachos · Madrid 2025-2026</div>
+  </header>
+
+  <nav role="tablist" aria-label="Herramientas">
+    <button class="tab" role="tab" aria-selected="true"  aria-controls="tool-reloj"    tabindex="0"  id="tab-reloj"    onclick="abrir('reloj')">Reloj de plazos</button>
+    <button class="tab" role="tab" aria-selected="false" aria-controls="tool-masc"     tabindex="-1" id="tab-masc"     onclick="abrir('masc')">Efecto MASC</button>
+    <button class="tab" role="tab" aria-selected="false" aria-controls="tool-contacto" tabindex="-1" id="tab-contacto" onclick="abrir('contacto')">Contacto</button>
+  </nav>
+  <p class="vigencia">Motores verificados a 16/06/2026 · Calendario de festivos: Madrid 2025-2026 · LO 1/2025 vigente</p>
+
+  <!-- ================= RELOJ DE PLAZOS ================= -->
+  <section class="tool activa" id="tool-reloj" role="tabpanel" aria-labelledby="tab-reloj">
+    <p class="tagline">Cómputo de plazos procesales y sustantivos · 5 órdenes + procedimiento administrativo común</p>
+    <div class="grid dos">
+      <div class="card">
+        <h2>Datos del plazo</h2>
+        <label for="r-orden">Orden / vía</label>
+        <select id="r-orden" onchange="relojSync()">
+          <option value="civil">Civil (LEC 1/2000)</option>
+          <option value="contencioso">Contencioso-administrativo (LJCA)</option>
+          <option value="social">Social (LJS)</option>
+          <option value="penal">Penal (LECrim / LOPJ)</option>
+          <option value="administrativo">Administrativo común (LPAC 39/2015)</option>
+        </select>
+        <label for="r-tipo">Naturaleza del plazo</label>
+        <select id="r-tipo">
+          <option value="procesal">Procesal (se excluyen inhábiles)</option>
+          <option value="sustantivo">Sustantivo / civil (días naturales, art. 5 CC)</option>
+        </select>
+        <div class="row">
+          <div><label for="r-num">Cantidad</label><input id="r-num" type="number" min="1" value="20"></div>
+          <div><label for="r-unidad">Unidad</label>
+            <select id="r-unidad"><option value="dias">días</option><option value="meses">meses</option><option value="anios">años</option></select>
+          </div>
+        </div>
+        <label for="r-fecha">Fecha del acto de comunicación</label>
+        <input id="r-fecha" type="date">
+        <div id="r-opts">
+          <label style="margin-top:16px">Opciones (según el caso)</label>
+          <div class="chk"><input type="checkbox" id="r-lexnet"><label for="r-lexnet" style="margin:0">Notificación a procurador/LexNET (art. 151.2 LEC): efecto el día hábil siguiente</label></div>
+          <div class="chk op-civil"><input type="checkbox" id="r-urgente"><label for="r-urgente" style="margin:0">Actuación urgente (art. 131 LEC): agosto hábil</label></div>
+          <div class="chk op-social oculto"><input type="checkbox" id="r-materia"><label for="r-materia" style="margin:0">Materia exceptuada del art. 43.4 LJS (despido, etc.): agosto hábil</label></div>
+          <div class="chk op-penal oculto"><input type="checkbox" id="r-instr"><label for="r-instr" style="margin:0">Fase de instrucción: agosto hábil</label></div>
+          <div class="chk op-cont oculto"><input type="checkbox" id="r-ddff"><label for="r-ddff" style="margin:0">Derechos fundamentales (contencioso): agosto hábil</label></div>
+        </div>
+        <button class="btn" onclick="calcularReloj()">Calcular plazo</button>
+      </div>
+      <div class="card">
+        <h2>Resultado</h2>
+        <div class="res" id="r-res"><p class="vac">Introduce los datos y pulsa «Calcular plazo».</p></div>
+      </div>
+    </div>
+    <details class="verificado">
+      <summary>Cómo se ha verificado esta herramienta</summary>
+      <p>El motor codifica un dictamen jurídico propio contrastado con el BOE (LEC, LJCA, LJS, LECrim, LPAC y LO 1/2025)
+      y superó una batería de tests antes de publicarse. Los festivos proceden de fuentes oficiales (BOE, BOCM y
+      Ayuntamiento de Madrid). El dictamen completo no está publicado: es la base de trabajo interna que respalda cada regla.</p>
+    </details>
+  </section>
+
+  <!-- ================= EFECTO MASC ================= -->
+  <section class="tool" id="tool-masc" role="tabpanel" aria-labelledby="tab-masc">
+    <p class="tagline">Efecto de los MASC (LO 1/2025) sobre prescripción y caducidad · suspensión, reanudación y ventana de procedibilidad</p>
+    <div class="grid dos">
+      <div class="card">
+        <h2>Datos del MASC</h2>
+        <label for="m-orden">Orden jurisdiccional</label>
+        <select id="m-orden" onchange="mascSync()"></select>
+        <div id="m-noaplica" class="hint oculto"></div>
+        <div id="m-campos">
+          <label for="m-tipomasc">Tipo de MASC</label>
+          <select id="m-tipomasc"></select>
+          <label for="m-tipoplazo">Naturaleza de la acción</label>
+          <select id="m-tipoplazo">
+            <option value="caducidad">Caducidad (se suspende)</option>
+            <option value="prescripcion">Prescripción (se interrumpe / reinicia)</option>
+          </select>
+          <label for="m-solicitud">Fecha de solicitud / presentación del MASC</label>
+          <input id="m-solicitud" type="date">
+          <label for="m-recepcion">Fecha de recepción por la otra parte <span style="text-transform:none;color:var(--gris2)">(si aplica)</span></label>
+          <input id="m-recepcion" type="date">
+          <label for="m-forma">Cómo termina el MASC</label>
+          <select id="m-forma" onchange="mascSync()">
+            <option value="no_arranca">La negociación no arranca (cese por plazo)</option>
+            <option value="terminacion_sin_acuerdo">Terminación / conciliación sin acuerdo (fecha conocida)</option>
+            <option value="propuesta_sin_respuesta">Propuesta concreta sin respuesta</option>
+          </select>
+          <div id="m-wrap-term" class="oculto"><label for="m-terminacion">Fecha de terminación / conciliación</label><input id="m-terminacion" type="date"></div>
+          <div id="m-wrap-prop" class="oculto"><label for="m-propuesta">Fecha de la propuesta</label><input id="m-propuesta" type="date"></div>
+
+          <div id="m-accion" class="blq">
+            <h3>Acción afectada (para datar el vencimiento)</h3>
+            <div class="row">
+              <div><label for="m-dur">Duración del plazo</label><input id="m-dur" type="number" min="1" placeholder="20"></div>
+              <div><label for="m-unidad">Unidad</label>
+                <select id="m-unidad"><option value="dias">días</option><option value="meses">meses</option><option value="anios">años</option></select>
+              </div>
+            </div>
+            <label for="m-inicio">Fecha de inicio de la acción <span style="text-transform:none;color:var(--gris2)">(efectos del despido en social)</span></label>
+            <input id="m-inicio" type="date">
+            <div class="op-social-masc oculto hint">En el orden social, la duración son <b>días hábiles</b> (despido = 20) y el cómputo sigue el criterio del TS (STS 531/2022): no cuentan el día de la papeleta ni el de la conciliación.</div>
+            <div id="m-wrap-cautelares" class="op-civil-masc oculto">
+              <label for="m-cautelares">Medidas cautelares (art. 7.3)</label>
+              <select id="m-cautelares"><option value="no">No</option><option value="previas">Previas</option><option value="durante">Durante la negociación</option></select>
+            </div>
+          </div>
+        </div>
+        <button class="btn" id="m-btn" onclick="calcularMasc()">Calcular efecto</button>
+      </div>
+      <div class="card">
+        <h2>Resultado</h2>
+        <div class="res" id="m-res"><p class="vac">Introduce los datos y pulsa «Calcular efecto».</p></div>
+      </div>
+    </div>
+    <details class="verificado">
+      <summary>Cómo se ha verificado esta herramienta</summary>
+      <p>El motor codifica un dictamen jurídico propio contrastado con el BOE (art. 7 LO 1/2025, art. 65 LJS,
+      LJCA, LEC y Código Civil), con el criterio de la STS 531/2022 implementado y más de 60 pruebas superadas;
+      las zonas grises se marcan para verificación manual en vez de fingir precisión. El dictamen completo no está
+      publicado: es la base de trabajo interna que respalda cada regla.</p>
+    </details>
+  </section>
+
+  <!-- ================= CONTACTO ================= -->
+  <section class="tool" id="tool-contacto" role="tabpanel" aria-labelledby="tab-contacto">
+    <p class="tagline">¿Una duda sobre una herramienta? ¿Quieres una app como esta? · escríbeme</p>
+    <div class="grid dos">
+      <div class="card">
+        <h2>Explica con tus palabras</h2>
+        <label for="c-motivo">¿Sobre qué quieres escribirme?</label>
+        <select id="c-motivo" onchange="contactoSync()">
+          <option value="duda">Tengo una duda sobre una herramienta</option>
+          <option value="app">Quiero una app como esta (legaltech / Python)</option>
+          <option value="otro">Otro</option>
+        </select>
+
+        <!-- Campos guiados para "duda" -->
+        <div class="campos-guia mot-duda">
+          <label for="c-herramienta">¿Sobre qué herramienta?</label>
+          <select id="c-herramienta">
+            <option value="">— Elige (opcional) —</option>
+            <option value="Reloj de plazos">Reloj de plazos</option>
+            <option value="Efecto MASC">Efecto MASC</option>
+            <option value="Otra / varias">Otra o varias</option>
+            <option value="Aún no lo sé">Aún no lo sé</option>
+          </select>
+          <label for="c-tipoduda">¿Qué tipo de duda es?</label>
+          <select id="c-tipoduda">
+            <option value="">— Elige (opcional) —</option>
+            <option value="No sé cómo se usa">No sé cómo se usa</option>
+            <option value="Creo que da un resultado raro o incorrecto">Creo que da un resultado raro o incorrecto</option>
+            <option value="Tengo una sugerencia de mejora">Tengo una sugerencia de mejora</option>
+            <option value="Otra">Otra</option>
+          </select>
+        </div>
+
+        <!-- Campos guiados para "app" -->
+        <div class="campos-guia mot-app oculto">
+          <label for="c-sector">Tipo de herramienta o sector <span style="text-transform:none;color:var(--gris2)">(opcional)</span></label>
+          <input id="c-sector" type="text" placeholder="p. ej. gestión de plazos, contratos, inmobiliario…">
+          <label for="c-paraquien">¿Para quién sería?</label>
+          <select id="c-paraquien">
+            <option value="">— Elige (opcional) —</option>
+            <option value="Mi despacho">Mi despacho</option>
+            <option value="Una empresa">Una empresa</option>
+            <option value="Uso particular">Uso particular</option>
+            <option value="Otro">Otro</option>
+          </select>
+          <label for="c-plazo">¿Para cuándo?</label>
+          <select id="c-plazo">
+            <option value="">— Elige (opcional) —</option>
+            <option value="Sin prisa, estoy explorando">Sin prisa, estoy explorando</option>
+            <option value="En los próximos meses">En los próximos meses</option>
+            <option value="Cuanto antes">Cuanto antes</option>
+          </select>
+        </div>
+
+        <label for="c-nombre">Tu nombre <span style="text-transform:none;color:var(--gris2)">(opcional)</span></label>
+        <input id="c-nombre" type="text" placeholder="Cómo te llamas">
+        <label for="c-emailresp">Tu correo de contacto <span style="text-transform:none;color:var(--gris2)">(opcional, para que pueda responderte)</span></label>
+        <input id="c-emailresp" type="email" placeholder="tucorreo@ejemplo.com" autocomplete="email">
+        <label for="c-texto">Cuéntame con tus palabras</label>
+        <textarea id="c-texto" placeholder="Explica tu duda o qué necesitas."></textarea>
+        <p class="hint">Este formulario no envía nada por sí solo ni guarda datos: redacta un correo en tu
+        dispositivo y solo se envía si tú lo mandas desde tu propio correo.</p>
+        <button class="btn" id="c-btn" onclick="enviarContacto()">Preparar correo</button>
+        <!-- URL del perfil facilitada por Pablo el 10-07-2026 -->
+        <p class="hint" style="margin-top:12px">También estoy en <a href="https://www.linkedin.com/in/pablo-andres-martinez-ricote-8279b0384" target="_blank" rel="noopener">LinkedIn</a>.</p>
+        <div class="error" id="c-error"></div>
+      </div>
+      <div class="card">
+        <h2>Tu correo</h2>
+        <div class="res" id="c-out"><p class="vac">Rellena el formulario y pulsa «Preparar correo». Aquí aparecerá el mensaje ya redactado y editable, con un botón para elegir cómo enviarlo (Gmail, Outlook, tu app de correo o copiarlo).</p></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <b>SALIDA ORIENTATIVA.</b> No constituye asesoramiento jurídico.<br>
+    <b>JV Legal — Tu despacho electrónico</b> · by Pablo Andrés Martínez · © 2026 ·
+    <button class="flink" type="button" onclick="abrirLegal('modal-aviso')">Aviso legal</button> ·
+    <button class="flink" type="button" onclick="abrirLegal('modal-privacidad')">Privacidad</button>
+    <p class="sobre"><b>Sobre JV Legal</b> — jurista en formación construyendo en público un despacho electrónico:
+    herramientas y automatizaciones para despachos. Los motores son deterministas (sin IA en el cálculo) y citan
+    el artículo aplicable en cada paso. Se basan en dictámenes jurídicos propios contrastados con el BOE.</p>
+  </footer>
+</div>
+
+<!-- ================= MODAL · CÓMO ENVIAR EL CORREO ================= -->
+<div class="modal-fondo" id="modal-envio" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" aria-describedby="modal-sub">
+  <div class="modal">
+    <button class="modal-x" type="button" aria-label="Cerrar" onclick="cerrarModalEnvio()">&times;</button>
+    <h3 id="modal-titulo">¿Cómo quieres enviar el correo?</h3>
+    <p class="sub" id="modal-sub">Elige una opción. El mensaje va ya redactado y puedes seguir editándolo antes de enviarlo.</p>
+    <div class="opt-envio">
+      <a class="opt" id="opt-gmail" href="#" target="_blank" rel="noopener" onclick="cerrarModalEnvio()">
+        <span class="ico" aria-hidden="true">✉️</span>
+        <span class="txt"><b>Gmail (navegador)</b><span>Se abre en una pestaña nueva</span></span>
+      </a>
+      <a class="opt" id="opt-outlook" href="#" target="_blank" rel="noopener" onclick="cerrarModalEnvio()">
+        <span class="ico" aria-hidden="true">📧</span>
+        <span class="txt"><b>Outlook (navegador)</b><span>Para cuentas Outlook / Office 365</span></span>
+      </a>
+      <a class="opt" id="opt-mailto" href="#" onclick="cerrarModalEnvio()">
+        <span class="ico" aria-hidden="true">💻</span>
+        <span class="txt"><b>Mi app de correo</b><span>Deja el borrador en tu programa de correo</span></span>
+      </a>
+      <button class="opt" type="button" onclick="copiarMensaje()">
+        <span class="ico" aria-hidden="true">📋</span>
+        <span class="txt"><b>Copiar el mensaje</b><span>Lo copia y te muestra la dirección</span></span>
+      </button>
+    </div>
+    <p id="c-copia-modal" role="status" aria-live="polite"></p>
+    <p class="modal-pie">Escribes a <b id="modal-para">—</b></p>
+  </div>
+</div>
+
+<!-- ================= MODAL · AVISO LEGAL ================= -->
+<div class="modal-fondo" id="modal-aviso" role="dialog" aria-modal="true" aria-labelledby="aviso-titulo">
+  <div class="modal modal-legal">
+    <button class="modal-x" type="button" aria-label="Cerrar" onclick="cerrarLegal('modal-aviso')">&times;</button>
+    <h3 id="aviso-titulo">Aviso legal</h3>
+    <div class="legal-cuerpo">
+      <h4>Titular del sitio (art. 10 LSSI-CE)</h4>
+      <p>Pablo Andrés Martínez, persona física. Contacto directo y efectivo: <span class="jv-email">—</span>
+      (también desde la pestaña «Contacto» de esta misma página).</p>
+      <h4>Finalidad del sitio</h4>
+      <p>Divulgación y demostración de herramientas jurídicas propias: un despacho electrónico con
+      automatizaciones para despachos (cálculo de plazos procesales y del efecto de los MASC). El sitio no
+      constituye ejercicio profesional de la abogacía ni actividad económica: no hay venta, publicidad de
+      terceros ni contratación a través de esta página.</p>
+      <h4>Responsabilidad sobre los resultados</h4>
+      <p>Las herramientas ofrecen <b>resultados orientativos</b>, generados por motores deterministas que citan
+      la norma aplicada en cada paso. <b>No constituyen asesoramiento jurídico</b> ni sustituyen el juicio de un
+      profesional: todo cómputo debe verificarse caso por caso antes de tomar decisiones con relevancia jurídica,
+      en especial en las zonas que la propia herramienta marca como «verificación manual». El titular no se hace
+      responsable de las decisiones adoptadas sobre la base exclusiva de estos resultados.</p>
+      <h4>Propiedad intelectual</h4>
+      <p>Los textos, el diseño y los motores de cálculo de este sitio son obra de su titular. Puedes enlazar la
+      página libremente; para reutilizar los contenidos, escribe al correo de contacto.</p>
+      <p class="legal-fecha">Última revisión: 10/07/2026.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MODAL · PRIVACIDAD ================= -->
+<div class="modal-fondo" id="modal-privacidad" role="dialog" aria-modal="true" aria-labelledby="priv-titulo">
+  <div class="modal modal-legal">
+    <button class="modal-x" type="button" aria-label="Cerrar" onclick="cerrarLegal('modal-privacidad')">&times;</button>
+    <h3 id="priv-titulo">Privacidad</h3>
+    <div class="legal-cuerpo">
+      <h4>Lo esencial, en una frase</h4>
+      <p>Esta página <b>no recoge, no envía y no guarda</b> ningún dato tuyo.</p>
+      <h4>Sin cookies, sin rastreo, sin terceros</h4>
+      <ul>
+        <li>No usa cookies ni ninguna otra tecnología de seguimiento (tampoco almacenamiento local).</li>
+        <li>No tiene analítica ni publicidad.</li>
+        <li>No carga recursos de terceros: todo (tipografías, iconos, motores) viaja dentro de esta única página.
+        Por eso <b>no necesita banner de cookies</b>.</li>
+        <li>Todos los cálculos se ejecutan en tu dispositivo y no salen de él.</li>
+      </ul>
+      <h4>El único tratamiento posible: si tú decides escribir</h4>
+      <p>El formulario de contacto solo redacta un borrador de correo en tu dispositivo; nada se envía salvo que
+      tú lo mandes desde tu propio correo. Si lo envías, se aplica lo siguiente (arts. 6.1.a y 13 RGPD):</p>
+      <ul>
+        <li><b>Responsable:</b> Pablo Andrés Martínez (<span class="jv-email">—</span>).</li>
+        <li><b>Finalidad:</b> atender y responder tu consulta. Nada más.</li>
+        <li><b>Base jurídica:</b> tu consentimiento, manifestado al enviar el correo por iniciativa propia.</li>
+        <li><b>Conservación:</b> el tiempo necesario para atender la consulta, en el propio buzón de correo.</li>
+        <li><b>Destinatarios:</b> ninguno; no se ceden datos a terceros ni hay decisiones automatizadas.</li>
+        <li><b>Derechos:</b> acceso, rectificación, supresión, oposición, limitación y portabilidad, escribiendo
+        al mismo correo. También puedes reclamar ante la AEPD (aepd.es).</li>
+      </ul>
+      <p>Si eliges «Gmail» u «Outlook» en el modal de envío, se abre tu propio webmail en una pestaña nueva:
+      esa navegación se rige por la política de privacidad de tu proveedor de correo, no por la de este sitio.</p>
+      <p class="legal-fecha">Última revisión: 10/07/2026.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ====================== CONFIG DE MARCA (única constante editable) ======================
+   Correo de contacto de todo el sitio (formulario, aviso legal y privacidad).
+   Se ensambla en partes (anti-spam): nunca aparece en crudo en el HTML.
+   Cambiar al comprar dominio: sustituir por el correo de marca (p. ej. usuario:'hola', dominio:'jvlegal.app'). */
+var JV_DEST = { usuario:'paandr02', dominio:'ucm.es' };
+
+/* ====================== LIBRERÍA COMÚN (única fuente de festivos) ====================== */
+var CAL_FESTIVOS = {
+  madrid: {
+    2025: ['2025-01-01','2025-01-06','2025-04-17','2025-04-18','2025-05-01','2025-05-02',
+           '2025-05-15','2025-07-25','2025-08-15','2025-11-10','2025-12-08','2025-12-25'],
+    2026: ['2026-01-01','2026-01-06','2026-04-02','2026-04-03','2026-05-01','2026-05-15',
+           '2026-10-12','2026-11-02','2026-11-09','2026-12-07','2026-12-08','2026-12-25']
+  }
+};
+var CAL_ANIOS = { madrid: [2025, 2026] };
+
+/* ====================== MOTOR · RELOJ DE PLAZOS ====================== */
+window.RELOJ = (function(){
+// ============================================================
+// JVLegal · Reloj de Plazos v0.2 — MOTOR (config-driven)
+// Codifica el dictamen jvlegal_dictamen_computo_plazos_v1.md
+// 5 órdenes (civil, contencioso, social, penal) + administrativo común
+// ============================================================
+
+// --- Festivos Madrid capital en día LABORABLE (los de finde no restan día) ---
+// COMPLETO: incluye 1-ene/6-ene/15-ago/25-dic porque en la vía ADMINISTRATIVA
+// agosto y navidad son hábiles y esos festivos sí deben excluirse.
+const FESTIVOS = new Set([].concat.apply([], Object.values(CAL_FESTIVOS.madrid)));
+const ANIOS_CARGADOS = CAL_ANIOS.madrid;
+
+// --- Configuración por orden jurisdiccional / vía ---
+const JUR = {
+  civil:          { label:"Civil (LEC 1/2000)",            agostoInhabil:true,  navidadInhabil:true,  diaGracia:true,  prorroga:true,  naturaleza:true  },
+  contencioso:    { label:"Contencioso (LJCA 29/1998)",    agostoInhabil:true,  navidadInhabil:true,  diaGracia:true,  prorroga:true,  naturaleza:false, agostoNoCorre:true },
+  social:         { label:"Social (LJS 36/2011)",          agostoInhabil:true,  navidadInhabil:true,  diaGracia:true,  prorroga:true,  naturaleza:false, materiaExceptua:true },
+  penal:          { label:"Penal (LECrim / LOPJ)",         agostoInhabil:true,  navidadInhabil:true,  diaGracia:true,  prorroga:true,  naturaleza:false, faseInstruccion:true },
+  administrativo: { label:"Administrativo común (LPAC 39/2015)", agostoInhabil:false, navidadInhabil:false, diaGracia:false, prorroga:true,  naturaleza:false }
+};
+
+const DOW = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+
+function parse(s){ const p=s.split("-"); return new Date(+p[0], +p[1]-1, +p[2], 12,0,0); }
+function iso(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function esf(d){ return String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0")+"/"+d.getFullYear(); }
+function addDays(d,n){ const r=new Date(d); r.setDate(r.getDate()+n); return r; }
+
+// ¿Es inhábil este día para este orden, con sus excepciones?
+function esInhabil(d, cfg, opts){
+  const w=d.getDay();
+  if(w===0) return "domingo (art. 130.2 LEC / 30.2 LPAC)";
+  if(w===6) return "sábado (art. 130.2 LEC / 30.2 LPAC)";
+  if(FESTIVOS.has(iso(d))) return "festivo (Madrid capital)";
+  const m=d.getMonth()+1, da=d.getDate();
+  let agosto=cfg.agostoInhabil, navidad=cfg.navidadInhabil;
+  if(opts.materiaExceptuada && cfg.materiaExceptua){ agosto=false; navidad=false; } // social art.43.4
+  if(opts.instruccion && cfg.faseInstruccion){ agosto=false; navidad=false; }        // penal instrucción
+  if(opts.ddff){ agosto=false; }                                                     // contencioso DDFF: agosto hábil
+  if(opts.urgente && cfg.agostoInhabil){ agosto=false; }                             // civil urgente art.131
+  if(agosto && m===8) return "mes de agosto";
+  if(navidad && ((m===12 && da>=24)||(m===1 && da<=6))) return "periodo 24-dic a 6-ene (LO 14/2022)";
+  return null;
+}
+
+function sigHabil(d, cfg, opts){
+  let c=addDays(d,1), g=0;
+  while(esInhabil(c,cfg,opts) && g<4000){ c=addDays(c,1); g++; }
+  return c;
+}
+
+// inp = { orden, unidad:'dias'|'meses'|'anios', num, fecha:'YYYY-MM-DD', tipo:'procesal'|'sustantivo', opts:{urgente,materiaExceptuada,instruccion,ddff,lexnet} }
+function computar(inp){
+  const cfg = JUR[inp.orden];
+  if(!cfg) throw new Error("Orden desconocido: "+inp.orden);
+  const opts = inp.opts || {};
+  const esSust = cfg.naturaleza && inp.tipo === "sustantivo";
+  const pasos = [], avisos = [];
+  const fechaOrig = parse(inp.fecha);
+  let notif = parse(inp.fecha);
+
+  pasos.push(`Acto de comunicación: ${esf(notif)} (${DOW[notif.getDay()]}).`);
+
+  // LexNET / procuradores / Administraciones (art. 151.2 LEC) — solo sede judicial
+  if(opts.lexnet && inp.orden !== "administrativo"){
+    const ef = sigHabil(notif, cfg, opts);
+    pasos.push(`Notificación a procurador/LexNET (art. 151.2 LEC): se tiene por realizada el día hábil siguiente → ${esf(ef)} (${DOW[ef.getDay()]}).`);
+    notif = ef;
+  }
+
+  let venc;
+  if(inp.unidad === "dias"){
+    if(esSust){
+      venc = addDays(notif, inp.num);
+      pasos.push(`Plazo sustantivo de ${inp.num} días: corre desde el día siguiente y NO se excluyen inhábiles (art. 5.2 CC) → ${inp.num} días naturales.`);
+    } else {
+      let c=new Date(notif), k=0, salt=[], g=0;
+      while(k<inp.num && g<6000){ c=addDays(c,1); g++; const mo=esInhabil(c,cfg,opts); if(mo) salt.push(`${esf(c)} — ${mo}`); else k++; }
+      venc=c;
+      pasos.push(`Plazo de ${inp.num} días hábiles: corre desde el día siguiente excluyendo los inhábiles (art. 133.2 LEC / 30.2 LPAC).`);
+      if(salt.length) pasos.push(`Inhábiles descartados (${salt.length}): ${salt.join("; ")}.`);
+    }
+  } else {
+    const mesesN = inp.unidad==="meses" ? inp.num : inp.num*12;
+    let base = notif;
+    // Contencioso: agosto "no corre"; si la notificación es en agosto, se computa desde el 1-sep (STS 910/2020)
+    if(cfg.agostoNoCorre && notif.getMonth()===7){
+      base = parse(`${notif.getFullYear()}-08-31`);
+      pasos.push(`Notificación en agosto (contencioso): el plazo no corre en agosto; empieza a computarse el 1 de septiembre (art. 128.2 LJCA, STS 910/2020).`);
+      avisos.push(`CONTENCIOSO con notificación en AGOSTO: el día final EXACTO del plazo por meses tiene matices jurisprudenciales (el TS ha 'completado' su doctrina). Resultado orientativo: VERIFÍCALO caso por caso.`);
+    }
+    const dn=base.getDate();
+    let mi=base.getMonth()+mesesN, yo=base.getFullYear()+Math.floor(mi/12); mi=((mi%12)+12)%12;
+    const ult=new Date(yo, mi+1, 0).getDate(), dob=Math.min(dn, ult);
+    venc=new Date(yo, mi, dob, 12,0,0);
+    pasos.push(`Plazo de ${inp.num} ${inp.unidad==="meses"?"mes(es)":"año(s)"}: cómputo «de fecha a fecha» (art. 5 CC / 133.3 LEC / 30.4 LPAC); vence el día de igual ordinal que la notificación (criterio mayoritario del TS).`);
+    if(dn>ult) pasos.push(`El mes de vencimiento no tiene día ${dn}; vence el último del mes.`);
+    pasos.push(`Vencimiento de fecha a fecha: ${esf(venc)} (${DOW[venc.getDay()]}).`);
+  }
+
+  // Prórroga del vencimiento (no aplica a sustantivo civil)
+  let vf = venc;
+  if(!esSust && cfg.prorroga){
+    const mo2 = esInhabil(venc, cfg, opts);
+    if(mo2){
+      let c2=new Date(venc), g=0;
+      while(esInhabil(c2,cfg,opts) && g<4000){ c2=addDays(c2,1); g++; }
+      vf=c2;
+      pasos.push(`El vencimiento cae en día inhábil (${mo2}); se prorroga al siguiente hábil → ${esf(vf)} (${DOW[vf.getDay()]}) — art. 133.4 LEC / 30.5 LPAC.`);
+    } else {
+      pasos.push(`Vencimiento: ${esf(vf)} (${DOW[vf.getDay()]}), expira a las 24:00 h.`);
+    }
+  } else if(esSust){
+    const mo2 = esInhabil(venc, cfg, opts);
+    if(mo2) pasos.push(`Plazo sustantivo: NO se aplica la prórroga del art. 133.4; concluye el ${esf(vf)} aunque sea inhábil (art. 5 CC). El día de gracia del 135.5 sí permite presentar la demanda al hábil siguiente.`);
+    else pasos.push(`Vencimiento: ${esf(vf)} (${DOW[vf.getDay()]}).`);
+  }
+
+  // Día de gracia (art. 135.5 LEC) — sede judicial; NO en vía administrativa
+  let gracia = null;
+  if(cfg.diaGracia){
+    gracia = sigHabil(vf, cfg, opts);
+    pasos.push(`Día de gracia (art. 135.5 LEC): el escrito puede presentarse hasta las 15:00 h del día hábil siguiente → ${esf(gracia)} (${DOW[gracia.getDay()]}) a las 15:00 h.`);
+  } else {
+    pasos.push(`Vía administrativa: NO hay día de gracia del art. 135.5 LEC (STS 3ª 11-6-2020, rec. 82/2019). El plazo termina en el vencimiento.`);
+  }
+
+  // Aviso de año fuera del calendario cargado (evita el error silencioso de v0.1)
+  const aniosTocados = new Set([fechaOrig.getFullYear(), venc.getFullYear(), vf.getFullYear()]);
+  if(gracia) aniosTocados.add(gracia.getFullYear());
+  const fuera = [...aniosTocados].filter(y => !ANIOS_CARGADOS.includes(y));
+  if(fuera.length){
+    avisos.push(`Calendario de festivos cargado solo para ${ANIOS_CARGADOS.join("/")}. El cómputo toca ${fuera.join(", ")}: faltan los festivos de ese año y el resultado puede ser inexacto. Actualiza el calendario (BOE/BOCM) antes de fiarte.`);
+  }
+
+  return { vencimiento: vf, gracia, pasos, avisos, label: cfg.label };
+}
+
+return { computar, JUR, esInhabil, FESTIVOS, ANIOS_CARGADOS, esf, iso, parse };
+
+})();
+
+/* ====================== MOTOR · EFECTO MASC ====================== */
+/* ============================================================================
+   MOTOR MASC v0.3 — JVLegal
+   Efecto de los MASC (LO 1/2025) sobre prescripción y caducidad.
+   Base jurídica verificada: jvlegal_dictamen_masc_v1.md (art. 7 LO 1/2025,
+   art. 65 LJS, arts. 46/128.2 LJCA, arts. 135.5/730 LEC, art. 5 CC).
+   Mismo código que se embebe en el HTML (lo verificado == lo desplegado).
+   ----------------------------------------------------------------------------
+   Convenciones de cómputo (documentadas y consistentes):
+   - parse() fija las fechas a mediodía local para evitar saltos por DST.
+   - Plazos de DÍAS: art. 5.1 CC, no se cuenta el día inicial -> fecha+n.
+   - Plazos de MESES/AÑOS: art. 5 CC, de fecha a fecha; si el mes de
+     vencimiento no tiene día equivalente, se toma el último día del mes.
+   - PRESCRIPCIÓN -> INTERRUPCIÓN -> reinicio ENTERO desde la reanudación.
+   - CADUCIDAD    -> SUSPENSIÓN   -> el vencimiento original se DESPLAZA por
+     el número de días naturales que el reloj estuvo detenido
+     (díasCongelación = reanudación − congelación). Equivale a "reanudar con
+     los días restantes" pero es robusto para cualquier unidad.
+   - El cómputo del día inicial/final tiene un ±1 discutido en la doctrina;
+     el motor SIEMPRE recomienda margen y marca verificación manual.
+============================================================================ */
+
+(function (root) {
+  'use strict';
+
+  /* -------------------- Calendario de festivos (ampliable) ----------------- */
+  // Estructura jerárquica: FESTIVOS[ámbito][año] = ['YYYY-MM-DD', ...]
+  // 'madrid' = Madrid capital (incluye nacionales + autonómicos CAM + locales).
+  // Para ampliar: añadir otra clave de ámbito (p. ej. 'barcelona') con sus años.
+  // Fuentes: Resolución estatal DG Trabajo (BOE); Decreto CAM (BOCM);
+  // Acuerdo del Pleno del Ayuntamiento (festivos locales).
+  var FESTIVOS = CAL_FESTIVOS;
+  var ANIOS_CARGADOS = { madrid: [2025, 2026] };
+
+  /* -------------------- Helpers de fecha ----------------------------------- */
+  function parse(iso) {
+    var p = iso.split('-').map(Number);
+    return new Date(p[0], p[1] - 1, p[2], 12, 0, 0, 0);
+  }
+  function fmt(dt) {
+    var y = dt.getFullYear();
+    var m = String(dt.getMonth() + 1).padStart(2, '0');
+    var d = String(dt.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + d;
+  }
+  function addDias(dt, n) {
+    var r = new Date(dt.getTime());
+    r.setDate(r.getDate() + n);
+    r.setHours(12, 0, 0, 0);
+    return r;
+  }
+  function addMeses(dt, n) {
+    var r = new Date(dt.getTime());
+    var dia = r.getDate();
+    r.setDate(1);
+    r.setMonth(r.getMonth() + n);
+    var ult = new Date(r.getFullYear(), r.getMonth() + 1, 0).getDate();
+    r.setDate(Math.min(dia, ult));
+    r.setHours(12, 0, 0, 0);
+    return r;
+  }
+  function addAnios(dt, n) { return addMeses(dt, n * 12); }
+  function diffDias(d1, d2) { // d2 - d1 en días naturales
+    var a = parse(fmt(d1)).getTime();
+    var b = parse(fmt(d2)).getTime();
+    return Math.round((b - a) / 86400000);
+  }
+  var DOW = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  function diaSemana(dt) { return DOW[dt.getDay()]; }
+
+  /* -------------------- Inhabilidad -------------------------------------- */
+  function esFestivo(dt, municipio) {
+    municipio = municipio || 'madrid';
+    var cal = FESTIVOS[municipio];
+    if (!cal) return false;
+    var lst = cal[dt.getFullYear()];
+    if (!lst) return false;
+    return lst.indexOf(fmt(dt)) !== -1;
+  }
+  function esSabado(dt) { return dt.getDay() === 6; }
+  function esDomingo(dt) { return dt.getDay() === 0; }
+  // Día inhábil a efectos procesales (art. 130 LEC / art. 133 LEC): sábados,
+  // domingos y festivos. Sirve para los 20 días hábiles tras cautelares.
+  function esInhabilProcesal(dt, municipio) {
+    // Inhábil a efectos procesales (art. 130.2 LEC): sábados, domingos, festivos
+    // y todo el mes de agosto. Aplica a los 20 días hábiles tras cautelares (art. 730.2 LEC).
+    if (esSabado(dt) || esDomingo(dt) || esFestivo(dt, municipio)) return true;
+    if (dt.getMonth() + 1 === 8) return true; // agosto inhábil (art. 130.2 LEC)
+    return false;
+  }
+  // Día inhábil en el orden SOCIAL (art. 65 LJS: "excluyendo los sábados";
+  // domingos y festivos son inhábiles por regla general).
+  function esInhabilSocial(dt, municipio) {
+    // Social: inhábiles sábados, domingos y festivos; AGOSTO es hábil (art. 43.4 LJS,
+    // materias como el despido). Inhábiles también 24 y 31 de diciembre (art. 182 LOPJ).
+    if (esSabado(dt) || esDomingo(dt) || esFestivo(dt, municipio)) return true;
+    var m = dt.getMonth() + 1, d = dt.getDate();
+    if (m === 12 && (d === 24 || d === 31)) return true;
+    return false;
+  }
+  // Primer día hábil (social) estrictamente posterior a dt.
+  function siguienteHabil(dt, inhabilFn, municipio) {
+    var r = addDias(dt, 1), g = 0;
+    while (inhabilFn(r, municipio) && g < 60) { r = addDias(r, 1); g++; }
+    return r;
+  }
+  // Nº de días hábiles en el intervalo [desde, hasta] (ambos inclusive).
+  function contarHabilesEntre(desde, hasta, inhabilFn, municipio) {
+    if (desde.getTime() > hasta.getTime()) return 0;
+    var r = new Date(desde.getTime()), n = 0, g = 0;
+    while (r.getTime() <= hasta.getTime() && g < 4000) {
+      if (!inhabilFn(r, municipio)) n++;
+      r = addDias(r, 1); g++;
+    }
+    return n;
+  }
+  function addDiasHabiles(dt, n, inhabilFn, municipio) {
+    var r = new Date(dt.getTime());
+    var contados = 0;
+    var guard = 0;
+    while (contados < n && guard < 4000) {
+      r = addDias(r, 1);
+      if (!inhabilFn(r, municipio)) contados++;
+      guard++;
+    }
+    return r;
+  }
+  function anioFueraDeRango(dt, municipio) {
+    municipio = municipio || 'madrid';
+    var ys = ANIOS_CARGADOS[municipio] || [];
+    return ys.indexOf(dt.getFullYear()) === -1;
+  }
+
+  /* -------------------- Configuración por orden / tipo de MASC ------------- */
+  // Plazos internos del MASC (cese si no arranca) y datos de cada modalidad.
+  var CONFIG = {
+    civil: {
+      label: 'Civil / Mercantil',
+      ventana: { valor: 1, unidad: 'anios', art: 'art. 7.3 LO 1/2025' },
+      cautelares: { dias: 20, tipo: 'habiles', art: 'art. 7.3 LO 1/2025 + art. 730.2 LEC' },
+      masc: {
+        negociacion_directa: {
+          label: 'Negociación directa',
+          hitoInicio: 'intento',        // efecto desde el intento de comunicación (art. 7.1)
+          diesAQuoCese: 'recepcion_o_intento',
+          plazoCese: 30, unidadCese: 'dias_naturales',
+          art: 'art. 7.1 LO 1/2025'
+        },
+        mediacion: {
+          label: 'Mediación',
+          hitoInicio: 'recepcion',
+          diesAQuoCese: 'recepcion',
+          plazoCese: 15, unidadCese: 'dias_naturales',
+          art: 'art. 7.2.a LO 1/2025 + art. 4 Ley 5/2012'
+        },
+        conciliacion_privada: {
+          label: 'Conciliación privada',
+          hitoInicio: 'recepcion',
+          diesAQuoCese: 'recepcion',
+          plazoCese: 15, unidadCese: 'dias_naturales',
+          art: 'art. 7.2.b LO 1/2025'
+        },
+        experto: {
+          label: 'Dictamen de experto independiente',
+          hitoInicio: 'designacion',
+          diesAQuoCese: null,           // reanuda en certificación/aceptación (no por plazo)
+          plazoCese: null, unidadCese: null,
+          art: 'art. 7.2.c + art. 18 LO 1/2025'
+        },
+        oferta_vinculante: {
+          label: 'Oferta vinculante confidencial',
+          hitoInicio: 'recepcion',
+          diesAQuoCese: 'recepcion',
+          plazoCese: 1, unidadCese: 'meses', // decae si no se acepta en 1 mes
+          art: 'art. 17 LO 1/2025'
+        },
+        conciliacion_LAJ: {
+          label: 'Conciliación ante LAJ / notario / registrador / juez de paz',
+          hitoInicio: 'recepcion',
+          diesAQuoCese: null,
+          plazoCese: null, unidadCese: null,
+          remision: 'Ley 15/2015 de Jurisdicción Voluntaria',
+          art: 'art. 7.2.d + art. 14 LO 1/2025'
+        }
+      }
+    },
+    social: {
+      label: 'Social',
+      ventana: null, // no hay "ventana de 1 año"; rige el plazo de la acción reanudado
+      cautelares: null,
+      masc: {
+        conciliacion_mediacion: {
+          label: 'Conciliación / mediación previa (papeleta)',
+          hitoInicio: 'presentacion',   // efecto desde la presentación de la papeleta
+          diesAQuoCese: 'presentacion',
+          plazoCese: 15, unidadCese: 'dias_habiles_social', // reanuda la caducidad
+          plazoTramite: 30,             // 30 días hábiles: trámite cumplido
+          art: 'art. 65 LJS'
+        }
+      }
+    },
+    contencioso: { label: 'Contencioso-administrativo', noAplica: true,
+      nota: 'Los MASC de la LO 1/2025 NO se aplican al orden contencioso (art. 3.2). ' +
+            'Plazo de recurso: 2 meses de fecha a fecha (art. 46.1 LJCA); agosto inhábil ' +
+            '(art. 128.2 LJCA), salvo derechos fundamentales. Futura ley específica (DF 31ª).' },
+    penal: { label: 'Penal', noAplica: true,
+      nota: 'Los MASC NO operan sobre la prescripción penal (art. 3.2 LO 1/2025). ' +
+            'La prescripción del delito se rige por los arts. 130-135 del Código Penal. ' +
+            'Solo cabe mediación penal / justicia restaurativa, sin efecto sobre la prescripción.' }
+  };
+
+  /* -------------------- Núcleo de cálculo --------------------------------- */
+  // Fecha de congelación (inicio del efecto interruptivo/suspensivo).
+  function fechaCongelacion(cfgMasc, inp, avisos) {
+    var sol = parse(inp.fechaSolicitud);
+    var rec = inp.fechaRecepcion ? parse(inp.fechaRecepcion) : null;
+    switch (cfgMasc.hitoInicio) {
+      case 'intento':
+      case 'presentacion':
+      case 'designacion':
+        return sol;
+      case 'recepcion':
+        if (rec) return rec;
+        avisos.push('No consta fecha de recepción; se usa la fecha de solicitud como inicio del efecto. ' +
+                    'En esta modalidad el efecto se cuenta desde la recepción (' + cfgMasc.art + ').');
+        return sol;
+      default:
+        return sol;
+    }
+  }
+
+  // Dies a quo para el plazo de cese (cuando la negociación no arranca).
+  function diesAQuoCese(cfgMasc, inp) {
+    var sol = parse(inp.fechaSolicitud);
+    var rec = inp.fechaRecepcion ? parse(inp.fechaRecepcion) : null;
+    if (cfgMasc.diesAQuoCese === 'recepcion_o_intento') return rec || sol;
+    if (cfgMasc.diesAQuoCese === 'recepcion') return rec || sol;
+    if (cfgMasc.diesAQuoCese === 'presentacion') return sol;
+    return rec || sol;
+  }
+
+  // Fecha de reanudación según cómo termina el MASC.
+  function fechaReanudacion(orden, cfgMasc, inp, avisos, pasos, municipio) {
+    var forma = inp.formaTerminacion;
+    if (forma === 'terminacion_sin_acuerdo' || forma === 'propuesta_sin_respuesta') {
+      // El usuario aporta la fecha real de terminación / o se calcula desde la propuesta.
+      if (forma === 'propuesta_sin_respuesta' && inp.fechaPropuesta) {
+        var base = parse(inp.fechaPropuesta);
+        var rea = addDias(base, 30); // 30 días naturales desde la propuesta concreta (art. 7.1 in fine)
+        pasos.push('Propuesta concreta sin respuesta: el cómputo se reanuda a los 30 días naturales ' +
+                   'desde la recepción de la propuesta (' + fmt(base) + ') → ' + fmt(rea) + ' (art. 7.1 / 10.4.b).');
+        return rea;
+      }
+      if (inp.fechaTerminacion) {
+        pasos.push('Terminación del proceso sin acuerdo aportada: ' + fmt(parse(inp.fechaTerminacion)) +
+                   ' → el reloj se reanuda en esa fecha.');
+        return parse(inp.fechaTerminacion);
+      }
+      avisos.push('Se indicó terminación sin acuerdo pero no se aportó la fecha; usa "no arranca" o ' +
+                  'introduce la fecha de terminación.');
+      return null;
+    }
+    // forma === 'no_arranca': se calcula el cese automático por plazo.
+    if (cfgMasc.plazoCese == null) {
+      avisos.push('En esta modalidad (' + cfgMasc.label + ') la reanudación no se produce por un plazo fijo, ' +
+                  'sino por ' + (cfgMasc.remision ? cfgMasc.remision : 'la certificación/aceptación del acuerdo (' + cfgMasc.art + ')') +
+                  '. Introduce la fecha de terminación real.');
+      return null;
+    }
+    var diesAQuo = diesAQuoCese(cfgMasc, inp);
+    var rea;
+    if (cfgMasc.unidadCese === 'dias_naturales') {
+      rea = addDias(diesAQuo, cfgMasc.plazoCese);
+      pasos.push('La negociación no arranca: el cómputo se reanuda a los ' + cfgMasc.plazoCese +
+                 ' días naturales desde ' + fmt(diesAQuo) + ' (' + cfgMasc.art + ') → ' + fmt(rea) +
+                 ' (' + diaSemana(rea) + ').');
+    } else if (cfgMasc.unidadCese === 'meses') {
+      rea = addMeses(diesAQuo, cfgMasc.plazoCese);
+      pasos.push('La oferta decae al mes desde ' + fmt(diesAQuo) + ' (' + cfgMasc.art + ') → ' + fmt(rea) + '.');
+    } else if (cfgMasc.unidadCese === 'dias_habiles_social') {
+      rea = addDiasHabiles(diesAQuo, cfgMasc.plazoCese, esInhabilSocial, municipio);
+      pasos.push('Orden social: la caducidad se reanuda a los ' + cfgMasc.plazoCese +
+                 ' días hábiles (excluidos sábados, domingos y festivos) desde la presentación ' +
+                 fmt(diesAQuo) + ' (' + cfgMasc.art + ') → ' + fmt(rea) + ' (' + diaSemana(rea) + ').');
+      if (anioFueraDeRango(rea, municipio))
+        avisos.push('El cómputo de días hábiles alcanza un año sin festivos cargados (' +
+                    rea.getFullYear() + '): verifica el calendario antes de usar el resultado.');
+    }
+    return rea;
+  }
+
+  // Vencimiento original de la acción (si se da duración + inicio).
+  function vencimientoOriginal(inp) {
+    if (inp.fechaVencimientoOriginal) return parse(inp.fechaVencimientoOriginal);
+    if (!inp.fechaInicioAccion || inp.duracionAccion == null) return null;
+    var ini = parse(inp.fechaInicioAccion);
+    if (inp.unidadAccion === 'dias') return addDias(ini, inp.duracionAccion);
+    if (inp.unidadAccion === 'meses') return addMeses(ini, inp.duracionAccion);
+    if (inp.unidadAccion === 'anios') return addAnios(ini, inp.duracionAccion);
+    return null;
+  }
+
+  // Nuevo vencimiento de la acción tras el efecto del MASC.
+  function nuevoVencimientoAccion(inp, congel, reanud, pasos, avisos) {
+    var tipo = inp.tipoPlazoAccion; // 'prescripcion' | 'caducidad'
+    if (!reanud) return null;
+    if (tipo === 'prescripcion') {
+      // Interrupción -> reinicio ENTERO desde la reanudación.
+      var nv;
+      if (inp.fechaVencimientoOriginal && (inp.duracionAccion == null || !inp.unidadAccion)) {
+        avisos.push('Para la prescripción es preferible introducir la DURACIÓN del plazo (p. ej. 5 años) ' +
+                    'en vez de solo la fecha de vencimiento, porque la interrupción reinicia el plazo entero.');
+        return null;
+      }
+      if (inp.unidadAccion === 'dias') nv = addDias(reanud, inp.duracionAccion);
+      else if (inp.unidadAccion === 'meses') nv = addMeses(reanud, inp.duracionAccion);
+      else nv = addAnios(reanud, inp.duracionAccion);
+      pasos.push('PRESCRIPCIÓN (interrupción, art. 7.1): el plazo se REINICIA entero desde la reanudación ' +
+                 fmt(reanud) + ' + ' + inp.duracionAccion + ' ' + inp.unidadAccion + ' → ' + fmt(nv) + '.');
+      return nv;
+    } else {
+      // Caducidad -> suspensión -> desplazamiento del vencimiento original.
+      var venc = vencimientoOriginal(inp);
+      if (!venc) {
+        avisos.push('Para la caducidad necesito la duración + fecha de inicio del plazo, o la fecha de ' +
+                    'vencimiento original.');
+        return null;
+      }
+      var diasCongel = diffDias(congel, reanud);
+      var nv2 = addDias(venc, diasCongel);
+      pasos.push('CADUCIDAD (suspensión, art. 7.1): el vencimiento original (' + fmt(venc) +
+                 ') se desplaza por los ' + diasCongel + ' días naturales que el reloj estuvo detenido (' +
+                 fmt(congel) + ' → ' + fmt(reanud) + ') → ' + fmt(nv2) + '.');
+      return nv2;
+    }
+  }
+
+  // Vencimiento de la acción en el ORDEN SOCIAL (caducidad del despido y análogas).
+  // Criterio unificado del TS: SSTS 531/2022 (rcud 4927/2019, ECLI:ES:TS:2022:2255),
+  // 350/2022, 817/2020, 913/2016, 727/2024. No se computan ni el día de la papeleta ni
+  // el de la conciliación; reanudación al día hábil siguiente a lo que antes ocurra entre
+  // la conciliación y el 15º día hábil desde la papeleta (tope inamovible, sin retroactividad);
+  // el vencimiento son los días hábiles restantes (plazo - consumidos) desde la reanudación.
+  function vencimientoSocialExacto(inp, pasos, avisos, verif, municipio) {
+    var despido = inp.fechaInicioAccion ? parse(inp.fechaInicioAccion) : null;
+    var papeleta = parse(inp.fechaSolicitud);
+    var plazo = (inp.duracionAccion != null) ? inp.duracionAccion : 20; // días HÁBILES (despido = 20)
+    if (!despido) {
+      avisos.push('Para el vencimiento de la acción social necesito la fecha de efectos del despido ' +
+                  '(fecha de inicio de la acción).');
+      return { reanudacion: null, vencimiento: null };
+    }
+    // 1) Días hábiles consumidos: del día siguiente al despido al día anterior a la papeleta.
+    var inicio = addDias(despido, 1);
+    var finConsumo = addDias(papeleta, -1);
+    var consumidos = contarHabilesEntre(inicio, finConsumo, esInhabilSocial, municipio);
+    // 2) Reanudación: lo que antes ocurra entre conciliación y 15º día hábil desde la papeleta.
+    var quince = addDiasHabiles(papeleta, 15, esInhabilSocial, municipio);
+    var concil = inp.fechaConciliacion ? parse(inp.fechaConciliacion)
+               : (inp.formaTerminacion === 'terminacion_sin_acuerdo' && inp.fechaTerminacion
+                    ? parse(inp.fechaTerminacion) : null);
+    var hito;
+    if (concil && concil.getTime() < quince.getTime()) {
+      hito = concil;
+      pasos.push('Orden social (STS 531/2022): la conciliación se intentó el ' + fmt(concil) +
+                 ', antes del 15º día hábil; la caducidad se reanuda al día hábil siguiente.');
+    } else {
+      hito = quince;
+      pasos.push('Orden social (STS 531/2022): transcurren 15 días hábiles desde la papeleta ' +
+                 '(15º día hábil = ' + fmt(quince) + ') sin conciliación anterior; la caducidad se reanuda ' +
+                 'al día hábil siguiente (tope inamovible, sin suspensión retroactiva).');
+    }
+    var reanud = siguienteHabil(hito, esInhabilSocial, municipio);
+    // 3) Vencimiento: días hábiles restantes desde la reanudación (que cuenta como el 1.er día).
+    var restantes = plazo - consumidos;
+    if (restantes <= 0)
+      avisos.push('Según el cómputo, antes de la papeleta ya se habrían agotado los ' + plazo +
+                  ' días hábiles del plazo. Revisa las fechas: la acción podría estar caducada.');
+    var venc = addDiasHabiles(reanud, restantes - 1, esInhabilSocial, municipio);
+    pasos.push('Días hábiles consumidos antes de la papeleta: ' + consumidos + ' de ' + plazo +
+               ' (el día de la papeleta NO se computa). Reanudación: ' + fmt(reanud) + ' (' +
+               diaSemana(reanud) + '). Restantes: ' + restantes + ' días hábiles → VENCIMIENTO de la acción: ' +
+               fmt(venc) + ' (' + diaSemana(venc) + ').');
+    // 4) Día de gracia (art. 45.1 LJS + 135.5 LEC): hasta las 15:00 del día hábil siguiente.
+    var gracia = siguienteHabil(venc, esInhabilSocial, municipio);
+    verif.push('Día de gracia (art. 45.1 LJS + art. 135.5 LEC): la demanda admite presentación hasta ' +
+               'las 15:00 del día hábil siguiente al vencimiento (' + fmt(gracia) + '). Aun así, presenta con margen.');
+    if (anioFueraDeRango(venc, municipio))
+      avisos.push('El cómputo social alcanza un año sin festivos cargados (' + venc.getFullYear() +
+                  '): verifica el calendario antes de usar el resultado.');
+    return { reanudacion: reanud, vencimiento: venc, diasConsumidos: consumidos,
+             diasRestantes: restantes, quinceDiaHabil: quince, fechaGracia: gracia };
+  }
+
+  // Ventana de procedibilidad (art. 7.3) y plazo tras cautelares.
+  function ventanaProcedibilidad(orden, cfg, inp, congel, reanud, pasos, avisos, municipio) {
+    var out = { fechaLimiteProcedibilidad: null, fechaLimiteCautelares: null };
+    if (!cfg.ventana) return out;
+    // Referencia: terminación sin acuerdo (reanudación) o, si no hubo respuesta, la recepción.
+    var ref;
+    if (inp.formaTerminacion === 'no_arranca' && (inp.fechaRecepcion || inp.fechaSolicitud)) {
+      ref = inp.fechaRecepcion ? parse(inp.fechaRecepcion) : parse(inp.fechaSolicitud);
+    } else {
+      ref = reanud || (inp.fechaTerminacion ? parse(inp.fechaTerminacion) : null);
+    }
+    if (ref) {
+      var lim = addAnios(ref, cfg.ventana.valor);
+      out.fechaLimiteProcedibilidad = lim;
+      pasos.push('Ventana de procedibilidad (' + cfg.ventana.art + '): 1 año de fecha a fecha desde ' +
+                 fmt(ref) + ' → ' + fmt(lim) + '. Pasado ese año sin demandar, hay que iniciar un MASC nuevo ' +
+                 '(no extingue la acción material).');
+    }
+    // Cautelares: 20 días hábiles.
+    if (cfg.cautelares && inp.cautelares && inp.cautelares !== 'no') {
+      var baseCaut = reanud || ref;
+      if (baseCaut) {
+        var limC = addDiasHabiles(baseCaut, cfg.cautelares.dias, esInhabilProcesal, municipio);
+        out.fechaLimiteCautelares = limC;
+        pasos.push('Medidas cautelares ' + (inp.cautelares === 'previas' ? 'previas' : 'durante la negociación') +
+                   ': la demanda debe presentarse en ' + cfg.cautelares.dias + ' días HÁBILES procesales desde ' +
+                   fmt(baseCaut) + ' (' + cfg.cautelares.art + ') → ' + fmt(limC) + ' (' + diaSemana(limC) + ').');
+        if (anioFueraDeRango(limC, municipio))
+          avisos.push('El plazo de cautelares alcanza un año sin festivos cargados (' + limC.getFullYear() +
+                      '): verifica el calendario.');
+      }
+    }
+    return out;
+  }
+
+  /* -------------------- API principal ------------------------------------- */
+  function computar(inp) {
+    var municipio = inp.municipio || 'madrid';
+    var pasos = [], avisos = [], verificacionManual = [];
+    var cfg = CONFIG[inp.orden];
+
+    if (!cfg) return { error: 'Orden jurisdiccional no reconocido: ' + inp.orden };
+
+    // Órdenes donde el MASC no aplica.
+    if (cfg.noAplica) {
+      return {
+        orden: inp.orden, noAplica: true, nota: cfg.nota,
+        pasos: ['El MASC de la LO 1/2025 no opera en este orden.'],
+        avisos: [cfg.nota], verificacionManual: []
+      };
+    }
+
+    var cfgMasc = cfg.masc[inp.tipoMASC];
+    if (!cfgMasc) return { error: 'Tipo de MASC no válido para el orden ' + inp.orden + ': ' + inp.tipoMASC };
+
+    if (!inp.fechaSolicitud) return { error: 'Falta la fecha de solicitud / presentación del MASC.' };
+
+    var congel = fechaCongelacion(cfgMasc, inp, avisos);
+    var reanud, nuevoVenc, social = null;
+    var esSocialCaducidad = (inp.orden === 'social' && inp.tipoPlazoAccion === 'caducidad' && inp.fechaInicioAccion);
+    if (esSocialCaducidad) {
+      social = vencimientoSocialExacto(inp, pasos, avisos, verificacionManual, municipio);
+      reanud = social.reanudacion;
+      nuevoVenc = social.vencimiento;
+    } else {
+      reanud = fechaReanudacion(inp.orden, cfgMasc, inp, avisos, pasos, municipio);
+      nuevoVenc = nuevoVencimientoAccion(inp, congel, reanud, pasos, avisos);
+    }
+
+    pasos.unshift('Congelación del plazo (inicio del efecto, ' + cfgMasc.art + '): ' + fmt(congel) +
+                  '. La ' + (inp.tipoPlazoAccion === 'prescripcion' ? 'prescripción se INTERRUMPE' : 'caducidad se SUSPENDE') +
+                  ' desde esa fecha.');
+
+    var vent = ventanaProcedibilidad(inp.orden, cfg, inp, congel, reanud, pasos, avisos, municipio);
+
+    // Avisos de verificación manual (zonas grises del dictamen).
+    verificacionManual.push('Cómputo del día inicial/final: hay un ±1 día discutido en la doctrina. ' +
+      'Presenta SIEMPRE con al menos 1-2 días de margen sobre la fecha calculada.');
+    if (vent.fechaLimiteProcedibilidad)
+      verificacionManual.push('Día de gracia del art. 135.5 LEC sobre la ventana de 1 año (art. 7.3): ' +
+        'es inferencia doctrinal, sin jurisprudencia específica. No lo des por seguro.');
+    if (cfgMasc.hitoInicio === 'intento')
+      verificacionManual.push('Intento de comunicación vs. recepción efectiva: el art. 7.1 dice "conste el intento", ' +
+        'pero algún juzgado exige recepción efectiva (divergencia viva).');
+    if (inp.cautelares === 'durante')
+      verificacionManual.push('Cautelares acordadas DURANTE la negociación: el plazo de 20 días corre desde la ' +
+        'terminación; revisa el art. 7.3, párrafo 2.');
+
+    return {
+      orden: inp.orden,
+      tipoMASC: cfgMasc.label,
+      tipoPlazoAccion: inp.tipoPlazoAccion,
+      fechaCongelacion: congel ? fmt(congel) : null,
+      fechaReanudacion: reanud ? fmt(reanud) : null,
+      nuevoVencimientoAccion: nuevoVenc ? fmt(nuevoVenc) : null,
+      fechaLimiteProcedibilidad: vent.fechaLimiteProcedibilidad ? fmt(vent.fechaLimiteProcedibilidad) : null,
+      fechaLimiteCautelares: vent.fechaLimiteCautelares ? fmt(vent.fechaLimiteCautelares) : null,
+      diasConsumidosSocial: social ? social.diasConsumidos : null,
+      diasRestantesSocial: social ? social.diasRestantes : null,
+      fechaGraciaSocial: (social && social.fechaGracia) ? fmt(social.fechaGracia) : null,
+      pasos: pasos,
+      avisos: avisos,
+      verificacionManual: verificacionManual
+    };
+  }
+
+  /* -------------------- Export -------------------------------------------- */
+  var API = {
+    computar: computar,
+    // utilidades expuestas para tests:
+    _parse: parse, _fmt: fmt, _addDias: addDias, _addMeses: addMeses, _addAnios: addAnios,
+    _diffDias: diffDias, _addDiasHabiles: addDiasHabiles, _esInhabilSocial: esInhabilSocial,
+    _siguienteHabil: siguienteHabil, _contarHabilesEntre: contarHabilesEntre,
+    _esInhabilProcesal: esInhabilProcesal, _FESTIVOS: FESTIVOS, _CONFIG: CONFIG
+  };
+  if (typeof module !== 'undefined' && module.exports) module.exports = API;
+  else root.MASC = API;
+
+})(typeof window !== 'undefined' ? window : this);
+
+
+/* ====================== Utilidad de escape (compartida) ====================== */
+function semEsc(t){ var d=document.createElement('div'); d.textContent=t==null?'':t; return d.innerHTML; }
+/* (Semáforo de cláusulas retirado de esta versión; el triaje con IA se valorará aparte.) */
+
+/* ====================== UI: navegación + render ====================== */
+function abrir(id){
+  ['reloj','masc','contacto'].forEach(function(t){
+    document.getElementById('tool-'+t).classList.toggle('activa', t===id);
+    var tab=document.getElementById('tab-'+t);
+    tab.setAttribute('aria-selected', t===id?'true':'false');
+    tab.setAttribute('tabindex', t===id?'0':'-1'); // roving tabindex (patrón WAI-ARIA tablist)
+  });
+}
+/* Navegación de pestañas con teclado: ←/→/Inicio/Fin (patrón WAI-ARIA tablist). */
+(function(){
+  var orden=['reloj','masc','contacto'];
+  var lista=document.querySelector('nav[role="tablist"]');
+  if(!lista) return;
+  lista.addEventListener('keydown', function(e){
+    var act=(document.activeElement&&document.activeElement.id)||'';
+    var i=orden.indexOf(act.replace('tab-',''));
+    if(i<0) return;
+    var j=null;
+    if(e.key==='ArrowRight'||e.key==='Right') j=(i+1)%orden.length;
+    else if(e.key==='ArrowLeft'||e.key==='Left') j=(i-1+orden.length)%orden.length;
+    else if(e.key==='Home') j=0;
+    else if(e.key==='End') j=orden.length-1;
+    if(j===null) return;
+    e.preventDefault();
+    abrir(orden[j]);
+    document.getElementById('tab-'+orden[j]).focus();
+  });
+})();
+
+/* ---- Modales legales (aviso legal / privacidad): Esc, clic fuera, trampa de foco ---- */
+var __jvFocoLegal=null, __jvLegalAbierto=null;
+function abrirLegal(id){
+  var m=document.getElementById(id); if(!m) return;
+  __jvFocoLegal=document.activeElement; __jvLegalAbierto=id;
+  m.classList.add('abierto');
+  document.addEventListener('keydown', legalTeclado);
+  try{ m.querySelector('.modal-x').focus(); }catch(_){}
+}
+function cerrarLegal(id){
+  var m=document.getElementById(id); if(!m) return;
+  m.classList.remove('abierto'); __jvLegalAbierto=null;
+  document.removeEventListener('keydown', legalTeclado);
+  if(__jvFocoLegal && __jvFocoLegal.focus){ try{ __jvFocoLegal.focus(); }catch(_){} }
+}
+function legalTeclado(e){
+  if(!__jvLegalAbierto) return;
+  if(e.key==='Escape'||e.key==='Esc'){ cerrarLegal(__jvLegalAbierto); return; }
+  if(e.key==='Tab'){ // trampa de foco dentro del modal legal
+    var modal=document.getElementById(__jvLegalAbierto);
+    var foco=modal.querySelectorAll('a[href],button:not([disabled])');
+    if(!foco.length) return;
+    var primero=foco[0], ultimo=foco[foco.length-1];
+    if(e.shiftKey && document.activeElement===primero){ e.preventDefault(); ultimo.focus(); }
+    else if(!e.shiftKey && document.activeElement===ultimo){ e.preventDefault(); primero.focus(); }
+  }
+}
+
+/* ====================== CONTACTO · motor de plantillas (determinista) ======================
+   Sin IA, sin backend, sin secretos: compone asunto + cuerpo a partir del motivo y unos
+   campos guiados. El resultado es EDITABLE y se manda por Gmail/Outlook/mailto o se copia.
+   La dirección de destino es la constante JV_DEST definida al inicio del script. */
+function jvDestino(){ return JV_DEST.usuario + '@' + JV_DEST.dominio; }
+function jvDestinoLegible(){ return JV_DEST.usuario + ' (arroba) ' + JV_DEST.dominio; }
+
+/* Muestra/oculta los campos guiados según el motivo elegido. */
+function contactoSync(){
+  var m=elv('c-motivo');
+  document.querySelectorAll('.mot-duda').forEach(function(e){ e.classList.toggle('oculto', m!=='duda'); });
+  document.querySelectorAll('.mot-app').forEach(function(e){ e.classList.toggle('oculto', m!=='app'); });
+}
+
+/* Lee un <select>/<input> guiado; devuelve '' si está vacío o sin elegir. */
+function gv(id){ var el=document.getElementById(id); return el ? el.value.trim() : ''; }
+
+/* Motor de plantillas: ensambla {asunto, cuerpo} de forma 100% determinista. */
+function componerCorreo(){
+  var motivo=elv('c-motivo');
+  var nombre=document.getElementById('c-nombre').value.trim();
+  var emailResp=document.getElementById('c-emailresp').value.trim();
+  var texto=document.getElementById('c-texto').value.trim();
+
+  var asunto, intro, detalles=[];
+  if(motivo==='app'){
+    var sector=gv('c-sector'), paraquien=gv('c-paraquien'), plazo=gv('c-plazo');
+    asunto = sector ? ('Quiero una app como esta — ' + sector) : 'Quiero una app como esta (legaltech)';
+    intro  = 'Te escribo porque me gustaría una aplicación parecida a esta.';
+    if(sector)    detalles.push('Tipo de herramienta o sector: ' + sector);
+    if(paraquien) detalles.push('Para quién sería: ' + paraquien);
+    if(plazo)     detalles.push('Para cuándo: ' + plazo);
+  } else if(motivo==='duda'){
+    var herr=gv('c-herramienta'), tipo=gv('c-tipoduda');
+    asunto = (herr && herr!=='Aún no lo sé') ? ('Duda sobre ' + herr + ' — JVLegal')
+                                             : 'Duda sobre una herramienta — JVLegal';
+    intro  = 'Te escribo con una duda sobre una de tus herramientas.';
+    if(herr) detalles.push('Herramienta: ' + herr);
+    if(tipo) detalles.push('Tipo de duda: ' + tipo);
+  } else {
+    asunto = 'Consulta · JVLegal';
+    intro  = 'Te escribo para una consulta.';
+  }
+
+  // Cuerpo estructurado: saludo · contexto · detalles guiados · texto libre · contacto · firma.
+  var partes=['Hola Pablo,', '', intro];
+  if(detalles.length){ partes.push(''); partes.push(detalles.join('\n')); }
+  if(texto){ partes.push(''); partes.push(texto); }
+  if(emailResp){ partes.push(''); partes.push('Puedes responderme a: ' + emailResp); }
+  partes.push('');
+  partes.push(nombre ? ('Un saludo,\n' + nombre) : 'Un saludo.');
+  partes.push('');
+  partes.push('(Enviado desde JVLegal Suite)');
+  return { asunto:asunto, cuerpo:partes.join('\n') };
+}
+
+/* "Preparar correo": compone y pinta la vista previa EDITABLE en el panel derecho. */
+function enviarContacto(){
+  var texto=document.getElementById('c-texto').value.trim();
+  var err=document.getElementById('c-error');
+  var out=document.getElementById('c-out');
+  err.style.display='none';
+  if(!texto){ err.textContent='Escribe tu mensaje antes de preparar el correo.'; err.style.display='block'; return; }
+  var c=componerCorreo();
+  out.innerHTML=
+    '<div class="para-pill">Para <b>'+semEsc(jvDestinoLegible())+'</b></div>'+
+    '<div class="preview-edit" style="margin-top:14px">'+
+      '<label for="c-asunto-edit">Asunto</label>'+
+      '<input id="c-asunto-edit" type="text">'+
+      '<label for="c-cuerpo-edit">Mensaje (puedes editarlo antes de enviar)</label>'+
+      '<textarea id="c-cuerpo-edit"></textarea>'+
+    '</div>'+
+    '<button class="btn btn-enviar" type="button" onclick="abrirModalEnvio()">Enviar correo ▸</button>'+
+    '<p class="hint" style="margin-top:10px">Revisa o edita el texto y pulsa «Enviar correo» para elegir cómo mandarlo.</p>';
+  // Set via .value so the text is treated as data, never interpreted as HTML.
+  document.getElementById('c-asunto-edit').value=c.asunto;
+  document.getElementById('c-cuerpo-edit').value=c.cuerpo;
+  try{ out.scrollIntoView({behavior:'smooth', block:'center'}); }catch(_){}
+}
+
+/* ---- Modal de envío: accesible (Esc, clic fuera, foco al abrir + trampa de foco) ---- */
+var __jvFocoPrevio=null;
+function abrirModalEnvio(){
+  var asuntoEl=document.getElementById('c-asunto-edit');
+  if(!asuntoEl){ enviarContacto(); asuntoEl=document.getElementById('c-asunto-edit'); if(!asuntoEl) return; }
+  var asunto=asuntoEl.value||'';
+  var cuerpo=(document.getElementById('c-cuerpo-edit')||{value:''}).value||'';
+  var to=jvDestino();
+  var toE=encodeURIComponent(to), su=encodeURIComponent(asunto), bo=encodeURIComponent(cuerpo);
+  // Hrefs nativos (más robusto frente a bloqueadores de pop-ups que window.open).
+  document.getElementById('opt-gmail').href   = 'https://mail.google.com/mail/?view=cm&fs=1&to='+toE+'&su='+su+'&body='+bo;
+  document.getElementById('opt-outlook').href = 'https://outlook.office.com/mail/deeplink/compose?to='+toE+'&subject='+su+'&body='+bo;
+  document.getElementById('opt-mailto').href  = 'mailto:'+to+'?subject='+su+'&body='+bo;
+  window.__jvCuerpo=cuerpo; // para la opción "Copiar"
+  document.getElementById('modal-para').textContent=jvDestinoLegible();
+  document.getElementById('c-copia-modal').textContent='';
+  __jvFocoPrevio=document.activeElement;
+  document.getElementById('modal-envio').classList.add('abierto');
+  document.addEventListener('keydown', modalTeclado);
+  try{ document.getElementById('opt-gmail').focus(); }catch(_){}
+}
+function cerrarModalEnvio(){
+  document.getElementById('modal-envio').classList.remove('abierto');
+  document.removeEventListener('keydown', modalTeclado);
+  if(__jvFocoPrevio && __jvFocoPrevio.focus){ try{ __jvFocoPrevio.focus(); }catch(_){} }
+}
+function modalTeclado(e){
+  if(e.key==='Escape' || e.key==='Esc'){ cerrarModalEnvio(); return; }
+  if(e.key==='Tab'){ // trampa de foco dentro del modal
+    var modal=document.getElementById('modal-envio');
+    var foco=modal.querySelectorAll('a[href],button:not([disabled])');
+    if(!foco.length) return;
+    var primero=foco[0], ultimo=foco[foco.length-1];
+    if(e.shiftKey && document.activeElement===primero){ e.preventDefault(); ultimo.focus(); }
+    else if(!e.shiftKey && document.activeElement===ultimo){ e.preventDefault(); primero.focus(); }
+  }
+}
+function copiarMensaje(){
+  var t=window.__jvCuerpo||'', n=document.getElementById('c-copia-modal');
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(
+      function(){ if(n) n.textContent='Mensaje copiado. Pégalo en un correo a '+jvDestino(); },
+      function(){ if(n) n.textContent='No se pudo copiar solo. La dirección es '+jvDestino(); });
+  } else if(n){ n.textContent='Tu navegador no permite copiar solo. La dirección es '+jvDestino(); }
+}
+function elv(id){ return document.getElementById(id).value; }
+function fechaLargaISO(iso){ // 'YYYY-MM-DD' -> 'dd/mm/YYYY'
+  if(!iso) return '—'; var p=iso.split('-'); return p[2]+'/'+p[1]+'/'+p[0];
+}
+
+/* ---- Reloj: mostrar/ocultar opciones por orden ---- */
+function relojSync(){
+  var o=elv('r-orden');
+  document.querySelectorAll('.op-civil').forEach(function(e){e.classList.toggle('oculto', o!=='civil');});
+  document.querySelectorAll('.op-social').forEach(function(e){e.classList.toggle('oculto', o!=='social');});
+  document.querySelectorAll('.op-penal').forEach(function(e){e.classList.toggle('oculto', o!=='penal');});
+  document.querySelectorAll('.op-cont').forEach(function(e){e.classList.toggle('oculto', o!=='contencioso');});
+}
+function calcularReloj(){
+  var box=document.getElementById('r-res');
+  try{
+    var inp={ orden:elv('r-orden'), unidad:elv('r-unidad'), num:parseInt(elv('r-num'),10),
+      fecha:elv('r-fecha'), tipo:elv('r-tipo'),
+      opts:{ lexnet:document.getElementById('r-lexnet').checked, urgente:document.getElementById('r-urgente').checked,
+        materiaExceptuada:document.getElementById('r-materia').checked, instruccion:document.getElementById('r-instr').checked,
+        ddff:document.getElementById('r-ddff').checked } };
+    if(!inp.fecha){ box.innerHTML='<p class="vac">Falta la fecha del acto de comunicación.</p>'; return; }
+    if(!inp.num||inp.num<1){ box.innerHTML='<p class="vac">Indica una cantidad válida.</p>'; return; }
+    var r=window.RELOJ.computar(inp);
+    var html='<div class="dato"><span class="k">Orden</span><span class="v">'+semEsc(r.label)+'</span></div>'+
+      '<div class="dato"><span class="k">Vencimiento</span><span class="v big">'+window.RELOJ.esf(r.vencimiento)+'</span></div>';
+    if(r.gracia) html+='<div class="dato"><span class="k">Día de gracia (15:00 h)</span><span class="v">'+window.RELOJ.esf(r.gracia)+'</span></div>';
+    html+='<div class="blq"><h3>Razonamiento</h3><ol class="pasos">'+r.pasos.map(function(p){return '<li>'+semEsc(p)+'</li>';}).join('')+'</ol></div>';
+    if(r.avisos&&r.avisos.length) html+='<div class="blq"><h3>Avisos</h3><ul class="avisos">'+r.avisos.map(function(a){return '<li>'+semEsc(a)+'</li>';}).join('')+'</ul></div>';
+    box.innerHTML=html;
+  }catch(e){ box.innerHTML='<p class="vac">Error en el cálculo: '+semEsc(e.message)+'</p>'; console.error(e); }
+  finally{ try{ box.scrollIntoView({behavior:'smooth', block:'center'}); }catch(_){ } }
+}
+
+/* ---- MASC: poblar órdenes y tipos desde el CONFIG del motor ---- */
+function mascInit(){
+  var cfg=window.MASC._CONFIG, selO=document.getElementById('m-orden');
+  ['civil','social','contencioso','penal'].forEach(function(o){
+    if(!cfg[o]) return;
+    var op=document.createElement('option'); op.value=o; op.textContent=cfg[o].label; selO.appendChild(op);
+  });
+  mascSync();
+}
+function mascSync(){
+  var cfg=window.MASC._CONFIG, o=elv('m-orden'), c=cfg[o];
+  var noap=document.getElementById('m-noaplica'), campos=document.getElementById('m-campos'), btn=document.getElementById('m-btn');
+  if(c && c.noAplica){
+    noap.textContent=c.nota; noap.classList.remove('oculto');
+    campos.classList.add('oculto'); btn.classList.add('oculto'); return;
+  }
+  noap.classList.add('oculto'); campos.classList.remove('oculto'); btn.classList.remove('oculto');
+  // tipos de MASC del orden
+  var selT=document.getElementById('m-tipomasc'); selT.innerHTML='';
+  var ms=(c&&c.masc)||{};
+  Object.keys(ms).forEach(function(k){ var op=document.createElement('option'); op.value=k; op.textContent=ms[k].label; selT.appendChild(op); });
+  // campos dependientes de la forma de terminación
+  var forma=elv('m-forma');
+  document.getElementById('m-wrap-term').classList.toggle('oculto', forma!=='terminacion_sin_acuerdo');
+  document.getElementById('m-wrap-prop').classList.toggle('oculto', forma!=='propuesta_sin_respuesta');
+  // campos por orden
+  document.querySelectorAll('.op-social-masc').forEach(function(e){e.classList.toggle('oculto', o!=='social');});
+  document.querySelectorAll('.op-civil-masc').forEach(function(e){e.classList.toggle('oculto', o!=='civil');});
+}
+function calcularMasc(){
+  var box=document.getElementById('m-res');
+  try{
+    var o=elv('m-orden');
+    var inp={ orden:o, tipoMASC:elv('m-tipomasc'), tipoPlazoAccion:elv('m-tipoplazo'),
+      fechaSolicitud:elv('m-solicitud')||null, fechaRecepcion:elv('m-recepcion')||null,
+      formaTerminacion:elv('m-forma'),
+      fechaTerminacion:elv('m-terminacion')||null, fechaPropuesta:elv('m-propuesta')||null,
+      fechaInicioAccion:elv('m-inicio')||null,
+      duracionAccion:elv('m-dur')?parseInt(elv('m-dur'),10):null, unidadAccion:elv('m-unidad'),
+      cautelares:elv('m-cautelares'), municipio:'madrid' };
+    if(o==='social'){ inp.fechaConciliacion = inp.fechaTerminacion; }
+    if(!inp.fechaSolicitud){ box.innerHTML='<p class="vac">Falta la fecha de solicitud / presentación del MASC.</p>'; return; }
+    var r=window.MASC.computar(inp);
+    if(r.error){ box.innerHTML='<p class="vac">'+semEsc(r.error)+'</p>'; return; }
+    if(r.noAplica){ box.innerHTML='<div class="blq"><ul class="verif"><li>'+semEsc(r.nota)+'</li></ul></div>'; return; }
+    var html='';
+    function fila(k,v,big){ if(!v) return ''; return '<div class="dato"><span class="k">'+k+'</span><span class="v'+(big?' big':'')+'">'+fechaLargaISO(v)+'</span></div>'; }
+    html+=fila('Congelación', r.fechaCongelacion);
+    html+=fila('Reanudación', r.fechaReanudacion);
+    html+=fila('Vencimiento de la acción', r.nuevoVencimientoAccion, true);
+    if(r.fechaGraciaSocial) html+=fila('Día de gracia (15:00 h)', r.fechaGraciaSocial);
+    if(r.diasConsumidosSocial!=null) html+='<div class="dato"><span class="k">Días hábiles consumidos / restantes</span><span class="v">'+r.diasConsumidosSocial+' / '+r.diasRestantesSocial+'</span></div>';
+    html+=fila('Límite de procedibilidad (ventana 1 año)', r.fechaLimiteProcedibilidad);
+    html+=fila('Límite con cautelares (20 días háb.)', r.fechaLimiteCautelares);
+    html+='<div class="blq"><h3>Razonamiento</h3><ol class="pasos">'+r.pasos.map(function(p){return '<li>'+semEsc(p)+'</li>';}).join('')+'</ol></div>';
+    if(r.avisos&&r.avisos.length) html+='<div class="blq"><h3>Avisos</h3><ul class="avisos">'+r.avisos.map(function(a){return '<li>'+semEsc(a)+'</li>';}).join('')+'</ul></div>';
+    if(r.verificacionManual&&r.verificacionManual.length) html+='<div class="blq"><h3>Verificación manual (zonas a vigilar)</h3><ul class="verif">'+r.verificacionManual.map(function(a){return '<li>'+semEsc(a)+'</li>';}).join('')+'</ul></div>';
+    box.innerHTML=html;
+  }catch(e){ box.innerHTML='<p class="vac">Error en el cálculo: '+semEsc(e.message)+'</p>'; console.error(e); }
+  finally{ try{ box.scrollIntoView({behavior:'smooth', block:'center'}); }catch(_){ } }
+}
+
+/* Init */
+relojSync(); mascInit(); contactoSync();
+// Clic en el fondo difuminado (fuera de la tarjeta) cierra el modal de envío.
+(function(){ var mf=document.getElementById('modal-envio');
+  if(mf) mf.addEventListener('click', function(e){ if(e.target===mf) cerrarModalEnvio(); }); })();
+// Clic en el fondo difuminado cierra también los modales legales.
+['modal-aviso','modal-privacidad'].forEach(function(id){
+  var mf=document.getElementById(id);
+  if(mf) mf.addEventListener('click', function(e){ if(e.target===mf) cerrarLegal(id); });
+});
+// El correo de contacto de los textos legales sale de la constante JV_DEST (anti-scraping: se pinta con JS).
+document.querySelectorAll('.jv-email').forEach(function(el){ el.textContent=jvDestino(); });
+// Fecha por defecto = hoy: evita que en movil parezca que "no hace nada" al pulsar sin fecha.
+(function(){ var f=document.getElementById('r-fecha'); if(f && !f.value){ var d=new Date(); f.value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); } })();
+</script>
+<!--
+  NOTA INTERNA (no visible): los textos de «Aviso legal» y «Privacidad» de esta página son un
+  BORRADOR PARA REVISIÓN DEL TITULAR (Pablo Andrés Martínez, jurista). Redactados el 10/07/2026
+  conforme al comportamiento real del código en esa fecha (sin cookies, sin analítica, sin recursos
+  de terceros, sin envío de datos a servidor). Si se añade cualquier tercero (analítica, calendarios
+  embebidos, fuentes externas...), estos textos deben revisarse ANTES de desplegar.
+-->
+</body>
+</html>

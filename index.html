@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- CSP: candado técnico de la promesa de privacidad — nada se carga ni se envía fuera (los enlaces a Gmail/Outlook son navegación, no van por red desde esta página) -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; font-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
 <title>JV Legal — Tu despacho electrónico · by Pablo Andrés Martínez</title>
 <meta name="description" content="JV Legal — Tu despacho electrónico: herramientas y automatizaciones para despachos. Calculadora de plazos procesales (5 órdenes + LPAC) y del efecto de los MASC (LO 1/2025) sobre prescripción y caducidad. Cada resultado, con su artículo. Funciona sin conexión y no guarda tus datos.">
 <!-- Open Graph / Twitter: HOY apuntan a la URL real de Pages (publicado 10-07-2026). Al comprar jvlegal.app: cambiar og:url, og:image y twitter:image al dominio + añadir CNAME al repo. -->
@@ -215,7 +217,7 @@
       <div class="marca">JV Legal <em>· tu despacho electrónico</em></div>
       <div class="firma">by Pablo Andrés Martínez</div>
     </div>
-    <div class="exp">Herramientas y automatizaciones<br>para despachos · Madrid 2025-2026</div>
+    <div class="exp">Herramientas y automatizaciones<br>para despachos</div>
   </header>
 
   <nav role="tablist" aria-label="Herramientas">
@@ -223,7 +225,7 @@
     <button class="tab" role="tab" aria-selected="false" aria-controls="tool-masc"     tabindex="-1" id="tab-masc"     onclick="abrir('masc')">Efecto MASC</button>
     <button class="tab" role="tab" aria-selected="false" aria-controls="tool-contacto" tabindex="-1" id="tab-contacto" onclick="abrir('contacto')">Contacto</button>
   </nav>
-  <p class="vigencia">Motores verificados a 16/06/2026 · Calendario de festivos: Madrid 2025-2026 · LO 1/2025 vigente</p>
+  <!-- Línea de vigencia movida a la letra pequeña del footer (orden Pablo 11-07) -->
 
   <!-- ================= RELOJ DE PLAZOS ================= -->
   <section class="tool activa" id="tool-reloj" role="tabpanel" aria-labelledby="tab-reloj">
@@ -407,8 +409,9 @@
     <button class="flink" type="button" onclick="abrirLegal('modal-aviso')">Aviso legal</button> ·
     <button class="flink" type="button" onclick="abrirLegal('modal-privacidad')">Privacidad</button>
     <p class="sobre"><b>Sobre JV Legal</b> — jurista especializado en Derecho de las nuevas tecnologías,
-    inteligencia artificial y automatización para despachos. Construyo motores deterministas, programados y
+    inteligencia artificial y automatización para despachos. Construyo CRMs y motores deterministas, programados y
     contrastados con las leyes y la jurisprudencia, que citan el artículo aplicable en cada paso.</p>
+    <p class="sobre" style="opacity:.75">Motores verificados a 16/06/2026 · Calendario de festivos: Madrid 2025-2026 · LO 1/2025 vigente</p>
   </footer>
 </div>
 
@@ -499,7 +502,12 @@
       </ul>
       <p>Si eliges «Gmail» u «Outlook» en el modal de envío, se abre tu propio webmail en una pestaña nueva:
       esa navegación se rige por la política de privacidad de tu proveedor de correo, no por la de este sitio.</p>
-      <p class="legal-fecha">Última revisión: 10/07/2026.</p>
+      <p><b>Alojamiento.</b> Este sitio se sirve como página estática desde GitHub Pages (GitHub, Inc.).
+      Como cualquier alojamiento web, GitHub puede registrar temporalmente direcciones IP en sus registros
+      técnicos por motivos de seguridad; el titular de este sitio no accede a esos registros ni los utiliza.
+      Además, una política de seguridad del navegador (CSP) impide técnicamente que la página cargue o envíe
+      nada a servidores externos.</p>
+      <p class="legal-fecha">Última revisión: 11/07/2026.</p>
     </div>
   </div>
 </div>

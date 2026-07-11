@@ -392,11 +392,15 @@
         <p class="hint">Este formulario no envía nada por sí solo ni guarda datos: redacta un correo en tu
         dispositivo y solo se envía si tú lo mandas desde tu propio correo.</p>
         <button class="btn" id="c-btn" onclick="enviarContacto()">Preparar correo</button>
-        <!-- Cal.com añadido 11-07-2026 (enlaces facilitados por Pablo). Enlaces de navegación directa,
-        NO fetch/XHR: no los bloquea la CSP (connect-src) porque no son peticiones desde esta página. -->
-        <p class="hint" style="margin-top:12px">¿Prefieres hablar directamente?
-        <a href="https://cal.com/pablo-jvlegal/15min" target="_blank" rel="noopener">Reserva una consulta de 15 min</a>
-        (o <a href="https://cal.com/pablo-jvlegal/30min" target="_blank" rel="noopener">30 min</a> si necesitas más tiempo).</p>
+        <!-- Cal.com añadido 11-07-2026, texto profesional/B2B afinado el mismo día (orden Pablo):
+        "reunión" en vez de "consulta" a propósito — "consulta" suena a consulta JURÍDICA, y mientras
+        Pablo no esté colegiado el encaje legal es vender la automatización, no el consejo (ver
+        working-memory / decisions-log). Enlaces de navegación directa, NO fetch/XHR: no los bloquea
+        la CSP (connect-src) porque no son peticiones desde esta página. -->
+        <p class="hint" style="margin-top:12px">¿Diriges un despacho y te interesa automatizar tareas como
+        estas? <a href="https://cal.com/pablo-jvlegal/15min" target="_blank" rel="noopener">Agenda una reunión
+        gratuita de 15 min</a> (o <a href="https://cal.com/pablo-jvlegal/30min" target="_blank" rel="noopener">30
+        min</a> si prefieres más tiempo).</p>
         <!-- URL del perfil facilitada por Pablo el 10-07-2026 -->
         <p class="hint" style="margin-top:12px">También estoy en <a href="https://www.linkedin.com/in/pablo-andres-martinez-ricote-8279b0384" target="_blank" rel="noopener">LinkedIn</a>.</p>
         <div class="error" id="c-error"></div>

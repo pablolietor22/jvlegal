@@ -4,28 +4,52 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- CSP: candado técnico de la promesa de privacidad — nada se carga ni se envía fuera (los enlaces a Gmail/Outlook son navegación, no van por red desde esta página) -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; font-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
-<title>JV Legal — Tu despacho electrónico · by Pablo Andrés Martínez</title>
-<meta name="description" content="JV Legal — Tu despacho electrónico: herramientas y automatizaciones para despachos. Calculadora de plazos procesales (5 órdenes + LPAC) y del efecto de los MASC (LO 1/2025) sobre prescripción y caducidad. Cada resultado, con su artículo. Funciona sin conexión y no guarda tus datos.">
-<!-- Open Graph / Twitter: HOY apuntan a la URL real de Pages (publicado 10-07-2026). Al comprar jvlegal.app: cambiar og:url, og:image y twitter:image al dominio + añadir CNAME al repo. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; font-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<!-- Anti-clickjacking (reel DW5uyesgo2M, 2026-07-13). AVISO HONESTO: el navegador IGNORA frame-ancestors
+     cuando va por <meta> (spec CSP3) — la protección REAL la dan las cabeceras del archivo _headers, que
+     Netlify/Cloudflare aplican y GitHub Pages NO. En github.io esta etiqueta es decorativa, no un candado. -->
+<meta http-equiv="Content-Security-Policy" content="frame-ancestors 'none'">
+<title>Calculadora de plazos procesales y efecto MASC — JV Legal</title>
+<meta name="description" content="Calculadora de plazos procesales (4 órdenes + LPAC) y del efecto MASC (LO 1/2025), con el artículo aplicable en cada paso. Todo se calcula en tu dispositivo.">
+<!-- ═══ DÍA DEL DOMINIO — checklist completa de sustituciones (buscar «github.io» no basta) ═══
+     1. og:url, og:image y twitter:image → dominio nuevo.
+     2. <link rel="canonical"> → dominio nuevo.
+     3. "url" del JSON-LD (schema.org) → dominio nuevo.
+     4. JV_DEST (CONFIG DE MARCA, inicio del <script>) → correo de marca.
+     5. Añadir archivo CNAME al repo (GitHub Pages) o conectar dominio en el panel del hosting.
+     6. Texto «Alojamiento» de la política de Privacidad si cambia el proveedor de hosting. -->
+<link rel="canonical" href="https://pablolietor22.github.io/jvlegal/">
+<meta name="referrer" content="no-referrer">
 <meta property="og:title" content="JV Legal — Tu despacho electrónico">
-<meta property="og:description" content="Herramientas y automatizaciones para despachos: plazos procesales (5 órdenes + LPAC) y efecto MASC (LO 1/2025). Cada resultado, con su artículo. Sin conexión y sin guardar tus datos.">
+<meta property="og:description" content="Herramientas para despachos: plazos procesales (4 órdenes jurisdiccionales + LPAC) y efecto MASC (LO 1/2025). Cada resultado, con su artículo. Todo se calcula en tu dispositivo, sin guardar tus datos.">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="JV Legal">
 <meta property="og:url" content="https://pablolietor22.github.io/jvlegal/">
 <meta property="og:image" content="https://pablolietor22.github.io/jvlegal/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="JV Legal — calculadora de plazos procesales y efecto MASC">
 <meta property="og:locale" content="es_ES">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="JV Legal — Tu despacho electrónico">
-<meta name="twitter:description" content="Herramientas y automatizaciones para despachos: plazos procesales y efecto MASC (LO 1/2025), con su artículo en cada paso.">
+<meta name="twitter:description" content="Herramientas para despachos: plazos procesales y efecto MASC (LO 1/2025), con su artículo en cada paso.">
 <meta name="twitter:image" content="https://pablolietor22.github.io/jvlegal/og.png">
+<meta name="twitter:image:alt" content="JV Legal — calculadora de plazos procesales y efecto MASC">
 <meta name="theme-color" content="#F1ECE2">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"JV Legal — Tu despacho electrónico","url":"https://pablolietor22.github.io/jvlegal/","applicationCategory":"BusinessApplication","operatingSystem":"Web","inLanguage":"es-ES","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"author":{"@type":"Person","name":"Pablo Andrés Martínez"},"description":"Calculadora de plazos procesales (4 órdenes jurisdiccionales + LPAC) y del efecto de los MASC (LO 1/2025) sobre prescripción y caducidad."}
+</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23F1ECE2'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-weight='700' font-size='30' fill='%236354C8' text-anchor='middle'%3EJV%3C/text%3E%3C/svg%3E">
+<!-- Favicon rastreable (Google no lee favicons data: en resultados de búsqueda) + icono de pantalla de inicio iOS -->
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
   :root{
-    --bg:#F1ECE2; --panel:#FBF8F1; --panel2:#FFFFFF; --linea:#D9CFBE;
+    --bg:#F1ECE2; --panel:#FBF8F1; --panel2:#FFFFFF; --linea:#D9CFBE; --linea-campo:#8A8172;
     --tinta:#2A2620; --gris:#6E6657; --gris2:#9C9384;
+    /* Contraste AA: --gris2 (2,6-3,0:1) queda SOLO para decoración no textual (guiones, bordes
+       discontinuos); todo TEXTO secundario usa --gris (4,8-5,4:1). --linea-campo: borde de campos
+       de formulario ≥3:1 (WCAG 1.4.11); --linea sigue en separadores decorativos. */
     --azul:#6354C8; --acc:#6354C8;
     --verde:#2E9E57; --ambar:#C2871D; --rojo:#C53D38;
     --mono:ui-monospace,"Cascadia Mono",Consolas,Menlo,monospace;
@@ -37,19 +61,21 @@
   .wrap{max-width:880px;margin:0 auto;padding:0 20px 72px}
 
   header{padding:30px 0 0;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px}
-  .marca{font-family:var(--serif);font-size:1.8rem;letter-spacing:.01em;font-weight:700}
+  .marca{font-family:var(--serif);font-size:1.8rem;letter-spacing:.01em;font-weight:700} /* también como h1 (el reset * anula márgenes UA) */
   .marca em{font-style:italic;color:var(--azul)}
-  .exp{font-family:var(--mono);font-size:.68rem;color:var(--gris2);text-transform:uppercase;letter-spacing:.12em;text-align:right;line-height:1.5}
+  .exp{font-family:var(--mono);font-size:.68rem;color:var(--gris);text-transform:uppercase;letter-spacing:.12em;text-align:right;line-height:1.5}
 
   /* Selector de herramienta */
   nav{display:flex;gap:4px;margin:24px 0 4px;border-bottom:1px solid var(--linea);flex-wrap:wrap}
   .tab{font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;
     background:transparent;color:var(--gris);border:0;border-bottom:2px solid transparent;
     padding:12px 18px;cursor:pointer;margin-bottom:-1px}
+  /* Móvil estrecho: que las 3 pestañas quepan en UNA fila (si se parten, el subrayado del tab activo queda flotando) */
+  @media(max-width:480px){ nav{gap:0} .tab{padding:11px 9px;font-size:.68rem;letter-spacing:.03em} }
   .tab:hover{color:var(--tinta)}
   .tab[aria-selected="true"]{color:var(--azul);border-bottom-color:var(--azul);font-weight:700}
   .tab:focus-visible,.btn:focus-visible,.ej:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
-  .tagline{font-family:var(--mono);font-size:.72rem;color:var(--gris2);letter-spacing:.1em;text-transform:uppercase;margin:14px 0 22px}
+  .tagline{font-family:var(--mono);font-size:.72rem;color:var(--gris);letter-spacing:.1em;text-transform:uppercase;margin:14px 0 22px}
 
   .tool{display:none}
   .tool.activa{display:block}
@@ -62,14 +88,15 @@
 
   label{display:block;font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gris);margin:14px 0 6px}
   label:first-of-type{margin-top:0}
-  input,select,textarea{width:100%;padding:10px 12px;background:var(--panel2);border:1px solid var(--linea);
+  input,select,textarea{width:100%;padding:10px 12px;background:var(--panel2);border:1px solid var(--linea-campo);
     color:var(--tinta);font-family:var(--sans);font-size:.92rem;border-radius:6px}
   input:focus,select:focus,textarea:focus{outline:2px solid var(--azul);outline-offset:0;border-color:var(--azul)}
   textarea{min-height:170px;resize:vertical;line-height:1.6}
   .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .chk{display:flex;align-items:flex-start;gap:8px;margin:8px 0;font-family:var(--sans);font-size:.86rem;color:var(--tinta);text-transform:none;letter-spacing:0}
   .chk input{width:auto;margin-top:3px}
-  .hint{font-size:.78rem;color:var(--gris2);margin-top:5px;line-height:1.5}
+  .hint{font-size:.78rem;color:var(--gris);margin-top:5px;line-height:1.5}
+  .glabel{display:block;font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gris);margin:16px 0 6px}
   .oculto{display:none}
 
   .btn{font-family:var(--mono);font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;background:var(--azul);
@@ -83,14 +110,15 @@
 
   /* Resultados */
   .res{margin-top:2px}
-  .vac{color:var(--gris2);font-size:.9rem;font-style:italic}
+  .vac{color:var(--gris);font-size:.9rem;font-style:italic}
+  .vac-err{padding:11px 13px;border:1px solid var(--rojo);color:#8A2A26;background:rgba(197,61,56,.09);border-radius:6px;font-size:.85rem}
   .dato{display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--linea);align-items:baseline}
   .dato:last-child{border-bottom:0}
   .dato .k{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--gris)}
   .dato .v{font-family:var(--mono);font-size:1.02rem;color:var(--tinta);text-align:right;font-weight:600}
   .dato .v.big{font-size:1.22rem;color:var(--azul);font-weight:700}
   .blq{margin-top:18px}
-  .blq h3{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gris2);margin-bottom:8px}
+  .blq h3{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gris);margin-bottom:8px}
   .pasos{list-style:none;counter-reset:p}
   .pasos li{counter-increment:p;position:relative;padding:6px 0 6px 26px;font-size:.86rem;color:var(--tinta);border-bottom:1px dotted var(--linea)}
   .pasos li::before{content:counter(p);position:absolute;left:0;top:6px;font-family:var(--mono);font-size:.7rem;color:var(--azul);font-weight:700}
@@ -109,7 +137,7 @@
     @keyframes estampar{from{transform:rotate(-2deg) scale(1.6);opacity:0}to{transform:rotate(-2deg) scale(1);opacity:1}}
   }
   .campo{margin-bottom:14px}
-  .campo h3{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gris2);margin-bottom:5px}
+  .campo h3{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gris);margin-bottom:5px}
   .campo p,.campo li{font-size:.92rem}
   .campo ul{list-style:none}
   .campo li{padding-left:18px;position:relative;margin-bottom:5px}
@@ -121,8 +149,8 @@
   .meta{margin-top:14px;padding:8px 11px;background:rgba(99,84,200,.08);border-left:3px solid var(--azul);border-radius:4px;font-family:var(--mono);font-size:.7rem;color:var(--gris);letter-spacing:.04em;line-height:1.7}
   .meta b{color:var(--tinta);font-weight:600}
 
-  footer{margin-top:48px;border-top:1px solid var(--linea);padding-top:16px;font-family:var(--mono);font-size:.66rem;letter-spacing:.04em;color:var(--gris2);line-height:1.8}
-  footer b{color:var(--gris)}
+  footer{margin-top:48px;border-top:1px solid var(--linea);padding-top:16px;font-family:var(--mono);font-size:.66rem;letter-spacing:.04em;color:var(--gris);line-height:1.8}
+  footer b{color:var(--tinta)}
 
   /* ---- Contacto: campos guiados y vista previa editable ---- */
   .campos-guia{margin-top:4px}
@@ -139,7 +167,8 @@
     background:rgba(42,38,32,.42);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
   .modal-fondo.abierto{display:flex}
   .modal{background:var(--panel);border:1px solid var(--linea);border-radius:14px;width:100%;max-width:440px;
-    padding:26px 24px 22px;box-shadow:0 24px 60px rgba(42,38,32,.30);position:relative}
+    padding:26px 24px 22px;box-shadow:0 24px 60px rgba(42,38,32,.30);position:relative;
+    max-height:90vh;overflow:auto} /* pantallas bajas (móvil apaisado): que la X y las opciones no queden cortadas */
   @media (prefers-reduced-motion:no-preference){
     .modal-fondo.abierto .modal{animation:modalIn .22s cubic-bezier(.2,1.1,.3,1) both}
     @keyframes modalIn{from{transform:translateY(14px) scale(.97);opacity:0}to{transform:none;opacity:1}}
@@ -159,15 +188,16 @@
     background:rgba(99,84,200,.10);font-size:1.15rem}
   .opt .txt{display:flex;flex-direction:column;gap:1px}
   .opt .txt b{font-size:.95rem;font-weight:600}
-  .opt .txt span{font-size:.76rem;color:var(--gris2)}
-  .modal-pie{margin-top:16px;font-family:var(--mono);font-size:.68rem;color:var(--gris2);letter-spacing:.03em;
+  .opt .txt span{font-size:.76rem;color:var(--gris)}
+  .opt .txt .avisolargo{display:block;color:#7A5310;font-size:.72rem;margin-top:2px}
+  .modal-pie{margin-top:16px;font-family:var(--mono);font-size:.68rem;color:var(--gris);letter-spacing:.03em;
     text-align:center;line-height:1.6}
-  .modal-pie b{color:var(--gris)}
-  #c-copia-modal{font-size:.78rem;color:var(--verde);text-align:center;margin-top:12px;min-height:1.2em;font-weight:600}
+  .modal-pie b{color:var(--tinta)}
+  #c-copia-modal{font-size:.78rem;color:#1F7A40;text-align:center;margin-top:12px;min-height:1.2em;font-weight:600}
 
   /* ---- Branding ---- */
-  .firma{font-family:var(--mono);font-size:.66rem;color:var(--gris2);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
-  .vigencia{font-family:var(--mono);font-size:.64rem;color:var(--gris2);letter-spacing:.06em;margin:10px 0 0;text-transform:uppercase}
+  .firma{font-family:var(--mono);font-size:.66rem;color:var(--gris);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+  .vigencia{font-family:var(--mono);font-size:.64rem;color:var(--gris);letter-spacing:.06em;margin:10px 0 0;text-transform:uppercase}
 
   /* ---- Credibilidad: "Cómo se ha verificado" ---- */
   details.verificado{margin-top:22px;border:1px dashed var(--linea);border-radius:8px;padding:10px 14px;background:rgba(251,248,241,.6)}
@@ -180,7 +210,7 @@
   .flink{background:none;border:0;padding:0;cursor:pointer;font:inherit;color:var(--gris);text-decoration:underline;letter-spacing:inherit}
   .flink:hover{color:var(--azul)}
   .flink:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
-  .sobre{margin-top:10px;color:var(--gris2);text-transform:none;letter-spacing:.02em}
+  .sobre{margin-top:10px;color:var(--gris);text-transform:none;letter-spacing:.02em}
 
   /* ---- Modal legal (aviso legal / privacidad) ---- */
   .modal.modal-legal{max-width:640px;max-height:86vh;overflow:auto}
@@ -190,18 +220,29 @@
   .legal-cuerpo ul{list-style:none;margin-bottom:10px}
   .legal-cuerpo li{padding-left:16px;position:relative;margin-bottom:4px}
   .legal-cuerpo li::before{content:"—";position:absolute;left:0;color:var(--gris2)}
-  .legal-fecha{font-family:var(--mono);font-size:.68rem;color:var(--gris2);margin-top:14px}
+  .legal-fecha{font-family:var(--mono);font-size:.68rem;color:var(--gris);margin-top:14px}
 
   /* ---- Robustez móvil: textos largos en la tabla de resultado ---- */
   .dato .v{overflow-wrap:anywhere}
+
+  /* ---- Scroll-reveal sobrio (spec A2/A3, reel DaYet-0T-TV, 13-07-2026): "documento que se revela" ----
+       IntersectionObserver PURO del navegador — cero librerías, cero CDN, la CSP no se toca.
+       El estado oculto SOLO existe si el JS del <head> marcó <html class="jv-anim">: sin JavaScript,
+       o con "reducir movimiento" activado en el sistema, la página se ve entera desde el primer instante. */
+  html.jv-anim .jv-reveal{opacity:0;transform:translateY(12px)}
+  html.jv-anim .jv-reveal.jv-vis{opacity:1;transform:none;transition:opacity .55s ease-out,transform .55s ease-out}
+  /* Al imprimir, todo visible aunque no se haya hecho scroll (los juristas imprimen). */
+  @media print{ html.jv-anim .jv-reveal{opacity:1 !important;transform:none !important} }
 
   /* ---- Impresión: resultado limpio (los juristas imprimen) ---- */
   @media print{
     body{background:#fff;color:#000}
     .wrap{max-width:100%;padding:0}
-    nav,.btn,.ejs,.modal-fondo,.error,details.verificado,.flink,.hint{display:none!important}
+    nav,.btn,.ejs,.modal-fondo,.error,details.verificado,.flinks,.hint,.meta{display:none!important}
     .grid.dos{grid-template-columns:1fr}
-    .grid.dos>.card:first-child{display:none}
+    /* Solo en las calculadoras se oculta el formulario al imprimir (el resultado es lo que vale);
+       en Contacto NO: ocultarlo dejaría la impresión casi vacía. */
+    #tool-reloj .grid.dos>.card:first-child,#tool-masc .grid.dos>.card:first-child{display:none}
     .card{border:1px solid #999;background:#fff;break-inside:avoid}
     .avisos li{background:#fff;border:1px solid #C2871D}
     .verif li{background:#fff;border:1px solid #6354C8}
@@ -209,18 +250,39 @@
     footer b{color:#000}
   }
 </style>
+<script>
+/* Scroll-reveal (spec A2/A3): interruptor de seguridad. Solo si el navegador tiene IntersectionObserver
+   y el usuario NO pidió "reducir movimiento" se marca <html class="jv-anim">, que es lo único que activa
+   el estado oculto del CSS. Va en el <head> para decidirse ANTES del primer pintado (sin parpadeo).
+   Si este script no corre (JS roto, navegador viejo), no se oculta nada: la página se ve como siempre. */
+try{
+  if('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    document.documentElement.classList.add('jv-anim');
+  }
+}catch(_){/* ante la duda, sin animación y todo visible */}
+/* Frame-buster: la única defensa anti-clickjacking que FUNCIONA en GitHub Pages
+   (frame-ancestors por <meta> es inerte y Pages ignora _headers). Si un tercero embebe
+   la página en un iframe, salta al nivel superior; si el sandbox lo impide, se oculta (fail-safe). */
+try{
+  if(window.top!==window.self){
+    try{ window.top.location=window.location.href; }
+    catch(_e){ document.documentElement.style.display='none'; }
+  }
+}catch(_){/* nunca romper la carga por esta defensa */}
+</script>
 </head>
 <body>
 <div class="wrap">
-  <header>
+  <!-- jv-reveal = pieza que entra con el scroll-reveal sobrio (ver CSS y el bloque al final del script) -->
+  <header class="jv-reveal">
     <div>
-      <div class="marca">JV Legal <em>· tu despacho electrónico</em></div>
+      <h1 class="marca">JV Legal <em>· tu despacho electrónico</em></h1>
       <div class="firma">by Pablo Andrés Martínez</div>
     </div>
     <div class="exp">Herramientas y automatizaciones para despachos</div>
   </header>
 
-  <nav role="tablist" aria-label="Herramientas">
+  <nav class="jv-reveal" role="tablist" aria-label="Herramientas">
     <button class="tab" role="tab" aria-selected="true"  aria-controls="tool-reloj"    tabindex="0"  id="tab-reloj"    onclick="abrir('reloj')">Reloj de plazos</button>
     <button class="tab" role="tab" aria-selected="false" aria-controls="tool-masc"     tabindex="-1" id="tab-masc"     onclick="abrir('masc')">Efecto MASC</button>
     <button class="tab" role="tab" aria-selected="false" aria-controls="tool-contacto" tabindex="-1" id="tab-contacto" onclick="abrir('contacto')">Contacto</button>
@@ -229,9 +291,9 @@
 
   <!-- ================= RELOJ DE PLAZOS ================= -->
   <section class="tool activa" id="tool-reloj" role="tabpanel" aria-labelledby="tab-reloj">
-    <p class="tagline">Cómputo de plazos procesales y sustantivos · 5 órdenes + procedimiento administrativo común</p>
+    <p class="tagline jv-reveal">Cómputo de plazos procesales y sustantivos · 4 órdenes jurisdiccionales + procedimiento administrativo común</p>
     <div class="grid dos">
-      <div class="card">
+      <div class="card jv-reveal">
         <h2>Datos del plazo</h2>
         <label for="r-orden">Orden / vía</label>
         <select id="r-orden" onchange="relojSync()">
@@ -247,16 +309,17 @@
           <option value="sustantivo">Sustantivo / civil (días naturales, art. 5 CC)</option>
         </select>
         <div class="row">
-          <div><label for="r-num">Cantidad</label><input id="r-num" type="number" min="1" value="20"></div>
+          <div><label for="r-num">Duración del plazo</label><input id="r-num" type="number" min="1" value="20"></div>
           <div><label for="r-unidad">Unidad</label>
             <select id="r-unidad"><option value="dias">días</option><option value="meses">meses</option><option value="anios">años</option></select>
           </div>
         </div>
-        <label for="r-fecha">Fecha del acto de comunicación</label>
+        <label for="r-fecha">Fecha de la notificación / acto de comunicación</label>
         <input id="r-fecha" type="date">
+        <p class="hint">Festivos aplicados: Madrid capital 2025-2026. Si tu partido judicial está en otro municipio, verifica sus festivos locales y autonómicos.</p>
         <div id="r-opts">
-          <label style="margin-top:16px">Opciones (según el caso)</label>
-          <div class="chk"><input type="checkbox" id="r-lexnet"><label for="r-lexnet" style="margin:0">Notificación a procurador/LexNET (art. 151.2 LEC): efecto el día hábil siguiente</label></div>
+          <span class="glabel">Opciones (según el caso)</span>
+          <div class="chk op-judicial"><input type="checkbox" id="r-lexnet"><label for="r-lexnet" style="margin:0">Notificación a procurador/LexNET (art. 151.2 LEC): efecto el día hábil siguiente</label></div>
           <div class="chk op-civil"><input type="checkbox" id="r-urgente"><label for="r-urgente" style="margin:0">Actuación urgente (art. 131 LEC): agosto hábil</label></div>
           <div class="chk op-social oculto"><input type="checkbox" id="r-materia"><label for="r-materia" style="margin:0">Materia exceptuada del art. 43.4 LJS (despido, etc.): agosto hábil</label></div>
           <div class="chk op-penal oculto"><input type="checkbox" id="r-instr"><label for="r-instr" style="margin:0">Fase de instrucción: agosto hábil</label></div>
@@ -264,23 +327,22 @@
         </div>
         <button class="btn" onclick="calcularReloj()">Calcular plazo</button>
       </div>
-      <div class="card">
+      <div class="card jv-reveal">
         <h2>Resultado</h2>
-        <div class="res" id="r-res"><p class="vac">Introduce los datos y pulsa «Calcular plazo».</p></div>
+        <div class="res" id="r-res" tabindex="-1"><p class="vac">Introduce los datos y pulsa «Calcular plazo».</p></div>
       </div>
     </div>
-    <!-- "Cómo se ha verificado" retirado a petición de Pablo 10-07-2026 (restaurable desde _BAK\jvlegal_suite.html.BAK_2026-07-10_pre_ajedrez_dudas) -->
   </section>
 
   <!-- ================= EFECTO MASC ================= -->
   <section class="tool" id="tool-masc" role="tabpanel" aria-labelledby="tab-masc">
-    <p class="tagline">Efecto de los MASC (LO 1/2025) sobre prescripción y caducidad · suspensión, reanudación y ventana de procedibilidad</p>
+    <p class="tagline jv-reveal">Efecto de los MASC (LO 1/2025) sobre prescripción y caducidad · suspensión, reanudación y ventana de procedibilidad</p>
     <div class="grid dos">
-      <div class="card">
+      <div class="card jv-reveal">
         <h2>Datos del MASC</h2>
         <label for="m-orden">Orden jurisdiccional</label>
         <select id="m-orden" onchange="mascSync()"></select>
-        <div id="m-noaplica" class="hint oculto"></div>
+        <div id="m-noaplica" class="hint oculto" role="status"></div>
         <div id="m-campos">
           <label for="m-tipomasc">Tipo de MASC</label>
           <select id="m-tipomasc"></select>
@@ -291,7 +353,8 @@
           </select>
           <label for="m-solicitud">Fecha de solicitud / presentación del MASC</label>
           <input id="m-solicitud" type="date">
-          <label for="m-recepcion">Fecha de recepción por la otra parte <span style="text-transform:none;color:var(--gris2)">(si aplica)</span></label>
+          <p class="hint">Festivos aplicados: Madrid capital 2025-2026. Si tu partido judicial está en otro municipio, verifica sus festivos locales y autonómicos.</p>
+          <label for="m-recepcion">Fecha de recepción por la otra parte <span style="text-transform:none;color:var(--gris)">(en su caso)</span></label>
           <input id="m-recepcion" type="date">
           <label for="m-forma">Cómo termina el MASC</label>
           <select id="m-forma" onchange="mascSync()">
@@ -321,24 +384,29 @@
         </div>
         <button class="btn" id="m-btn" onclick="calcularMasc()">Calcular efecto</button>
       </div>
-      <div class="card">
+      <div class="card jv-reveal">
         <h2>Resultado</h2>
-        <div class="res" id="m-res"><p class="vac">Introduce los datos y pulsa «Calcular efecto».</p></div>
+        <div class="res" id="m-res" tabindex="-1"><p class="vac">Introduce los datos y pulsa «Calcular efecto».</p></div>
       </div>
     </div>
-    <!-- "Cómo se ha verificado" retirado a petición de Pablo 10-07-2026 (restaurable desde _BAK\jvlegal_suite.html.BAK_2026-07-10_pre_ajedrez_dudas) -->
   </section>
 
   <!-- ================= CONTACTO ================= -->
   <section class="tool" id="tool-contacto" role="tabpanel" aria-labelledby="tab-contacto">
-    <p class="tagline">¿Una duda sobre una herramienta? ¿Quieres una app como esta? · escríbeme</p>
+    <p class="tagline jv-reveal">¿Una duda? ¿Automatizamos tu despacho? · escríbeme o agenda una reunión de 15 min</p>
     <div class="grid dos">
-      <div class="card">
+      <div class="card jv-reveal">
+        <!-- Enlaces de navegación directa, NO fetch/XHR: la CSP (connect-src) no los bloquea. -->
+        <p class="meta">¿Diriges un despacho y quieres automatizar tareas como estas?
+        <a href="https://cal.com/pablo-jvlegal/15min" target="_blank" rel="noopener">Agenda una reunión
+        gratuita de 15 min</a> (o <a href="https://cal.com/pablo-jvlegal/30min" target="_blank" rel="noopener">30
+        min</a>) — sin compromiso.</p>
         <h2>Explica con tus palabras</h2>
         <label for="c-motivo">¿Sobre qué quieres escribirme?</label>
         <select id="c-motivo" onchange="contactoSync()">
           <option value="duda">Tengo una duda sobre una herramienta</option>
-          <option value="app">Quiero una app como esta (legaltech / Python)</option>
+          <option value="despacho">Quiero automatizar tareas de mi despacho</option>
+          <option value="app">Quiero una app como esta (legaltech)</option>
           <option value="otro">Otro</option>
         </select>
 
@@ -360,11 +428,12 @@
             <option value="Tengo una sugerencia de mejora">Tengo una sugerencia de mejora</option>
             <option value="Otra">Otra</option>
           </select>
+          <div class="chk oculto" id="c-wrap-calc"><input type="checkbox" id="c-adjcalc"><label for="c-adjcalc" style="margin:0">Incluir los datos de mi último cálculo (para que pueda reproducirlo)</label></div>
         </div>
 
         <!-- Campos guiados para "app" -->
         <div class="campos-guia mot-app oculto">
-          <label for="c-sector">Tipo de herramienta o sector <span style="text-transform:none;color:var(--gris2)">(opcional)</span></label>
+          <label for="c-sector">Tipo de herramienta, tarea o área <span style="text-transform:none;color:var(--gris)">(opcional)</span></label>
           <input id="c-sector" type="text" placeholder="p. ej. gestión de plazos, contratos, inmobiliario…">
           <label for="c-paraquien">¿Para quién sería?</label>
           <select id="c-paraquien">
@@ -383,44 +452,34 @@
           </select>
         </div>
 
-        <label for="c-nombre">Tu nombre <span style="text-transform:none;color:var(--gris2)">(opcional)</span></label>
+        <label for="c-nombre">Tu nombre <span style="text-transform:none;color:var(--gris)">(opcional)</span></label>
         <input id="c-nombre" type="text" placeholder="Cómo te llamas">
-        <label for="c-emailresp">Tu correo de contacto <span style="text-transform:none;color:var(--gris2)">(opcional, para que pueda responderte)</span></label>
+        <label for="c-emailresp">Tu correo de contacto <span style="text-transform:none;color:var(--gris)">(opcional, para que pueda responderte)</span></label>
         <input id="c-emailresp" type="email" placeholder="tucorreo@ejemplo.com" autocomplete="email">
         <label for="c-texto">Cuéntame con tus palabras</label>
         <textarea id="c-texto" placeholder="Explica tu duda o qué necesitas."></textarea>
         <p class="hint">Este formulario no envía nada por sí solo ni guarda datos: redacta un correo en tu
         dispositivo y solo se envía si tú lo mandas desde tu propio correo.</p>
         <button class="btn" id="c-btn" onclick="enviarContacto()">Preparar correo</button>
-        <!-- Cal.com añadido 11-07-2026, texto profesional/B2B afinado el mismo día (orden Pablo):
-        "reunión" en vez de "consulta" a propósito — "consulta" suena a consulta JURÍDICA, y mientras
-        Pablo no esté colegiado el encaje legal es vender la automatización, no el consejo (ver
-        working-memory / decisions-log). Enlaces de navegación directa, NO fetch/XHR: no los bloquea
-        la CSP (connect-src) porque no son peticiones desde esta página. -->
-        <p class="hint" style="margin-top:12px">¿Diriges un despacho y te interesa automatizar tareas como
-        estas? <a href="https://cal.com/pablo-jvlegal/15min" target="_blank" rel="noopener">Agenda una reunión
-        gratuita de 15 min</a> (o <a href="https://cal.com/pablo-jvlegal/30min" target="_blank" rel="noopener">30
-        min</a> si prefieres más tiempo).</p>
-        <!-- URL del perfil facilitada por Pablo el 10-07-2026 -->
         <p class="hint" style="margin-top:12px">También estoy en <a href="https://www.linkedin.com/in/pablo-andres-martinez-ricote-8279b0384" target="_blank" rel="noopener">LinkedIn</a>.</p>
-        <div class="error" id="c-error"></div>
+        <div class="error" id="c-error" role="alert"></div>
       </div>
-      <div class="card">
+      <div class="card jv-reveal">
         <h2>Tu correo</h2>
-        <div class="res" id="c-out"><p class="vac">Rellena el formulario y pulsa «Preparar correo». Aquí aparecerá el mensaje ya redactado y editable, con un botón para elegir cómo enviarlo (Gmail, Outlook, tu app de correo o copiarlo).</p></div>
+        <div class="res" id="c-out" tabindex="-1"><p class="vac">Rellena el formulario y pulsa «Preparar correo». Aquí aparecerá el mensaje ya redactado y editable, con un botón para elegir cómo enviarlo (Gmail, Outlook, tu app de correo o copiarlo).</p></div>
       </div>
     </div>
   </section>
 
-  <footer>
+  <footer class="jv-reveal">
     <b>SALIDA ORIENTATIVA.</b> No constituye asesoramiento jurídico.<br>
-    <b>JV Legal — Tu despacho electrónico</b> · by Pablo Andrés Martínez · © 2026 ·
+    <b>JV Legal — Tu despacho electrónico</b> · by Pablo Andrés Martínez · © 2026<span class="flinks"> ·
     <button class="flink" type="button" onclick="abrirLegal('modal-aviso')">Aviso legal</button> ·
-    <button class="flink" type="button" onclick="abrirLegal('modal-privacidad')">Privacidad</button>
-    <p class="sobre"><b>Sobre JV Legal</b> — jurista especializado en Derecho de las nuevas tecnologías,
+    <button class="flink" type="button" onclick="abrirLegal('modal-privacidad')">Privacidad</button></span>
+    <p class="sobre"><b>Sobre JV Legal</b> — proyecto de un jurista especializado en Derecho de las nuevas tecnologías,
     inteligencia artificial y automatización para despachos. Construyo CRMs y motores deterministas, programados y
     contrastados con las leyes y la jurisprudencia, que citan el artículo aplicable en cada paso.</p>
-    <p class="sobre" style="opacity:.75">Motores verificados a 16/06/2026 · Calendario de festivos: Madrid 2025-2026 · LO 1/2025 vigente</p>
+    <p class="sobre">Motores verificados a 16/06/2026 · Página revisada el 18/07/2026 · Calendario de festivos: Madrid 2025-2026 · LO 1/2025 vigente</p>
   </footer>
 </div>
 
@@ -433,19 +492,23 @@
     <div class="opt-envio">
       <a class="opt" id="opt-gmail" href="#" target="_blank" rel="noopener" onclick="cerrarModalEnvio()">
         <span class="ico" aria-hidden="true">✉️</span>
-        <span class="txt"><b>Gmail (navegador)</b><span>Se abre en una pestaña nueva</span></span>
+        <span class="txt"><b>Gmail (navegador)</b><span>Se abre en una pestaña nueva</span><span class="avisolargo oculto" id="aviso-gmail">Mensaje largo: esta vía puede recortarlo — mejor «Copiar el mensaje»</span></span>
       </a>
       <a class="opt" id="opt-outlook" href="#" target="_blank" rel="noopener" onclick="cerrarModalEnvio()">
+        <span class="ico" aria-hidden="true">💼</span>
+        <span class="txt"><b>Outlook del trabajo</b><span>Cuentas de empresa (Microsoft 365)</span><span class="avisolargo oculto" id="aviso-outlook">Mensaje largo: esta vía puede recortarlo — mejor «Copiar el mensaje»</span></span>
+      </a>
+      <a class="opt" id="opt-outlookp" href="#" target="_blank" rel="noopener" onclick="cerrarModalEnvio()">
         <span class="ico" aria-hidden="true">📧</span>
-        <span class="txt"><b>Outlook (navegador)</b><span>Para cuentas Outlook / Office 365</span></span>
+        <span class="txt"><b>Outlook / Hotmail personal</b><span>Cuentas outlook.com, hotmail.com, live.com</span><span class="avisolargo oculto" id="aviso-outlookp">Mensaje largo: esta vía puede recortarlo — mejor «Copiar el mensaje»</span></span>
       </a>
       <a class="opt" id="opt-mailto" href="#" onclick="cerrarModalEnvio()">
         <span class="ico" aria-hidden="true">💻</span>
-        <span class="txt"><b>Mi app de correo</b><span>Deja el borrador en tu programa de correo</span></span>
+        <span class="txt"><b>Mi app de correo</b><span>Deja el borrador en tu programa de correo</span><span class="avisolargo oculto" id="aviso-mailto">Mensaje largo: esta vía puede recortarlo — mejor «Copiar el mensaje»</span></span>
       </a>
       <button class="opt" type="button" onclick="copiarMensaje()">
         <span class="ico" aria-hidden="true">📋</span>
-        <span class="txt"><b>Copiar el mensaje</b><span>Lo copia y te muestra la dirección</span></span>
+        <span class="txt"><b>Copiar el mensaje</b><span>Copia dirección, asunto y mensaje completos</span></span>
       </button>
     </div>
     <p id="c-copia-modal" role="status" aria-live="polite"></p>
@@ -465,8 +528,10 @@
       <h4>Finalidad del sitio</h4>
       <p>Divulgación y demostración de herramientas jurídicas propias: un despacho electrónico con
       automatizaciones para despachos (cálculo de plazos procesales y del efecto de los MASC). El sitio no
-      constituye ejercicio profesional de la abogacía ni actividad económica: no hay venta, publicidad de
-      terceros ni contratación a través de esta página.</p>
+      constituye ejercicio profesional de la abogacía: no se presta asesoramiento jurídico ni se realiza
+      venta o contratación a través de esta página. La pestaña «Contacto» permite únicamente solicitar
+      información sobre las herramientas o sobre desarrollos a medida; cualquier eventual encargo se
+      trataría fuera de este sitio.</p>
       <h4>Responsabilidad sobre los resultados</h4>
       <p>Las herramientas ofrecen <b>resultados orientativos</b>, generados por motores deterministas que citan
       la norma aplicada en cada paso. <b>No constituyen asesoramiento jurídico</b> ni sustituyen el juicio de un
@@ -476,7 +541,7 @@
       <h4>Propiedad intelectual</h4>
       <p>Los textos, el diseño y los motores de cálculo de este sitio son obra de su titular. Puedes enlazar la
       página libremente; para reutilizar los contenidos, escribe al correo de contacto.</p>
-      <p class="legal-fecha">Última revisión: 10/07/2026.</p>
+      <p class="legal-fecha">Última revisión: 18/07/2026.</p>
     </div>
   </div>
 </div>
@@ -502,23 +567,27 @@
       tú lo mandes desde tu propio correo. Si lo envías, se aplica lo siguiente (arts. 6.1.a y 13 RGPD):</p>
       <ul>
         <li><b>Responsable:</b> Pablo Andrés Martínez (<span class="jv-email">—</span>).</li>
-        <li><b>Finalidad:</b> atender y responder tu consulta. Nada más.</li>
+        <li><b>Finalidad:</b> atender y responder tu mensaje. Nada más.</li>
         <li><b>Base jurídica:</b> tu consentimiento, manifestado al enviar el correo por iniciativa propia.</li>
-        <li><b>Conservación:</b> el tiempo necesario para atender la consulta, en el propio buzón de correo.</li>
+        <li><b>Conservación:</b> el tiempo necesario para atender el mensaje, en el propio buzón de correo
+        (una cuenta de Gmail; Google actúa como proveedor de ese servicio de correo).</li>
         <li><b>Destinatarios:</b> ninguno; no se ceden datos a terceros ni hay decisiones automatizadas.</li>
         <li><b>Derechos:</b> acceso, rectificación, supresión, oposición, limitación y portabilidad, escribiendo
         al mismo correo. También puedes reclamar ante la AEPD (aepd.es).</li>
       </ul>
-      <p>Si eliges «Gmail» u «Outlook» en el modal de envío, se abre tu propio webmail en una pestaña nueva:
-      esa navegación se rige por la política de privacidad de tu proveedor de correo, no por la de este sitio.
-      Lo mismo si reservas una consulta por el enlace de Cal.com: esa página es de un tercero (Cal.com) y se
+      <p>Si eliges «Gmail» u «Outlook» en el modal de envío, se abre tu propio webmail en una pestaña nueva
+      con el borrador ya volcado (el texto del mensaje viaja dentro de la propia dirección del enlace, y queda
+      en tu historial de navegación): esa navegación se rige por la política de privacidad de tu proveedor de
+      correo, no por la de este sitio.
+      Lo mismo si reservas una reunión por el enlace de Cal.com: esa página es de un tercero (Cal.com) y se
       rige por su propia política de privacidad, no por la de esta web — este sitio solo enlaza a ella.</p>
       <p><b>Alojamiento.</b> Este sitio se sirve como página estática desde GitHub Pages (GitHub, Inc.).
       Como cualquier alojamiento web, GitHub puede registrar temporalmente direcciones IP en sus registros
       técnicos por motivos de seguridad; el titular de este sitio no accede a esos registros ni los utiliza.
-      Además, una política de seguridad del navegador (CSP) impide técnicamente que la página cargue o envíe
-      nada a servidores externos.</p>
-      <p class="legal-fecha">Última revisión: 11/07/2026.</p>
+      Además, una política de seguridad del navegador (CSP) impide técnicamente que la página cargue recursos
+      o envíe datos por sí sola a servidores externos (los enlaces que tú decides abrir son navegación de tu
+      navegador, no envíos de esta página).</p>
+      <p class="legal-fecha">Última revisión: 18/07/2026.</p>
     </div>
   </div>
 </div>
@@ -717,7 +786,7 @@ return { computar, JUR, esInhabil, FESTIVOS, ANIOS_CARGADOS, esf, iso, parse };
   // Fuentes: Resolución estatal DG Trabajo (BOE); Decreto CAM (BOCM);
   // Acuerdo del Pleno del Ayuntamiento (festivos locales).
   var FESTIVOS = CAL_FESTIVOS;
-  var ANIOS_CARGADOS = { madrid: [2025, 2026] };
+  var ANIOS_CARGADOS = CAL_ANIOS; // única fuente de verdad (ampliar el calendario arriba actualiza AMBOS motores)
 
   /* -------------------- Helpers de fecha ----------------------------------- */
   function parse(iso) {
@@ -994,6 +1063,11 @@ return { computar, JUR, esInhabil, FESTIVOS, ANIOS_CARGADOS, esf, iso, parse };
     if (tipo === 'prescripcion') {
       // Interrupción -> reinicio ENTERO desde la reanudación.
       var nv;
+      if (inp.duracionAccion == null || isNaN(inp.duracionAccion)) {
+        avisos.push('Para la prescripción necesito la duración del plazo (p. ej. 5 años) y su unidad, ' +
+                    'porque la interrupción reinicia el plazo entero.');
+        return null;
+      }
       if (inp.fechaVencimientoOriginal && (inp.duracionAccion == null || !inp.unidadAccion)) {
         avisos.push('Para la prescripción es preferible introducir la DURACIÓN del plazo (p. ej. 5 años) ' +
                     'en vez de solo la fecha de vencimiento, porque la interrupción reinicia el plazo entero.');
@@ -1205,13 +1279,37 @@ function semEsc(t){ var d=document.createElement('div'); d.textContent=t==null?'
 /* (Semáforo de cláusulas retirado de esta versión; el triaje con IA se valorará aparte.) */
 
 /* ====================== UI: navegación + render ====================== */
+/* Desplazamiento accesible al resultado: da el foco (el lector de pantalla anuncia el contenido
+   nuevo), respeta «reducir movimiento» y en pantallas estrechas alinea al INICIO (centrar un
+   resultado más alto que la pantalla dejaría el dato clave fuera del viewport, por arriba). */
+function jvIrA(el){
+  if(!el) return;
+  try{ el.focus({preventScroll:true}); }catch(_){ }
+  try{
+    var reducir=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var estrecho=window.innerWidth<760;
+    el.scrollIntoView({behavior:reducir?'auto':'smooth', block:estrecho?'start':'center'});
+  }catch(_){ }
+}
+var __jvTabPrevia='reloj'; // pestaña activa por defecto
 function abrir(id){
+  // Al entrar en Contacto desde una calculadora: preseleccionar la herramienta (solo si el
+  // campo sigue vacío, sin pisar elecciones manuales) y refrescar la casilla del último cálculo.
+  if(id==='contacto' && __jvTabPrevia!=='contacto'){
+    var s=document.getElementById('c-herramienta');
+    if(s && s.value===''){
+      if(__jvTabPrevia==='reloj') s.value='Reloj de plazos';
+      else if(__jvTabPrevia==='masc') s.value='Efecto MASC';
+    }
+    try{ contactoSync(); }catch(_){ }
+  }
   ['reloj','masc','contacto'].forEach(function(t){
     document.getElementById('tool-'+t).classList.toggle('activa', t===id);
     var tab=document.getElementById('tab-'+t);
     tab.setAttribute('aria-selected', t===id?'true':'false');
     tab.setAttribute('tabindex', t===id?'0':'-1'); // roving tabindex (patrón WAI-ARIA tablist)
   });
+  __jvTabPrevia=id;
 }
 /* Navegación de pestañas con teclado: ←/→/Inicio/Fin (patrón WAI-ARIA tablist). */
 (function(){
@@ -1273,7 +1371,11 @@ function jvDestinoLegible(){ return JV_DEST.usuario + ' (arroba) ' + JV_DEST.dom
 function contactoSync(){
   var m=elv('c-motivo');
   document.querySelectorAll('.mot-duda').forEach(function(e){ e.classList.toggle('oculto', m!=='duda'); });
-  document.querySelectorAll('.mot-app').forEach(function(e){ e.classList.toggle('oculto', m!=='app'); });
+  // "despacho" reutiliza los campos guiados de "app" (sector/para quién/para cuándo)
+  document.querySelectorAll('.mot-app').forEach(function(e){ e.classList.toggle('oculto', m!=='app' && m!=='despacho'); });
+  // La casilla "incluir mi último cálculo" solo si el motivo es duda Y hay un cálculo que adjuntar
+  var wc=document.getElementById('c-wrap-calc');
+  if(wc) wc.classList.toggle('oculto', m!=='duda' || !window.__jvUltimoCalculo);
 }
 
 /* Lee un <select>/<input> guiado; devuelve '' si está vacío o sin elegir. */
@@ -1294,16 +1396,25 @@ function componerCorreo(){
     if(sector)    detalles.push('Tipo de herramienta o sector: ' + sector);
     if(paraquien) detalles.push('Para quién sería: ' + paraquien);
     if(plazo)     detalles.push('Para cuándo: ' + plazo);
+  } else if(motivo==='despacho'){
+    var area=gv('c-sector'), paraquien2=gv('c-paraquien'), plazo2=gv('c-plazo');
+    asunto = area ? ('Automatización para mi despacho — ' + area) : 'Automatización para mi despacho';
+    intro  = 'Trabajo en un despacho y me interesa automatizar tareas.';
+    if(area)      detalles.push('Área o tarea: ' + area);
+    if(paraquien2) detalles.push('Para quién sería: ' + paraquien2);
+    if(plazo2)    detalles.push('Para cuándo: ' + plazo2);
   } else if(motivo==='duda'){
     var herr=gv('c-herramienta'), tipo=gv('c-tipoduda');
-    asunto = (herr && herr!=='Aún no lo sé') ? ('Duda sobre ' + herr + ' — JVLegal')
-                                             : 'Duda sobre una herramienta — JVLegal';
+    asunto = (herr && herr!=='Aún no lo sé') ? ('Duda sobre ' + herr + ' — JV Legal')
+                                             : 'Duda sobre una herramienta — JV Legal';
     intro  = 'Te escribo con una duda sobre una de tus herramientas.';
     if(herr) detalles.push('Herramienta: ' + herr);
     if(tipo) detalles.push('Tipo de duda: ' + tipo);
+    var adj=document.getElementById('c-adjcalc');
+    if(adj && adj.checked && window.__jvUltimoCalculo) detalles.push('Datos de mi último cálculo: ' + window.__jvUltimoCalculo);
   } else {
-    asunto = 'Consulta · JVLegal';
-    intro  = 'Te escribo para una consulta.';
+    asunto = 'Mensaje desde JV Legal';
+    intro  = 'Te escribo desde la página de JV Legal.';
   }
 
   // Cuerpo estructurado: saludo · contexto · detalles guiados · texto libre · contacto · firma.
@@ -1314,7 +1425,7 @@ function componerCorreo(){
   partes.push('');
   partes.push(nombre ? ('Un saludo,\n' + nombre) : 'Un saludo.');
   partes.push('');
-  partes.push('(Enviado desde JVLegal Suite)');
+  partes.push('(Enviado desde la web de JV Legal)');
   return { asunto:asunto, cuerpo:partes.join('\n') };
 }
 
@@ -1325,6 +1436,11 @@ function enviarContacto(){
   var out=document.getElementById('c-out');
   err.style.display='none';
   if(!texto){ err.textContent='Escribe tu mensaje antes de preparar el correo.'; err.style.display='block'; return; }
+  // Validación nativa del correo de respuesta (type=email sin <form> no se dispara sola)
+  var em=document.getElementById('c-emailresp');
+  if(em && em.value.trim() && em.checkValidity && !em.checkValidity()){
+    err.textContent='Revisa tu correo de contacto: no parece una dirección válida.'; err.style.display='block'; return;
+  }
   var c=componerCorreo();
   out.innerHTML=
     '<div class="para-pill">Para <b>'+semEsc(jvDestinoLegible())+'</b></div>'+
@@ -1339,7 +1455,7 @@ function enviarContacto(){
   // Set via .value so the text is treated as data, never interpreted as HTML.
   document.getElementById('c-asunto-edit').value=c.asunto;
   document.getElementById('c-cuerpo-edit').value=c.cuerpo;
-  try{ out.scrollIntoView({behavior:'smooth', block:'center'}); }catch(_){}
+  jvIrA(out);
 }
 
 /* ---- Modal de envío: accesible (Esc, clic fuera, foco al abrir + trampa de foco) ---- */
@@ -1352,10 +1468,19 @@ function abrirModalEnvio(){
   var to=jvDestino();
   var toE=encodeURIComponent(to), su=encodeURIComponent(asunto), bo=encodeURIComponent(cuerpo);
   // Hrefs nativos (más robusto frente a bloqueadores de pop-ups que window.open).
-  document.getElementById('opt-gmail').href   = 'https://mail.google.com/mail/?view=cm&fs=1&to='+toE+'&su='+su+'&body='+bo;
-  document.getElementById('opt-outlook').href = 'https://outlook.office.com/mail/deeplink/compose?to='+toE+'&subject='+su+'&body='+bo;
-  document.getElementById('opt-mailto').href  = 'mailto:'+to+'?subject='+su+'&body='+bo;
-  window.__jvCuerpo=cuerpo; // para la opción "Copiar"
+  document.getElementById('opt-gmail').href    = 'https://mail.google.com/mail/?view=cm&fs=1&to='+toE+'&su='+su+'&body='+bo;
+  document.getElementById('opt-outlook').href  = 'https://outlook.office.com/mail/deeplink/compose?to='+toE+'&subject='+su+'&body='+bo;
+  document.getElementById('opt-outlookp').href = 'https://outlook.live.com/mail/deeplink/compose?to='+toE+'&subject='+su+'&body='+bo;
+  // mailto: la RFC 6068 exige CRLF (%0D%0A); con %0A a secas algunos Outlook de escritorio aplastan los párrafos
+  document.getElementById('opt-mailto').href   = 'mailto:'+to+'?subject='+su+'&body='+encodeURIComponent(cuerpo.replace(/\r?\n/g,'\r\n'));
+  window.__jvCuerpo=cuerpo; window.__jvAsunto=asunto; // para la opción "Copiar"
+  // Mensaje largo: avisar por vía (mailto se trunca ~2.000 caracteres de URL en Windows; los compose
+  // web degradan más arriba). Nunca deshabilitar ni recortar en silencio: el usuario decide informado.
+  [['aviso-gmail','opt-gmail',6000],['aviso-outlook','opt-outlook',6000],
+   ['aviso-outlookp','opt-outlookp',6000],['aviso-mailto','opt-mailto',1800]].forEach(function(par){
+    var av=document.getElementById(par[0]), op=document.getElementById(par[1]);
+    if(av && op) av.classList.toggle('oculto', op.href.length<=par[2]);
+  });
   document.getElementById('modal-para').textContent=jvDestinoLegible();
   document.getElementById('c-copia-modal').textContent='';
   __jvFocoPrevio=document.activeElement;
@@ -1379,13 +1504,31 @@ function modalTeclado(e){
     else if(!e.shiftKey && document.activeElement===ultimo){ e.preventDefault(); primero.focus(); }
   }
 }
+/* Copia de respaldo con execCommand para navegadores sin Clipboard API (equipos de despacho
+   gestionados, contextos sin HTTPS): textarea temporal fuera de pantalla, select + copy. */
+function copiarFallback(t){
+  try{
+    var ta=document.createElement('textarea');
+    ta.value=t; ta.setAttribute('readonly','');
+    ta.style.position='fixed'; ta.style.left='-9999px';
+    document.body.appendChild(ta); ta.select();
+    var ok=document.execCommand('copy');
+    document.body.removeChild(ta);
+    return !!ok;
+  }catch(_){ return false; }
+}
 function copiarMensaje(){
-  var t=window.__jvCuerpo||'', n=document.getElementById('c-copia-modal');
+  // Bloque completo: quien pega no tiene que reescribir el asunto ni teclear la dirección de memoria
+  var t='Para: '+jvDestino()+'\nAsunto: '+(window.__jvAsunto||'')+'\n\n'+(window.__jvCuerpo||'');
+  var n=document.getElementById('c-copia-modal');
+  function exito(){ if(n) n.textContent='Copiado todo: dirección, asunto y mensaje. Pégalo en tu correo.'; }
+  function fallo(){
+    if(copiarFallback(t)){ exito(); return; }
+    if(n) n.textContent='No se ha podido copiar automáticamente. Copia el texto a mano; la dirección es '+jvDestino();
+  }
   if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(t).then(
-      function(){ if(n) n.textContent='Mensaje copiado. Pégalo en un correo a '+jvDestino(); },
-      function(){ if(n) n.textContent='No se pudo copiar solo. La dirección es '+jvDestino(); });
-  } else if(n){ n.textContent='Tu navegador no permite copiar solo. La dirección es '+jvDestino(); }
+    navigator.clipboard.writeText(t).then(exito, fallo);
+  } else { fallo(); }
 }
 function elv(id){ return document.getElementById(id).value; }
 function fechaLargaISO(iso){ // 'YYYY-MM-DD' -> 'dd/mm/YYYY'
@@ -1399,26 +1542,44 @@ function relojSync(){
   document.querySelectorAll('.op-social').forEach(function(e){e.classList.toggle('oculto', o!=='social');});
   document.querySelectorAll('.op-penal').forEach(function(e){e.classList.toggle('oculto', o!=='penal');});
   document.querySelectorAll('.op-cont').forEach(function(e){e.classList.toggle('oculto', o!=='contencioso');});
+  // LexNET (art. 151.2 LEC) no existe en vía administrativa: ocultar y desmarcar
+  document.querySelectorAll('.op-judicial').forEach(function(e){
+    var oc=(o==='administrativo'); e.classList.toggle('oculto', oc);
+    if(oc){ var c=e.querySelector('input[type=checkbox]'); if(c) c.checked=false; }
+  });
+  // La distinción procesal/sustantivo solo se ofrece en el orden civil: fuera de él se fija y bloquea
+  var t=document.getElementById('r-tipo'); var esCivil=(o==='civil');
+  if(t){ t.disabled=!esCivil; if(!esCivil) t.value='procesal'; }
 }
 function calcularReloj(){
   var box=document.getElementById('r-res');
   try{
-    var inp={ orden:elv('r-orden'), unidad:elv('r-unidad'), num:parseInt(elv('r-num'),10),
-      fecha:elv('r-fecha'), tipo:elv('r-tipo'),
-      opts:{ lexnet:document.getElementById('r-lexnet').checked, urgente:document.getElementById('r-urgente').checked,
-        materiaExceptuada:document.getElementById('r-materia').checked, instruccion:document.getElementById('r-instr').checked,
-        ddff:document.getElementById('r-ddff').checked } };
-    if(!inp.fecha){ box.innerHTML='<p class="vac">Falta la fecha del acto de comunicación.</p>'; return; }
-    if(!inp.num||inp.num<1){ box.innerHTML='<p class="vac">Indica una cantidad válida.</p>'; return; }
+    var o=elv('r-orden');
+    // Cada opción solo llega al motor si el orden activo la MUESTRA: un checkbox marcado y luego
+    // oculto al cambiar de orden no debe alterar el cálculo sin verse en pantalla.
+    var inp={ orden:o, unidad:elv('r-unidad'), num:parseInt(elv('r-num'),10),
+      fecha:elv('r-fecha'), tipo:(o==='civil'?elv('r-tipo'):'procesal'),
+      opts:{ lexnet:(o!=='administrativo') && document.getElementById('r-lexnet').checked,
+        urgente:(o==='civil') && document.getElementById('r-urgente').checked,
+        materiaExceptuada:(o==='social') && document.getElementById('r-materia').checked,
+        instruccion:(o==='penal') && document.getElementById('r-instr').checked,
+        ddff:(o==='contencioso') && document.getElementById('r-ddff').checked } };
+    if(!inp.fecha){ box.innerHTML='<p class="vac-err">Falta la fecha de la notificación / acto de comunicación.</p>'; return; }
+    if(!inp.num||inp.num<1){ box.innerHTML='<p class="vac-err">Indica una duración del plazo válida.</p>'; return; }
     var r=window.RELOJ.computar(inp);
+    // Foto del cálculo para la casilla "incluir mi último cálculo" del contacto (entrada + salida, sin datos personales)
+    window.__jvUltimoCalculo='Reloj de plazos · '+r.label+' · '+inp.num+' '+inp.unidad+' ('+inp.tipo+') · notificación '+inp.fecha+
+      ' · opciones: '+(Object.keys(inp.opts).filter(function(k){return inp.opts[k];}).join(', ')||'ninguna')+
+      ' → vencimiento '+window.RELOJ.esf(r.vencimiento);
     var html='<div class="dato"><span class="k">Orden</span><span class="v">'+semEsc(r.label)+'</span></div>'+
       '<div class="dato"><span class="k">Vencimiento</span><span class="v big">'+window.RELOJ.esf(r.vencimiento)+'</span></div>';
     if(r.gracia) html+='<div class="dato"><span class="k">Día de gracia (15:00 h)</span><span class="v">'+window.RELOJ.esf(r.gracia)+'</span></div>';
     html+='<div class="blq"><h3>Razonamiento</h3><ol class="pasos">'+r.pasos.map(function(p){return '<li>'+semEsc(p)+'</li>';}).join('')+'</ol></div>';
     if(r.avisos&&r.avisos.length) html+='<div class="blq"><h3>Avisos</h3><ul class="avisos">'+r.avisos.map(function(a){return '<li>'+semEsc(a)+'</li>';}).join('')+'</ul></div>';
+    html+='<p class="hint">¿Te gustaría que tu despacho automatizara cómputos como este? <a href="https://cal.com/pablo-jvlegal/15min" target="_blank" rel="noopener">Agenda una reunión gratuita de 15 min</a>.</p>';
     box.innerHTML=html;
-  }catch(e){ box.innerHTML='<p class="vac">Error en el cálculo: '+semEsc(e.message)+'</p>'; console.error(e); }
-  finally{ try{ box.scrollIntoView({behavior:'smooth', block:'center'}); }catch(_){ } }
+  }catch(e){ box.innerHTML='<p class="vac-err">Error en el cálculo: '+semEsc(e.message)+'</p>'; console.error(e); }
+  finally{ jvIrA(box); }
 }
 
 /* ---- MASC: poblar órdenes y tipos desde el CONFIG del motor ---- */
@@ -1438,10 +1599,12 @@ function mascSync(){
     campos.classList.add('oculto'); btn.classList.add('oculto'); return;
   }
   noap.classList.add('oculto'); campos.classList.remove('oculto'); btn.classList.remove('oculto');
-  // tipos de MASC del orden
-  var selT=document.getElementById('m-tipomasc'); selT.innerHTML='';
+  // tipos de MASC del orden — preservando la selección del usuario (mascSync también salta al
+  // cambiar «Cómo termina», y repoblar sin memoria reseteaba en silencio el tipo de MASC elegido)
+  var selT=document.getElementById('m-tipomasc'); var prev=selT.value; selT.innerHTML='';
   var ms=(c&&c.masc)||{};
   Object.keys(ms).forEach(function(k){ var op=document.createElement('option'); op.value=k; op.textContent=ms[k].label; selT.appendChild(op); });
+  if(prev && ms[prev]) selT.value=prev; // si el orden cambió y ya no existe, cae limpia a la primera
   // campos dependientes de la forma de terminación
   var forma=elv('m-forma');
   document.getElementById('m-wrap-term').classList.toggle('oculto', forma!=='terminacion_sin_acuerdo');
@@ -1454,18 +1617,26 @@ function calcularMasc(){
   var box=document.getElementById('m-res');
   try{
     var o=elv('m-orden');
+    var forma=elv('m-forma');
+    // Los campos condicionados por «Cómo termina» solo se leen si su campo está VISIBLE: una fecha
+    // tecleada, luego oculta por un cambio de idea, no debe contaminar el cálculo sin verse.
     var inp={ orden:o, tipoMASC:elv('m-tipomasc'), tipoPlazoAccion:elv('m-tipoplazo'),
       fechaSolicitud:elv('m-solicitud')||null, fechaRecepcion:elv('m-recepcion')||null,
-      formaTerminacion:elv('m-forma'),
-      fechaTerminacion:elv('m-terminacion')||null, fechaPropuesta:elv('m-propuesta')||null,
+      formaTerminacion:forma,
+      fechaTerminacion:(forma==='terminacion_sin_acuerdo' ? (elv('m-terminacion')||null) : null),
+      fechaPropuesta:(forma==='propuesta_sin_respuesta' ? (elv('m-propuesta')||null) : null),
       fechaInicioAccion:elv('m-inicio')||null,
       duracionAccion:elv('m-dur')?parseInt(elv('m-dur'),10):null, unidadAccion:elv('m-unidad'),
-      cautelares:elv('m-cautelares'), municipio:'madrid' };
+      cautelares:(o==='civil' ? elv('m-cautelares') : 'no'), municipio:'madrid' };
     if(o==='social'){ inp.fechaConciliacion = inp.fechaTerminacion; }
-    if(!inp.fechaSolicitud){ box.innerHTML='<p class="vac">Falta la fecha de solicitud / presentación del MASC.</p>'; return; }
+    if(!inp.fechaSolicitud){ box.innerHTML='<p class="vac-err">Falta la fecha de solicitud / presentación del MASC.</p>'; return; }
     var r=window.MASC.computar(inp);
-    if(r.error){ box.innerHTML='<p class="vac">'+semEsc(r.error)+'</p>'; return; }
+    if(r.error){ box.innerHTML='<p class="vac-err">'+semEsc(r.error)+'</p>'; return; }
     if(r.noAplica){ box.innerHTML='<div class="blq"><ul class="verif"><li>'+semEsc(r.nota)+'</li></ul></div>'; return; }
+    // Foto del cálculo para la casilla "incluir mi último cálculo" del contacto
+    window.__jvUltimoCalculo='Efecto MASC · '+r.tipoMASC+' ('+o+') · '+inp.tipoPlazoAccion+
+      ' · solicitud '+inp.fechaSolicitud+(inp.fechaRecepcion?' · recepción '+inp.fechaRecepcion:'')+
+      ' · termina: '+forma+(r.nuevoVencimientoAccion?' → vencimiento '+r.nuevoVencimientoAccion:'');
     var html='';
     function fila(k,v,big){ if(!v) return ''; return '<div class="dato"><span class="k">'+k+'</span><span class="v'+(big?' big':'')+'">'+fechaLargaISO(v)+'</span></div>'; }
     html+=fila('Congelación', r.fechaCongelacion);
@@ -1478,13 +1649,17 @@ function calcularMasc(){
     html+='<div class="blq"><h3>Razonamiento</h3><ol class="pasos">'+r.pasos.map(function(p){return '<li>'+semEsc(p)+'</li>';}).join('')+'</ol></div>';
     if(r.avisos&&r.avisos.length) html+='<div class="blq"><h3>Avisos</h3><ul class="avisos">'+r.avisos.map(function(a){return '<li>'+semEsc(a)+'</li>';}).join('')+'</ul></div>';
     if(r.verificacionManual&&r.verificacionManual.length) html+='<div class="blq"><h3>Verificación manual (zonas a vigilar)</h3><ul class="verif">'+r.verificacionManual.map(function(a){return '<li>'+semEsc(a)+'</li>';}).join('')+'</ul></div>';
+    html+='<p class="hint">¿Te gustaría que tu despacho automatizara cómputos como este? <a href="https://cal.com/pablo-jvlegal/15min" target="_blank" rel="noopener">Agenda una reunión gratuita de 15 min</a>.</p>';
     box.innerHTML=html;
-  }catch(e){ box.innerHTML='<p class="vac">Error en el cálculo: '+semEsc(e.message)+'</p>'; console.error(e); }
-  finally{ try{ box.scrollIntoView({behavior:'smooth', block:'center'}); }catch(_){ } }
+  }catch(e){ box.innerHTML='<p class="vac-err">Error en el cálculo: '+semEsc(e.message)+'</p>'; console.error(e); }
+  finally{ jvIrA(box); }
 }
 
-/* Init */
-relojSync(); mascInit(); contactoSync();
+/* Init — cada init va blindado por separado: con jv-anim puesto en <html>, un script abortado
+   antes de registrar el scroll-reveal dejaría la página entera a opacity:0 (invisible). */
+try{ relojSync(); }catch(e){ console.error(e); }
+try{ mascInit(); }catch(e){ console.error(e); }
+try{ contactoSync(); }catch(e){ console.error(e); }
 // Clic en el fondo difuminado (fuera de la tarjeta) cierra el modal de envío.
 (function(){ var mf=document.getElementById('modal-envio');
   if(mf) mf.addEventListener('click', function(e){ if(e.target===mf) cerrarModalEnvio(); }); })();
@@ -1497,13 +1672,35 @@ relojSync(); mascInit(); contactoSync();
 document.querySelectorAll('.jv-email').forEach(function(el){ el.textContent=jvDestino(); });
 // Fecha por defecto = hoy: evita que en movil parezca que "no hace nada" al pulsar sin fecha.
 (function(){ var f=document.getElementById('r-fecha'); if(f && !f.value){ var d=new Date(); f.value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); } })();
+
+/* ====================== Scroll-reveal sobrio (spec A2/A3, reel DaYet-0T-TV) ======================
+   "Documento que se revela": cada pieza estructural (cabecera, pestañas, taglines, tarjetas, pie)
+   entra con un fundido corto y 12px de subida cuando asoma en pantalla, con un escalonado leve si
+   asoman varias a la vez. Reglas de la casa:
+   - IntersectionObserver PURO (API nativa del navegador): cero librerías, cero CDN, la CSP ni se toca.
+   - De un solo uso por pieza: lo revelado queda revelado. Nada de re-animar en cada scroll (discreto, no circo).
+   - Las pestañas ocultas (display:none) no intersecan; al abrir cada herramienta por primera vez sus
+     tarjetas se revelan igual de suave. Los resultados de cálculo NO llevan reveal (el sello ya tiene
+     su animación de estampado y un resultado jamás debe esperar a un adorno).
+   - Si <html> no lleva .jv-anim (sin soporte o con "reducir movimiento"), aquí no se hace nada. */
+(function(){
+  if(!document.documentElement.classList.contains('jv-anim')) return; // todo visible ya; no hay nada que revelar
+  var obs=new IntersectionObserver(function(entradas){
+    var peldano=0; // escalonado dentro del mismo lote: 0/70/140/210/280 ms y tope (que nadie espere a un adorno)
+    entradas.forEach(function(en){
+      if(!en.isIntersecting) return;
+      var el=en.target;
+      obs.unobserve(el); // un solo uso por pieza
+      el.style.transitionDelay=(Math.min(peldano,4)*70)+'ms'; peldano++;
+      el.classList.add('jv-vis');
+      el.addEventListener('transitionend', function limpiar(ev){
+        if(ev.target!==el || ev.propertyName!=='opacity') return;
+        el.style.transitionDelay=''; el.removeEventListener('transitionend', limpiar);
+      });
+    });
+  },{threshold:.08, rootMargin:'0px 0px -32px 0px'}); // pide ~32px de asomo real antes de revelar
+  document.querySelectorAll('.jv-reveal').forEach(function(el){ obs.observe(el); });
+})();
 </script>
-<!--
-  NOTA INTERNA (no visible): los textos de «Aviso legal» y «Privacidad» de esta página son un
-  BORRADOR PARA REVISIÓN DEL TITULAR (Pablo Andrés Martínez, jurista). Redactados el 10/07/2026
-  conforme al comportamiento real del código en esa fecha (sin cookies, sin analítica, sin recursos
-  de terceros, sin envío de datos a servidor). Si se añade cualquier tercero (analítica, calendarios
-  embebidos, fuentes externas...), estos textos deben revisarse ANTES de desplegar.
--->
 </body>
 </html>

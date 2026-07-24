@@ -144,7 +144,11 @@ html.anim .sello-b.estampado{transform:rotate(1.6deg) scale(1)}
 /* ── Revelado al entrar en pantalla ────────────────────────────────────── */
 html.anim .rev{opacity:0;transform:translateY(14px)}
 html.anim .rev.visto{opacity:1;transform:none;transition:opacity .6s var(--curva),transform .6s var(--curva)}
-@media print{ html.anim .rev{opacity:1!important;transform:none!important} html.anim .sello{opacity:1!important;transform:rotate(-2.2deg)!important} }
+@media print{
+  html.anim .rev{opacity:1!important;transform:none!important}
+  html.anim .sello{opacity:1!important;transform:rotate(-2.2deg)!important}
+  html.anim .raya path,html.anim .boli path{stroke-dashoffset:0!important}
+}
 
 /* ══ 00 · CARÁTULA ═══════════════════════════════════════════════════════ */
 .caratula{padding-top:clamp(26px,5vh,50px);padding-bottom:clamp(56px,8vh,96px)}
@@ -188,19 +192,49 @@ html.anim .rev.visto{opacity:1;transform:none;transition:opacity .6s var(--curva
 .firma .quien b{display:block;font-family:var(--serif);font-size:1.06rem;text-transform:none;letter-spacing:0;color:var(--tinta);font-weight:400}
 
 /* Banda de datos duros */
-.banda{display:grid;grid-template-columns:repeat(4,1fr);border-top:var(--pelo);border-bottom:var(--pelo);
+.banda{display:grid;grid-template-columns:repeat(3,1fr);border-top:var(--pelo);border-bottom:var(--pelo);
   margin-top:clamp(40px,6vh,64px)}
 .banda div{padding:18px 20px 16px;border-left:var(--pelo-suave)}
 .banda div:first-child{border-left:0;padding-left:0}
-.banda .cifra{font-family:var(--mono);font-size:1.6rem;font-weight:700;color:var(--tinta);line-height:1.1;letter-spacing:-.01em}
+.banda .cifra{font-family:var(--mono);font-size:1.6rem;font-weight:700;color:var(--tinta);line-height:1.1;
+  letter-spacing:-.01em;font-variant-numeric:tabular-nums}
 /* OJO: esta glosa NO puede llamarse .pie — chocaría con el .pie del cierre de página. */
 .banda .glosa{font-family:var(--mono);font-size:.63rem;text-transform:uppercase;letter-spacing:.1em;color:var(--tinta-c);margin-top:8px;line-height:1.55}
 @media (max-width:760px){
   .banda{grid-template-columns:1fr 1fr}
   .banda div{border-left:0;border-top:var(--pelo-suave);padding-left:0;padding-right:14px}
   .banda div:nth-child(-n+2){border-top:0}
-  .banda div:nth-child(2),.banda div:nth-child(4){padding-left:16px;border-left:var(--pelo-suave)}
+  .banda div:nth-child(2){padding-left:16px;border-left:var(--pelo-suave)}
 }
+
+/* ── Subrayado que se dibuja bajo los titulares ────────────────────────── */
+.raya{display:block;margin-top:13px}
+.raya svg{display:block;width:min(300px,64%);height:9px;overflow:visible}
+.raya path{fill:none;stroke:var(--morado);stroke-width:2;stroke-linecap:round;stroke-dasharray:1}
+html.anim .raya path{stroke-dashoffset:1}
+html.anim .visto .raya path{stroke-dashoffset:0;transition:stroke-dashoffset .85s var(--curva) .1s}
+
+/* ── Círculo de boli rojo sobre el claim: el efecto estrella ───────────── */
+.circulado{position:relative;display:inline-block}
+.boli{position:absolute;left:-6%;top:-32%;width:112%;height:164%;overflow:visible;pointer-events:none}
+.boli path{fill:none;stroke:#B3261E;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
+  opacity:.88;stroke-dasharray:1}
+html.anim .boli path{stroke-dashoffset:1}
+html.anim .visto .boli path{stroke-dashoffset:0;transition:stroke-dashoffset .9s ease-out .45s}
+
+/* ── Plegable «ver detalle»: el papel que se despliega ─────────────────── */
+.detalle{border-top:var(--pelo);margin-top:18px}
+.detalle>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;
+  font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.11em;font-weight:700;
+  color:var(--morado);padding:13px 0 12px;transition:color .18s ease}
+.detalle>summary::-webkit-details-marker{display:none}
+.detalle>summary::after{content:"+";margin-left:auto;font-size:1.05rem;line-height:1;color:var(--tinta-d);font-weight:400}
+.detalle[open]>summary::after{content:"−"}
+.detalle>summary:hover{color:var(--morado-hondo)}
+.detalle[open]>summary{border-bottom:var(--pelo-suave)}
+.detalle .dentro{padding:15px 0 6px}
+.detalle .dentro p{font-size:.9rem;line-height:1.6;color:var(--tinta-b)}
+.detalle .rasgos{margin-top:0}
 
 /* ══ 01 · HERRAMIENTAS · fichas apiladas ════════════════════════════════ */
 .pila{margin-top:8px}
@@ -258,7 +292,23 @@ html.anim .rev.visto{opacity:1;transform:none;transition:opacity .6s var(--curva
 .tesis .dicho{font-family:var(--serif);font-size:clamp(1.3rem,1.9vw,1.72rem);line-height:1.34;color:var(--tinta);letter-spacing:-.008em}
 .tesis .dicho b{font-weight:400;color:var(--morado)}
 
+/* Marcador: las cifras que sustituyen a la tabla larga */
+.marcador{display:grid;grid-template-columns:repeat(3,1fr);border-top:var(--pelo);border-bottom:var(--pelo)}
+.marcador div{padding:22px 16px 20px;border-left:var(--pelo-suave)}
+.marcador div:first-child{border-left:0;padding-left:0}
+.marcador .cifra-xl{font-family:var(--mono);font-size:clamp(2.3rem,5.4vw,3.5rem);font-weight:700;
+  color:var(--tinta);line-height:1;letter-spacing:-.025em;font-variant-numeric:tabular-nums}
+.marcador .glosa{font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--tinta-c);margin-top:11px;line-height:1.55}
+@media (max-width:520px){
+  .marcador{grid-template-columns:1fr 1fr}
+  .marcador div:nth-child(3){grid-column:1/-1;border-left:0;padding-left:0;border-top:var(--pelo-suave)}
+}
+
 .indice{display:grid;gap:26px}
+.detalle-reg .indice{gap:20px}
+.detalle-reg .indice dt{font-size:.64rem;padding:5px 0 4px}
+.detalle-reg .indice dd{font-size:.79rem;padding:5px 0 4px}
 .indice .grupo>.tit{font-family:var(--mono);font-size:.63rem;text-transform:uppercase;letter-spacing:.14em;
   color:var(--tinta-c);padding-bottom:7px;border-bottom:var(--pelo);margin-bottom:2px}
 .indice dl{display:grid;grid-template-columns:minmax(112px,auto) 1fr;column-gap:18px}
@@ -335,17 +385,17 @@ html.anim .rev.visto{opacity:1;transform:none;transition:opacity .6s var(--curva
 <header class="sec caratula">
   <div class="marco">
     <div class="cabecera rev">
-      <p class="exp"><b>JV LEGAL</b><br>Expediente de herramientas · 2026</p>
+      <p class="exp"><b>JV LEGAL</b></p>
       <span class="sello" data-sello>En vivo · 3 de 4 herramientas</span>
     </div>
 
     <h1 class="titulo rev">JV <em>Legal</em></h1>
 
-    <p class="claim rev">Herramientas jurídicas deterministas: cada cálculo <b>cita el artículo que lo sostiene</b>.</p>
+    <p class="claim rev">Herramientas jurídicas deterministas: cada cálculo <b><span class="circulado">cita el artículo<svg class="boli" viewBox="0 0 200 60" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M16 41C5 23 41 8 100 7 160 6 195 20 192 32c-3 14-44 23-96 22C44 53 10 46 12 31 14 17 53 8 105 9c53 1 85 12 84 25-1 13-49 23-101 21-36-1-64-6-75-13"/></svg></span> que lo sostiene</b>.</p>
 
-    <p class="honesto rev">Las construye Pablo Andrés Martínez, estudiante de Derecho en la Universidad
-      Complutense de Madrid, dirigiendo el desarrollo con metodologías de IA agéntica. El proyecto está
-      en construcción; las herramientas publicadas funcionan hoy y se pueden usar ahora mismo.</p>
+    <p class="honesto rev">Las construye Pablo Andrés Martínez, estudiante de Derecho en la UCM,
+      dirigiendo el desarrollo con metodologías de IA agéntica. El proyecto está en construcción;
+      lo que ya está publicado funciona hoy.</p>
 
     <div class="acciones rev">
       <a class="cta" href="suite.html">Abrir la suite en vivo</a>
@@ -358,10 +408,9 @@ html.anim .rev.visto{opacity:1;transform:none;transition:opacity .6s var(--curva
     </div>
 
     <div class="banda rev">
-      <div><p class="cifra">5</p><p class="glosa">Vías de cómputo:<br>civil, contencioso, social, penal y LPAC</p></div>
-      <div><p class="cifra">6</p><p class="glosa">Modalidades de MASC<br>civiles y mercantiles</p></div>
-      <div><p class="cifra">18</p><p class="glosa">Obligaciones de lanzamiento,<br>cada una con su base legal</p></div>
-      <div><p class="cifra">0</p><p class="glosa">Datos que salen<br>de tu dispositivo</p></div>
+      <div><p class="cifra" data-cuenta="5">5</p><p class="glosa">Vías de cómputo:<br>civil, contencioso, social, penal y LPAC</p></div>
+      <div><p class="cifra" data-cuenta="6">6</p><p class="glosa">Modalidades de MASC<br>civiles y mercantiles</p></div>
+      <div><p class="cifra" data-cuenta="9">9</p><p class="glosa">Preguntas del autodiagnóstico<br>de lanzamiento</p></div>
     </div>
   </div>
 </header>
@@ -370,7 +419,7 @@ html.anim .rev.visto{opacity:1;transform:none;transition:opacity .6s var(--curva
 <section class="sec" id="herramientas">
   <div class="marco">
     <div class="reg rev"><span class="n">01</span><span class="t">Herramientas</span><span class="barra"></span></div>
-    <h2 class="rev">Cuatro motores. Tres se pueden usar ahora.</h2>
+    <h2 class="rev">Cuatro herramientas. Tres en vivo.<span class="raya" aria-hidden="true"><svg viewBox="0 0 300 10" preserveAspectRatio="none" focusable="false"><path pathLength="1" d="M2 7C46 3.6 96 8.4 150 5.2 204 2 252 7.6 298 4.4"/></svg></span></h2>
 
     <div class="pila">
 
@@ -385,17 +434,23 @@ html.anim .rev.visto{opacity:1;transform:none;transition:opacity .6s var(--curva
           <div>
             <h3>Reloj de plazos procesales</h3>
             <p class="menudo">Introduces la notificación y el plazo; devuelve el vencimiento y el
-              razonamiento entero, paso a paso, con el artículo aplicable en cada uno de ellos.</p>
+              razonamiento paso a paso, con su artículo en cada paso.</p>
             <ul class="rasgos">
-              <li>Cómputo en <b>cinco vías</b>: Civil (LEC), Contencioso (LJCA), Social (LJS), Penal (LECrim) y Administrativo común (LPAC).</li>
+              <li>Cómputo en <b>cinco vías</b>: LEC, LJCA, LJS, LECrim y LPAC.</li>
               <li><b>Día de gracia del art. 135.5 LEC</b>: hasta las 15:00 del día hábil siguiente.</li>
-              <li><b>Agosto</b> resuelto orden por orden, con la doctrina del TS (STS 910/2020) para el contencioso.</li>
-              <li>Festivos reales de calendario, no fines de semana a ojo.</li>
-              <li>Notificación a procurador y LexNET (art. 151.2 LEC) como opción del cálculo.</li>
             </ul>
+            <details class="detalle">
+              <summary>Ver detalle</summary>
+              <div class="dentro">
+                <ul class="rasgos">
+                  <li><b>Agosto</b> resuelto orden por orden, con la doctrina del TS (STS 910/2020) para el contencioso.</li>
+                  <li>Festivos reales de calendario, no fines de semana a ojo.</li>
+                  <li>Notificación a procurador y LexNET (art. 151.2 LEC) como opción del cálculo.</li>
+                </ul>
+              </div>
+            </details>
             <div class="ficha-pie">
               <a class="abrir" href="suite.html">Abrir el reloj <span class="flecha">▸</span></a>
-              <span class="nota-pie">Se calcula en tu navegador</span>
             </div>
           </div>
           <div>
@@ -419,11 +474,18 @@ html.anim .rev.visto{opacity:1;transform:none;transition:opacity .6s var(--curva
               controversias: si se suspende, si se interrumpe y cuándo vuelve a correr.</p>
             <ul class="rasgos">
               <li><b>Prescripción frente a caducidad</b>: interrumpir y reiniciar no es lo mismo que suspender y reanudar.</li>
-              <li><b>Seis modalidades civiles</b>: negociación directa, mediación, conciliación privada, dictamen de experto, oferta vinculante y conciliación ante LAJ, notario o registrador.</li>
-              <li>Papeleta del orden social con el cómputo del Supremo (<b>STS 531/2022</b>).</li>
-              <li><b>Ventana de procedibilidad de un año</b> y plazo de las cautelares.</li>
-              <li>Bloque de <b>verificación manual</b>: declara el ±1 día que la doctrina discute, en vez de esconderlo.</li>
+              <li><b>Seis modalidades civiles</b>, de la negociación directa a la conciliación ante LAJ, notario o registrador.</li>
             </ul>
+            <details class="detalle">
+              <summary>Ver detalle</summary>
+              <div class="dentro">
+                <ul class="rasgos">
+                  <li>Papeleta del orden social con el cómputo del Supremo (<b>STS 531/2022</b>).</li>
+                  <li><b>Ventana de procedibilidad de un año</b> y plazo de las cautelares.</li>
+                  <li>Bloque de <b>verificación manual</b>: declara el ±1 día que la doctrina discute, en vez de esconderlo.</li>
+                </ul>
+              </div>
+            </details>
             <div class="ficha-pie">
               <a class="abrir" href="suite.html">Abrir el efecto MASC <span class="flecha">▸</span></a>
             </div>
@@ -449,17 +511,24 @@ html.anim .rev.visto{opacity:1;transform:none;transition:opacity .6s var(--curva
               lanzar hoy, qué puede cerrar después y qué no le aplica.</p>
             <ul class="rasgos">
               <li>Veredicto con <b>sello de expediente</b> y recuento de ramas críticas, importantes y aplazables.</li>
-              <li><b>Dieciocho obligaciones</b>, cada una con su artículo y su sanción detrás.</li>
               <li>Rama de <b>dato de categoría especial (art. 9 RGPD)</b>, la que se cae de las plantillas estadounidenses.</li>
-              <li>España y UE: RGPD, LOPDGDD, LSSI, TRLGDCU y art. 50 del Reglamento de IA.</li>
             </ul>
+            <details class="detalle">
+              <summary>Ver detalle</summary>
+              <div class="dentro">
+                <ul class="rasgos">
+                  <li>Cada rama trae su artículo, su sanción y quién tiene que ejecutarla.</li>
+                  <li>España y UE: RGPD, LOPDGDD, LSSI, TRLGDCU y art. 50 del Reglamento de IA.</li>
+                </ul>
+              </div>
+            </details>
             <div class="ficha-pie">
               <a class="abrir" href="autodiagnostico.html">Abrir el autodiagnóstico <span class="flecha">▸</span></a>
             </div>
           </div>
           <div>
-            <div class="visor" style="--papel-foto:#FFFFFF"><img src="assets/shots/autodiagnostico.webp" alt="Veredicto del autodiagnóstico: sello rojo «no lances aún, 5 puertas críticas», recuento de ramas y chips con las respuestas dadas." width="1720" height="1366" loading="lazy" decoding="async"></div>
-            <p class="visor-pie">Captura real · veredicto sobre un caso de sector salud</p>
+            <div class="visor" style="--papel-foto:#F2F3F0"><img src="assets/shots/autodiagnostico.webp" alt="Autodiagnóstico recién abierto: la primera de las nueve preguntas, sobre jurisdicción, con sus tres opciones de respuesta." width="1720" height="1630" loading="lazy" decoding="async"></div>
+            <p class="visor-pie">Captura real · la herramienta al abrirla, sin responder</p>
           </div>
         </div>
       </article>
@@ -474,10 +543,17 @@ html.anim .rev.visto{opacity:1;transform:none;transition:opacity .6s var(--curva
           <div>
             <h3>Semáforo de cláusulas</h3>
             <p class="menudo">Triaje de una cláusula en verde, ámbar o rojo, con los riesgos detectados
-              y las preguntas que llevarle al abogado. A diferencia de las otras tres, esta piensa con
-              un modelo de lenguaje: necesita una clave de acceso, así que no se publica abierta.</p>
+              y las preguntas que llevarle al abogado.</p>
+            <details class="detalle">
+              <summary>Ver detalle</summary>
+              <div class="dentro">
+                <p>A diferencia de las otras tres, esta piensa con un modelo de lenguaje, y por eso
+                  todavía no se publica abierta: va en despliegue controlado. La salida es siempre un
+                  borrador para revisión humana, nunca un dictamen.</p>
+              </div>
+            </details>
             <div class="ficha-pie">
-              <span class="nota-pie">Sin enlace público · la salida siempre es un borrador para revisión</span>
+              <span class="nota-pie">Salida orientativa</span>
             </div>
           </div>
           <div>
@@ -498,17 +574,24 @@ html.anim .rev.visto{opacity:1;transform:none;transition:opacity .6s var(--curva
 
     <div class="tesis">
       <div class="tesis-izq rev">
-        <h2>Nada de cajas negras.</h2>
+        <h2>Nada de cajas negras.<span class="raya" aria-hidden="true"><svg viewBox="0 0 300 10" preserveAspectRatio="none" focusable="false"><path pathLength="1" d="M2 7C46 3.6 96 8.4 150 5.2 204 2 252 7.6 298 4.4"/></svg></span></h2>
         <p class="dicho" style="margin-top:20px">Cada resultado <b>enseña su razonamiento y cita su
-          fuente</b>. Se puede comprobar línea a línea contra el BOE, discutir y corregir.</p>
-        <p class="menudo" style="margin-top:20px">Un plazo mal contado no se arregla pidiéndole más
-          confianza al usuario. Por eso los motores no devuelven una fecha: devuelven el camino
-          hasta la fecha. Y cuando la doctrina no es unánime, lo dicen en vez de elegir por su cuenta.</p>
-        <p class="menudo" style="margin-top:16px">Estas son las normas que citan hoy los motores,
-          tal y como salen en pantalla.</p>
+          fuente</b>: se comprueba línea a línea contra el BOE.</p>
+        <p class="menudo" style="margin-top:18px">Y cuando la doctrina no es unánime, la herramienta
+          lo declara en pantalla en vez de elegir por su cuenta.</p>
       </div>
 
-      <div class="indice rev">
+      <div class="rev">
+        <div class="marcador">
+          <div><p class="cifra-xl" data-cuenta="26">26</p><p class="glosa">Artículos citados<br>en pantalla</p></div>
+          <div><p class="cifra-xl" data-cuenta="4">4</p><p class="glosa">Sentencias del<br>Tribunal Supremo</p></div>
+          <div><p class="cifra-xl" data-cuenta="11">11</p><p class="glosa">Normas distintas<br>aplicadas</p></div>
+        </div>
+
+        <details class="detalle detalle-reg">
+          <summary>Ver el registro completo</summary>
+          <div class="dentro">
+          <div class="indice">
         <div class="grupo">
           <p class="tit">Cómputo procesal y administrativo</p>
           <dl>
@@ -559,11 +642,14 @@ html.anim .rev.visto{opacity:1;transform:none;transition:opacity .6s var(--curva
             <dt>AI Act art. 50</dt><dd>Transparencia, aplicable desde el 2-08-2026</dd>
           </dl>
         </div>
+          </div>
+          </div>
+        </details>
       </div>
     </div>
 
     <figure class="hoja-suelta rev">
-      <figcaption class="rotulo"><b>Lo que ninguna calculadora enseña:</b> el motor declara lo que no está cerrado</figcaption>
+      <figcaption class="rotulo"><b>Lo que ninguna calculadora enseña:</b> la herramienta declara lo que no está cerrado</figcaption>
       <img src="assets/shots/verificacion.webp" alt="Bloque «verificación manual (zonas a vigilar)» del efecto MASC: advierte del día de gracia del art. 45.1 LJS y del ±1 día discutido en la doctrina." width="736" height="418" loading="lazy" decoding="async">
     </figure>
   </div>
@@ -573,38 +659,39 @@ html.anim .rev.visto{opacity:1;transform:none;transition:opacity .6s var(--curva
 <section class="sec" id="metodo">
   <div class="marco">
     <div class="reg rev"><span class="n">03</span><span class="t">Cómo lo construyo</span><span class="barra"></span></div>
-    <h2 class="rev">Primero el dictamen. Después el código.</h2>
-    <p class="lede rev" style="margin-top:20px">No empiezo programando. Cada motor nace de un dictamen
-      jurídico escrito antes de que exista una sola línea de código: el de cómputo de plazos y el de
-      efecto MASC ocupan decenas de páginas de norma, doctrina y jurisprudencia contrastada.</p>
+    <h2 class="rev">Primero el dictamen. Después el código.<span class="raya" aria-hidden="true"><svg viewBox="0 0 300 10" preserveAspectRatio="none" focusable="false"><path pathLength="1" d="M2 7C46 3.6 96 8.4 150 5.2 204 2 252 7.6 298 4.4"/></svg></span></h2>
+    <p class="lede rev" style="margin-top:20px">No empiezo programando: cada herramienta nace de un
+      dictamen jurídico escrito antes de la primera línea de código.</p>
 
     <ol class="pasos rev" style="margin-top:clamp(30px,5vh,46px)">
       <li>
         <div>
-          <h4>Dictamen jurídico</h4>
-          <p>Redacto el criterio antes de construir nada: qué dice la norma, dónde discrepa la doctrina
-            y qué ha unificado el Supremo. Es el documento que manda; el software solo lo ejecuta.</p>
+          <h4>Dictamen</h4>
+          <p>Qué dice la norma, dónde discrepa la doctrina y qué ha unificado el Supremo.</p>
         </div>
       </li>
       <li>
         <div>
-          <h4>Especificación cerrada</h4>
-          <p>Traduzco el dictamen a un pliego técnico: entradas, salidas, casos límite y qué debe citar
-            cada paso. Si algo no está en el pliego, no se construye.</p>
+          <h4>Pliego</h4>
+          <p>El dictamen traducido a entradas, salidas y casos límite: lo que no está en el pliego, no se construye.</p>
         </div>
       </li>
       <li>
         <div>
-          <h4>Construcción con agentes</h4>
-          <p>Los agentes de IA implementan contra ese pliego, sin margen para improvisar el criterio
-            jurídico. Es la parte mecánica, y es donde la velocidad se nota.</p>
+          <h4>Construcción</h4>
+          <p>Los agentes de IA implementan contra ese pliego, sin improvisar criterio jurídico.</p>
         </div>
       </li>
       <li>
         <div>
-          <h4>Verificación contra la ley</h4>
-          <p>Cada resultado se contrasta con el texto vigente y con la jurisprudencia citada, y la
-            herramienta declara en pantalla las zonas donde el cómputo admite discusión.</p>
+          <h4>Verificación</h4>
+          <p>Cada resultado se contrasta con el texto vigente y con la jurisprudencia citada.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <h4>Declaración de dudas</h4>
+          <p>Las zonas donde el cómputo admite discusión salen escritas en pantalla, no escondidas.</p>
         </div>
       </li>
     </ol>
@@ -621,12 +708,12 @@ html.anim .rev.visto{opacity:1;transform:none;transition:opacity .6s var(--curva
     <div class="reg rev"><span class="n">04</span><span class="t">A dónde va</span><span class="barra"></span></div>
     <div class="vision">
       <div class="rev">
-        <h2>Automatizar lo repetitivo del despacho.</h2>
+        <h2>Automatizar lo repetitivo del despacho.<span class="raya" aria-hidden="true"><svg viewBox="0 0 300 10" preserveAspectRatio="none" focusable="false"><path pathLength="1" d="M2 7C46 3.6 96 8.4 150 5.2 204 2 252 7.6 298 4.4"/></svg></span></h2>
         <p class="lede" style="margin-top:20px">Contar plazos, comprobar si un trámite es preceptivo,
-          leer una cláusula por primera vez: trabajo que consume horas y que un motor determinista hace
-          igual de bien y sin cansarse. El criterio se queda donde debe estar, con el jurista.</p>
-        <p class="menudo" style="margin-top:16px">JV Legal está en construcción. Lo que hay publicado
-          funciona hoy y se puede abrir ahora mismo; lo que falta, falta.</p>
+          leer una cláusula por primera vez: horas de trabajo que una herramienta determinista hace
+          igual de bien y sin cansarse. El criterio se queda con el jurista.</p>
+        <p class="menudo" style="margin-top:16px">JV Legal está en construcción: lo publicado
+          funciona hoy; lo que falta, falta.</p>
       </div>
       <div class="rev"><span class="sello sello-b" data-sello>En construcción</span></div>
     </div>
@@ -639,8 +726,8 @@ html.anim .rev.visto{opacity:1;transform:none;transition:opacity .6s var(--curva
     <div class="pie-rejilla">
       <div>
         <h5>JV Legal</h5>
-        <p class="menudo" style="font-size:.88rem">Herramientas jurídicas deterministas.
-          Todo se calcula en tu dispositivo: ni servidores, ni cuentas, ni datos guardados.</p>
+        <p class="menudo" style="font-size:.88rem">Herramientas jurídicas deterministas
+          para el despacho.</p>
         <p style="margin-top:18px"><a class="cruce" href="https://pablolietor22.github.io/jv-fitness/showcase.html" target="_blank" rel="noopener">⚡ Ver también: JV Fitness</a></p>
       </div>
       <div>
@@ -685,11 +772,45 @@ html.anim .rev.visto{opacity:1;transform:none;transition:opacity .6s var(--curva
      movimiento", la página se sirve entera visible y ningún fallo puede dejarla en blanco. */
   if(!quieto) document.documentElement.classList.add('anim');
 
+  /* ── Contadores odómetro ────────────────────────────────────────────────
+     Separador de miles DETERMINISTA (nada de toLocaleString: depende del idioma
+     del navegador y en una página en castellano puede pintar comas). */
+  function miles(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.'); }
+
+  function contar(el){
+    if(el.getAttribute('data-done')) return;      // anti-doble-disparo
+    el.setAttribute('data-done','1');
+    var fin = parseInt(el.getAttribute('data-cuenta'),10) || 0;
+    if(quieto || !window.requestAnimationFrame){ el.textContent = miles(fin); return; }
+    var t0 = 0, dur = 700;
+    window.requestAnimationFrame(function paso(ts){
+      if(!t0) t0 = ts;
+      var p = (ts - t0) / dur; if(p > 1) p = 1;
+      var e = 1 - Math.pow(1 - p, 3);              // easeOutCubic
+      el.textContent = miles(Math.round(fin * e));
+      if(p < 1) window.requestAnimationFrame(paso);
+      else el.textContent = miles(fin);
+    });
+  }
+
+  function contarDentro(el){
+    var c = el.matches('[data-cuenta]') ? [el] : el.querySelectorAll('[data-cuenta]');
+    for(var k=0;k<c.length;k++) contar(c[k]);
+  }
+
   function revelarTodo(){
     var i, n = document.querySelectorAll('.rev');
     for(i=0;i<n.length;i++) n[i].classList.add('visto');
     var s = document.querySelectorAll('[data-sello]');
     for(i=0;i<s.length;i++) s[i].classList.add('estampado');
+    /* El failsafe también cierra los contadores: nunca se quedan a medias ni a cero. */
+    var c = document.querySelectorAll('[data-cuenta]');
+    for(i=0;i<c.length;i++){
+      if(!c[i].getAttribute('data-done')){
+        c[i].setAttribute('data-done','1');
+        c[i].textContent = miles(parseInt(c[i].getAttribute('data-cuenta'),10) || 0);
+      }
+    }
   }
 
   /* Failsafe: bots, prerenderizadores y capturas no hacen scroll. A los 6 s se revela todo
@@ -710,6 +831,7 @@ html.anim .rev.visto{opacity:1;transform:none;transition:opacity .6s var(--curva
           el.classList.add('visto');
           var sellos = el.matches('[data-sello]') ? [el] : el.querySelectorAll('[data-sello]');
           for(var k=0;k<sellos.length;k++) sellos[k].classList.add('estampado');
+          contarDentro(el);
         }, ms);
       })(e.target, retraso);
       retraso += 70;

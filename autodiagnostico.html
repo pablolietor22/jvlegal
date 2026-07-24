@@ -42,11 +42,9 @@
   .opciones{display:flex;gap:10px;flex-wrap:wrap}
   .opt{font-family:var(--mono);font-size:.82rem;letter-spacing:.06em;padding:10px 18px;border:1.5px solid var(--tinta);background:transparent;color:var(--tinta);cursor:pointer;text-align:left}
   .opt:hover{background:var(--tinta);color:var(--papel)}
-  .opt:focus-visible,.btn:focus-visible,.btn-caso:focus-visible,.chk:focus-visible{outline:3px solid #8FA3BF;outline-offset:2px}
+  .opt:focus-visible,.btn:focus-visible,.chk:focus-visible{outline:3px solid #8FA3BF;outline-offset:2px}
   .btn{font-family:var(--mono);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;background:transparent;color:var(--gris);border:1px dashed var(--gris);padding:9px 16px;cursor:pointer;margin-top:6px}
   .btn:hover{border-color:var(--tinta);color:var(--tinta)}
-  .btn-caso{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;background:transparent;color:var(--azul);border:1.5px solid var(--azul);padding:10px 16px;cursor:pointer}
-  .btn-caso:hover{background:var(--azul);color:var(--papel)}
   .fila-acciones{display:flex;gap:10px;flex-wrap:wrap;margin:4px 0 22px}
 
   /* Veredicto (sello de expediente) */
@@ -60,8 +58,6 @@
   .cont{font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;padding:7px 12px;border:1px solid currentColor}
   .recap{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
   .chip{font-family:var(--mono);font-size:.7rem;letter-spacing:.05em;color:var(--gris);border:1px dashed var(--linea);background:var(--papel);padding:5px 9px}
-  .banner-caso{margin-top:16px;padding:12px 14px;border-left:3px solid var(--azul);background:var(--papel);font-size:.86rem}
-  .banner-caso b{color:var(--azul)}
   .dif{margin-top:16px;padding:12px 14px;border-left:3px solid var(--rojo);background:var(--papel);font-size:.86rem}
   .dif b{color:var(--rojo)}
 
@@ -103,7 +99,7 @@
 
   @media print{
     body{background:#fff;padding:0}
-    .opciones,.btn,.btn-caso,.fila-acciones,.no-print{display:none!important}
+    .opciones,.btn,.fila-acciones,.no-print{display:none!important}
     .paso{display:none!important}
     #veredicto{display:block!important}
   }
@@ -115,17 +111,16 @@
     <div class="marca">JVLegal <em>· lanzamiento SaaS</em></div>
     <div class="exp">Autodiagnóstico v0.1 · España / UE<br>RGPD · LOPDGDD · LSSI · TRLGDCU · AI Act<br>Checklist de 18 ramas con artículo</div>
   </header>
-  <p class="sub">¿Puedo lanzar ya mi SaaS? · Responde 9 preguntas y se encienden tus deberes · 100% en tu navegador</p>
+  <p class="sub">¿Puedo lanzar ya mi SaaS? · Responde 9 preguntas y se encienden tus deberes</p>
 
   <div class="aviso"><b>Orientativo, no asesoramiento jurídico.</b> Herramienta de triaje para saber QUÉ te aplica y preparar la consulta con un abogado/a. No introduzcas datos reales de clientes. Los importes y artículos son los vigentes a la fecha de corte; verifica la norma antes de actuar.</div>
-  <p class="corte">Motor: checklist España/UE de <b>18 puntos</b>, re-analizado <b>12-07-2026</b> · Origen: reel «5 requisitos legales para lanzar un SaaS» (@eriktaveras) · Diferencial: la rama de <b>dato de salud (art. 9 RGPD)</b> que el reel US omite.</p>
+  <p class="corte">Base: checklist España/UE de <b>18 puntos</b>, re-analizado <b>12-07-2026</b> · Origen: reel «5 requisitos legales para lanzar un SaaS» (@eriktaveras) · Diferencial: la rama de <b>dato de salud (art. 9 RGPD)</b> que el reel US omite.</p>
 
   <!-- ================= BLOQUE A · ÁRBOL DE DECISIÓN ================= -->
   <h2><span class="n">A</span>El interrogatorio: 9 preguntas al fundador</h2>
   <p class="lede">Responde sobre <b>tu</b> SaaS (o el que quieres lanzar). Cada respuesta enciende o apaga ramas del checklist. Regla transversal del propio reel, y es correcta: <b>la jurisdicción la marca dónde vendes y dónde están tus usuarios, no dónde vives tú</b> (art. 3 RGPD).</p>
 
   <div class="fila-acciones no-print">
-    <button class="btn-caso" onclick="casoJVF()">⚡ Cargar caso JV Fitness (dogfooding)</button>
     <button class="btn" onclick="reiniciar()">↺ Empezar de cero</button>
   </div>
 
@@ -256,7 +251,6 @@
       <h4>Tu foto (respuestas dadas)</h4>
       <div class="recap" id="recap"></div>
       <div class="dif" id="dif-salud" style="display:none"><b>La rama que el reel omite:</b> tratas dato de salud, y eso es <b>categoría especial del art. 9 RGPD</b>: consentimiento EXPLÍCITO + una condición del art. 9 <em>además</em> de la base del art. 6. El listón está muy por encima de la «política de privacidad genérica» de las plantillas US. Aquí es donde un checklist de reel se queda corto y un jurista no.</div>
-      <div class="banner-caso" id="banner-jvf" style="display:none"><b>Caso cargado: JV Fitness (dogfooding).</b> Respuestas precargadas según su realidad a 12-07-2026: establecida en España · sector salud/fitness · trata dato de salud (peso, medidas, ingesta) → <b>dispara la rama art. 9</b> · B2C · gratis por ahora · proveedores US (GitHub Pages, APIs de IA) · sin analítica de terceros · menores posibles (hubo «aviso adolescente» en el MVP) · el motor recomienda → hay IA de cara al usuario. Si el resultado te parece exigente, es que la herramienta funciona.</div>
       <div class="fila-acciones no-print" style="margin-top:16px">
         <button class="btn" onclick="reiniciar()">↺ Cambiar respuestas</button>
         <button class="btn" onclick="window.print()">⎙ Imprimir expediente</button>
@@ -265,7 +259,7 @@
     </div>
 
     <h2><span class="n">B.2</span>Las 18 ramas, encendidas según tus respuestas</h2>
-    <p class="lede">Cada rama trae su artículo, por qué se te enciende, qué hacer y <b>quién lo hace</b>. Marca «cerrada» cuando esté hecha de verdad (hecho ≠ redactado: hecho es publicado/firmado/decidido). El progreso se guarda solo en este navegador.</p>
+    <p class="lede">Cada rama trae su artículo, por qué se te enciende, qué hacer y <b>quién lo hace</b>. Marca «cerrada» cuando esté hecha de verdad (hecho ≠ redactado: hecho es publicado/firmado/decidido).</p>
     <div class="leyenda"><b>Marcas de reparto:</b> 🧑‍⚖️ criterio o acción jurídica <b>tuya</b> · 🖐️ trámite o panel que solo puedes tocar tú · 🤖 borrador que redacta/genera Claude (y luego validas tú). <b>Prioridad:</b> <span class="t-rojo tag">crítico ya</span> antes de lanzar/captar · <span class="t-ambar tag">importante</span> en el primer tramo · <span class="t-pausa tag">cuando toque</span> se enciende sola al crecer.</div>
     <div id="ramas"></div>
   </div>
@@ -304,8 +298,7 @@
 
   <footer>
     <b>SALIDA ORIENTATIVA · NO ES ASESORAMIENTO JURÍDICO NI DICTAMEN.</b> Herramienta de triaje para preparar la consulta con abogado/a.<br>
-    CARÁTULA DE EXPEDIENTE, 100% CLIENTE · MOTOR: CHECKLIST ES/UE DE 18 PUNTOS (12-07-2026).<br>
-    FUNCIONA 100% EN EL NAVEGADOR · SIN SERVIDOR · SIN CLAVES · EL PROGRESO SE GUARDA SOLO EN ESTE NAVEGADOR (localStorage) · NADA SALE DE TU EQUIPO.
+    CARÁTULA DE EXPEDIENTE · CHECKLIST ES/UE DE 18 PUNTOS (12-07-2026).
   </footer>
 </div>
 
@@ -318,7 +311,6 @@ var CLAVE_LS = 'jvlegal_autodiag_saas_v01';
 var ORDEN = ['alcance','sector','salud','clientes','cobro','provUS','cookies','menores','ia'];
 var respuestas = {};
 var checks = {};
-var esCasoJVF = false;
 
 // ---------- Etiquetas legibles para el recap ----------
 var ETIQ = {
@@ -427,7 +419,7 @@ var RAMAS = [
     quien:'🧑‍⚖️ la evaluación es criterio jurídico tuyo (🤖 prepara la plantilla)',
     ev:function(a){
       if(a.salud==='si'){
-        if(a.ia==='si') return {e:'ambar', p:'Dato de salud + un motor que evalúa y recomienda sobre las personas: dos marcadores de la lista AEPD. A poca escala que cojas, la EIPD deja de ser opcional.'};
+        if(a.ia==='si') return {e:'ambar', p:'Dato de salud + un sistema que evalúa y recomienda sobre las personas: dos marcadores de la lista AEPD. A poca escala que cojas, la EIPD deja de ser opcional.'};
         return {e:'ambar', p:'Con dato de salud a escala, la EIPD es lo esperable. Hazla antes de crecer: retro-encajarla con miles de usuarios es mucho peor.'};
       }
       if(a.salud==='nose') return {e:'ambar', p:'Resuelve primero si tratas categoría especial (rama #2); de eso depende que la EIPD sea probable u opcional.'};
@@ -462,10 +454,10 @@ var RAMAS = [
     }},
   { n:14, t:'Pagos — PCI-DSS por descarga',
     base:'PCI-DSS (estándar de seguridad de las marcas de tarjeta, exigido por contrato con la pasarela).',
-    hacer:'La tarjeta NUNCA pasa por tu servidor ni se guarda en tu base de datos: checkout de Stripe/PayPal (o equivalente) para que el número viaje directo a la pasarela. Así descargas casi todo el PCI-DSS en ellos. En esto el reel acierta 1:1.',
+    hacer:'La tarjeta NUNCA pasa por tu servidor ni queda almacenada en tu base de datos: checkout de Stripe/PayPal (o equivalente) para que el número viaje directo a la pasarela. Así descargas casi todo el PCI-DSS en ellos. En esto el reel acierta 1:1.',
     quien:'🤖 integración del checkout (sin tocar PAN/CVV jamás)',
     ev:function(a){
-      if(a.cobro==='ya') return {e:'ambar', p:'Ya cobras: verifica que el dato de tarjeta ni pasa ni se guarda en tu infraestructura. Si hoy pasa por tu servidor, esto salta a crítico.'};
+      if(a.cobro==='ya') return {e:'ambar', p:'Ya cobras: verifica que el dato de tarjeta ni pasa ni queda almacenado en tu infraestructura. Si hoy pasa por tu servidor, esto salta a crítico.'};
       if(a.cobro==='pronto') return {e:'ambar', p:'Elige pasarela ANTES del primer cobro y que el diseño nazca sin tocar la tarjeta. Retro-encajar PCI después es carísimo.'};
       return {e:'pausa', p:'Sin cobros no hay tarjeta que proteger. La rama se enciende al elegir pasarela.'};
     }},
@@ -497,11 +489,11 @@ var RAMAS = [
     }},
   { n:18, t:'IA — transparencia del AI Act',
     base:'Reglamento (UE) 2024/1689 (AI Act), art. 50: deber de transparencia, aplicable desde el 2-ago-2026.',
-    hacer:'Si el usuario interactúa con una IA o recibe sus recomendaciones, debe saberlo: decláralo en la interfaz («este plan lo genera un motor de IA») y en los términos. Si tu IA recomienda sobre salud, vigila además dos fronteras: las categorías de riesgo del AI Act y la de «producto sanitario» (MDR) — que tu app no cruce a diagnosticar o tratar.',
+    hacer:'Si el usuario interactúa con una IA o recibe sus recomendaciones, debe saberlo: decláralo en la interfaz («este plan lo genera una IA») y en los términos. Si tu IA recomienda sobre salud, vigila además dos fronteras: las categorías de riesgo del AI Act y la de «producto sanitario» (MDR) — que tu app no cruce a diagnosticar o tratar.',
     quien:'🧑‍⚖️ clasificas el riesgo · 🤖 textos de transparencia en la UI',
     ev:function(a){
       if(a.ia==='si'){
-        if(a.sector==='salud') return {e:'ambar', p:'Tu motor recomienda sobre salud: declara la IA (art. 50, ya con fecha: 2-ago-2026) y mantén el producto en «bienestar/hábitos», lejos de diagnosticar o tratar — esa frontera (MDR) cambia el juego entero.'};
+        if(a.sector==='salud') return {e:'ambar', p:'Tu producto recomienda sobre salud: declara la IA (art. 50, ya con fecha: 2-ago-2026) y mantén el producto en «bienestar/hábitos», lejos de diagnosticar o tratar — esa frontera (MDR) cambia el juego entero.'};
         return {e:'ambar', p:'Hay IA de cara al usuario: el deber de transparencia del art. 50 tiene fecha (2-ago-2026). Declararlo cuesta una línea; no declararlo es sanción de transparencia.'};
       }
       return {e:'pausa', p:'Sin IA de cara al usuario, el art. 50 no se activa. Se enciende el día que metas chat, recomendaciones o contenido generado.'};
@@ -520,7 +512,6 @@ function mostrarPaso(id){
 }
 function resp(clave, val){
   respuestas[clave]=val;
-  esCasoJVF=false;
   guardar();
   if(clave==='alcance' && val==='fuera'){ mostrarPaso('v-fuera'); return; }
   var i=ORDEN.indexOf(clave);
@@ -529,20 +520,11 @@ function resp(clave, val){
 }
 function atras(idPaso){ mostrarPaso(idPaso); }
 function reiniciar(){
-  respuestas={}; esCasoJVF=false; guardar();
+  respuestas={}; guardar();
   mostrarPaso('q-alcance');
 }
 function completo(){
   return ORDEN.every(function(k){ return respuestas[k]; });
-}
-
-// ---------- Caso JV Fitness (dogfooding) ----------
-function casoJVF(){
-  respuestas={ alcance:'es', sector:'salud', salud:'si', clientes:'b2c', cobro:'no',
-               provUS:'si', cookies:'no', menores:'si', ia:'si' };
-  esCasoJVF=true;
-  guardar();
-  veredicto();
 }
 
 // ---------- Veredicto ----------
@@ -589,9 +571,8 @@ function veredicto(){
     return v ? '<span class="chip">'+ETIQ[k][v]+'</span>' : '';
   }).join('');
 
-  // 5. Diferencial art. 9 y banner JVF
+  // 5. Diferencial art. 9
   document.getElementById('dif-salud').style.display = (respuestas.salud==='si') ? 'block' : 'none';
-  document.getElementById('banner-jvf').style.display = esCasoJVF ? 'block' : 'none';
 
   // 6. Pintar las 18 ramas (rojas primero, luego ámbar, pausa, na — manteniendo numeración visible)
   var ordenEstado={rojo:0, ambar:1, pausa:2, na:3};
@@ -632,7 +613,7 @@ function veredicto(){
 // ---------- Persistencia (solo en ESTE navegador) ----------
 function guardar(){
   try{
-    localStorage.setItem(CLAVE_LS, JSON.stringify({a:respuestas, c:checks, jvf:esCasoJVF}));
+    localStorage.setItem(CLAVE_LS, JSON.stringify({a:respuestas, c:checks}));
   }catch(e){ /* modo privado o storage lleno: la app sigue funcionando sin guardar */ }
 }
 function cargar(){
@@ -641,13 +622,12 @@ function cargar(){
     if(d && typeof d==='object'){
       respuestas = d.a || {};
       checks = d.c || {};
-      esCasoJVF = !!d.jvf;
     }
   }catch(e){ respuestas={}; checks={}; }
 }
 function borrarTodo(){
   try{ localStorage.removeItem(CLAVE_LS); }catch(e){}
-  respuestas={}; checks={}; esCasoJVF=false;
+  respuestas={}; checks={};
   mostrarPaso('q-alcance');
 }
 

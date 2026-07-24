@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Nada se carga de fuera: sin CDN, sin fuentes externas, sin red. Las tipografías son las del sistema. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'none'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>JV Legal — herramientas jurídicas deterministas</title>
+<meta name="description" content="Cuatro herramientas jurídicas construidas por un estudiante de Derecho: cómputo de plazos en cinco vías, efecto MASC de la LO 1/2025, autodiagnóstico de lanzamiento SaaS y triaje de cláusulas. Cada cálculo cita el artículo que lo sostiene.">
+<link rel="canonical" href="https://pablolietor22.github.io/jvlegal/">
+<meta name="referrer" content="no-referrer">
+<meta property="og:title" content="JV Legal — herramientas jurídicas deterministas">
+<meta property="og:description" content="Cada cálculo cita el artículo que lo sostiene. Plazos procesales en cinco vías, efecto MASC (LO 1/2025), autodiagnóstico SaaS y triaje de cláusulas.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="JV Legal">
+<meta property="og:url" content="https://pablolietor22.github.io/jvlegal/">
+<meta property="og:image" content="https://pablolietor22.github.io/jvlegal/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="JV Legal — herramientas jurídicas deterministas: cada cálculo cita el artículo que lo sostiene.">
+<meta property="og:locale" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="JV Legal — herramientas jurídicas deterministas">
+<meta name="twitter:description" content="Cada cálculo cita el artículo que lo sostiene. Plazos procesales, efecto MASC (LO 1/2025), autodiagnóstico SaaS y triaje de cláusulas.">
+<meta name="twitter:image" content="https://pablolietor22.github.io/jvlegal/assets/og.png">
+<meta name="twitter:image:alt" content="JV Legal — herramientas jurídicas deterministas">
+<meta name="theme-color" content="#F1ECE2">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","name":"JV Legal","url":"https://pablolietor22.github.io/jvlegal/","inLanguage":"es-ES","description":"Herramientas jurídicas deterministas: cómputo de plazos procesales, efecto MASC (LO 1/2025), autodiagnóstico de lanzamiento SaaS y triaje de cláusulas.","author":{"@type":"Person","name":"Pablo Andrés Martínez"}}
+</script>
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   EXPEDIENTE FUTURISTA · el despacho del futuro imprime en papel.
+   Papel crema + tinta + morado con disciplina. Retícula de plano técnico
+   dibujada EN TINTA sobre el papel, grano de imprenta, sellos de goma.
+   Cero dependencias: tipografías del sistema, cero red.
+   ══════════════════════════════════════════════════════════════════════════ */
+:root{
+  /* Papel y superficies — la elevación se dice con el TONO, nunca con sombras difusas */
+  --papel:#F1ECE2;
+  --carta:#F7F4EC;
+  --carpeta:#EDE7D9;
+  /* Cuatro tintas, ninguna es negro puro */
+  --tinta:#1C1B22;
+  --tinta-b:#3A3843;
+  --tinta-c:#6B6879;
+  --tinta-d:#948FA3;
+  /* Un solo acento, con disciplina */
+  --morado:#6354C8;
+  --morado-hondo:#4E3FA8;
+  --morado-agua:rgba(99,84,200,.09);
+  /* Trazos */
+  --pelo:1px solid rgba(28,27,34,.14);
+  --pelo-suave:1px solid rgba(28,27,34,.08);
+  --rejilla:rgba(28,27,34,.05);
+
+  --serif:Georgia,"Times New Roman",serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"Cascadia Mono",Consolas,Menlo,monospace;
+
+  --curva:cubic-bezier(.16,1,.3,1);
+  --muelle:cubic-bezier(.2,1.6,.4,1);
+  --marco:min(1180px,100%);
+  --aire:clamp(20px,5vw,56px);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background-color:var(--papel);
+  /* Plano técnico dibujado sobre el papel: 1px cada 24px, en tinta al 5% */
+  background-image:
+    repeating-linear-gradient(to right, var(--rejilla) 0 1px, transparent 1px 24px),
+    repeating-linear-gradient(to bottom, var(--rejilla) 0 1px, transparent 1px 24px);
+  color:var(--tinta-b);
+  font-family:var(--sans);
+  font-size:clamp(.97rem,.55vw + .84rem,1.04rem);
+  line-height:1.62;
+  overflow-x:hidden;
+}
+
+/* ── Grano de imprenta ──────────────────────────────────────────────────── */
+body::before{
+  content:"";position:fixed;inset:-60px;z-index:90;pointer-events:none;
+  mix-blend-mode:multiply;opacity:.042;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+@media (prefers-reduced-motion:no-preference){
+  body::before{animation:grano 1.1s steps(2,end) infinite}
+  @keyframes grano{0%,100%{background-position:0 0}50%{background-position:13px -9px}}
+}
+
+/* ── Rejas del maquetado ───────────────────────────────────────────────── */
+.marco{width:var(--marco);margin:0 auto;padding-left:var(--aire);padding-right:var(--aire)}
+.sec{position:relative;padding:clamp(72px,11vh,132px) 0}
+/* Cruces "+" en las cuatro esquinas: el papel es un plano cotado */
+.sec::before{
+  content:"";position:absolute;inset:clamp(46px,7vh,80px) calc(var(--aire) - 5px);
+  pointer-events:none;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11'%3E%3Cpath d='M5.5 0v11M0 5.5h11' stroke='%23948FA3' stroke-width='1'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11'%3E%3Cpath d='M5.5 0v11M0 5.5h11' stroke='%23948FA3' stroke-width='1'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11'%3E%3Cpath d='M5.5 0v11M0 5.5h11' stroke='%23948FA3' stroke-width='1'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11'%3E%3Cpath d='M5.5 0v11M0 5.5h11' stroke='%23948FA3' stroke-width='1'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:left top,right top,left bottom,right bottom;
+}
+@media (max-width:700px){ .sec::before{display:none} }
+
+/* ── Tipografía ────────────────────────────────────────────────────────── */
+.mono{font-family:var(--mono);font-size:.69rem;text-transform:uppercase;letter-spacing:.08em;color:var(--tinta-c)}
+.reg{display:flex;align-items:baseline;gap:12px;margin-bottom:clamp(26px,4vh,44px)}
+.reg .n{font-family:var(--mono);font-size:.69rem;letter-spacing:.08em;color:var(--morado);font-weight:700}
+.reg .t{font-family:var(--mono);font-size:.69rem;text-transform:uppercase;letter-spacing:.16em;color:var(--tinta-c)}
+.reg .barra{flex:1;height:1px;background:rgba(28,27,34,.14)}
+
+h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.95rem,4.4vw,3.4rem);line-height:1.06;letter-spacing:-.015em;color:var(--tinta);max-width:19ch}
+h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.32rem,2.2vw,1.72rem);line-height:1.14;letter-spacing:-.012em;color:var(--tinta)}
+.lede{font-size:clamp(1.02rem,.8vw + .84rem,1.24rem);line-height:1.58;color:var(--tinta-b);max-width:56ch}
+.menudo{font-size:.9rem;line-height:1.6;color:var(--tinta-c);max-width:60ch}
+
+a{color:inherit}
+a:focus-visible,button:focus-visible{outline:2px solid var(--morado);outline-offset:3px}
+
+/* ── Sello de goma ─────────────────────────────────────────────────────── */
+.sello{
+  display:inline-block;font-family:var(--mono);font-weight:700;
+  font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;
+  padding:8px 15px;border:3px double currentColor;color:var(--morado);
+  transform:rotate(-2.2deg);
+}
+html.anim .sello{opacity:0;transform:rotate(-2.2deg) scale(1.15)}
+html.anim .sello.estampado{
+  opacity:1;transform:rotate(-2.2deg) scale(1);
+  transition:opacity .25s var(--muelle),transform .25s var(--muelle);
+}
+@media (max-width:560px){ .sello{font-size:.62rem;letter-spacing:.12em;padding:7px 12px} }
+.sello-b{color:var(--tinta-c);transform:rotate(1.6deg)}
+html.anim .sello-b{transform:rotate(1.6deg) scale(1.15)}
+html.anim .sello-b.estampado{transform:rotate(1.6deg) scale(1)}
+
+/* ── Revelado al entrar en pantalla ────────────────────────────────────── */
+html.anim .rev{opacity:0;transform:translateY(14px)}
+html.anim .rev.visto{opacity:1;transform:none;transition:opacity .6s var(--curva),transform .6s var(--curva)}
+@media print{ html.anim .rev{opacity:1!important;transform:none!important} html.anim .sello{opacity:1!important;transform:rotate(-2.2deg)!important} }
+
+/* ══ 00 · CARÁTULA ═══════════════════════════════════════════════════════ */
+.caratula{padding-top:clamp(26px,5vh,50px);padding-bottom:clamp(56px,8vh,96px)}
+.caratula::before{display:none}
+.cabecera{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;
+  padding-bottom:14px;border-bottom:var(--pelo);flex-wrap:wrap}
+.cabecera .exp{font-family:var(--mono);font-size:.66rem;text-transform:uppercase;letter-spacing:.14em;color:var(--tinta-c);line-height:1.8}
+.cabecera .exp b{color:var(--tinta);font-weight:700}
+
+.titulo{
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(2.8rem,9vw,6.5rem);line-height:.92;letter-spacing:-.015em;
+  color:var(--tinta);margin:clamp(34px,6vh,64px) 0 0;
+}
+.titulo em{font-style:italic;color:var(--tinta-c)}
+.claim{
+  font-family:var(--serif);font-size:clamp(1.24rem,1.5vw + .92rem,2.05rem);
+  line-height:1.28;letter-spacing:-.008em;color:var(--tinta);
+  max-width:23ch;margin-top:clamp(20px,3vh,34px);
+}
+.claim b{font-weight:400;color:var(--morado)}
+.honesto{margin-top:20px;max-width:54ch;font-size:.98rem;line-height:1.62;color:var(--tinta-b)}
+
+.acciones{display:flex;gap:12px;flex-wrap:wrap;margin-top:clamp(28px,4vh,40px)}
+.cta{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--mono);font-size:.73rem;text-transform:uppercase;letter-spacing:.11em;font-weight:700;
+  background:var(--morado);color:#FFF;border:1px solid var(--morado);
+  padding:15px 24px;text-decoration:none;
+  transition:background .2s ease,transform .2s var(--curva);
+}
+.cta:hover{background:var(--morado-hondo);border-color:var(--morado-hondo);transform:translateY(-1px)}
+.cta-b{background:transparent;color:var(--tinta);border:1px solid rgba(28,27,34,.28)}
+.cta-b:hover{background:var(--carpeta);border-color:var(--tinta);transform:translateY(-1px)}
+
+.firma{display:flex;align-items:center;gap:16px;margin-top:clamp(38px,6vh,58px)}
+.retrato{width:64px;height:64px;flex:none;border:var(--pelo);background:var(--carta);overflow:hidden}
+.retrato img{width:100%;height:100%;object-fit:cover;display:block;
+  filter:grayscale(1) contrast(1.06);mix-blend-mode:multiply}
+.firma .quien{font-family:var(--mono);font-size:.66rem;text-transform:uppercase;letter-spacing:.13em;color:var(--tinta-c);line-height:1.85}
+.firma .quien b{display:block;font-family:var(--serif);font-size:1.06rem;text-transform:none;letter-spacing:0;color:var(--tinta);font-weight:400}
+
+/* Banda de datos duros */
+.banda{display:grid;grid-template-columns:repeat(4,1fr);border-top:var(--pelo);border-bottom:var(--pelo);
+  margin-top:clamp(40px,6vh,64px)}
+.banda div{padding:18px 20px 16px;border-left:var(--pelo-suave)}
+.banda div:first-child{border-left:0;padding-left:0}
+.banda .cifra{font-family:var(--mono);font-size:1.6rem;font-weight:700;color:var(--tinta);line-height:1.1;letter-spacing:-.01em}
+/* OJO: esta glosa NO puede llamarse .pie — chocaría con el .pie del cierre de página. */
+.banda .glosa{font-family:var(--mono);font-size:.63rem;text-transform:uppercase;letter-spacing:.1em;color:var(--tinta-c);margin-top:8px;line-height:1.55}
+@media (max-width:760px){
+  .banda{grid-template-columns:1fr 1fr}
+  .banda div{border-left:0;border-top:var(--pelo-suave);padding-left:0;padding-right:14px}
+  .banda div:nth-child(-n+2){border-top:0}
+  .banda div:nth-child(2),.banda div:nth-child(4){padding-left:16px;border-left:var(--pelo-suave)}
+}
+
+/* ══ 01 · HERRAMIENTAS · fichas apiladas ════════════════════════════════ */
+.pila{margin-top:8px}
+.ficha{
+  position:sticky;top:calc(56px + var(--i,0) * 16px);
+  background:var(--carta);border:var(--pelo);
+  padding:clamp(22px,3vw,34px);
+  margin-bottom:clamp(22px,3vh,34px);
+}
+.ficha-xl{background:var(--carta);border-color:rgba(28,27,34,.22);padding:clamp(26px,3.6vw,44px)}
+.ficha-mini{background:var(--carpeta)}
+.ficha-cab{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+.ficha-cab .idx{font-family:var(--mono);font-size:.69rem;letter-spacing:.08em;color:var(--tinta-d);font-weight:700}
+.etiq{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.11em;
+  padding:4px 9px;border:1px solid rgba(28,27,34,.2);color:var(--tinta-c);white-space:nowrap}
+.etiq-viva{color:var(--morado);border-color:rgba(99,84,200,.4);background:var(--morado-agua)}
+.ficha h3{margin-bottom:10px}
+.ficha-xl h3{font-size:clamp(1.62rem,3vw,2.5rem)}
+.ficha-cuerpo{display:grid;gap:clamp(20px,3vw,34px);align-items:start}
+.ficha-cuerpo.dos{grid-template-columns:minmax(0,1fr) minmax(0,.92fr)}
+.ficha-xl .ficha-cuerpo{grid-template-columns:minmax(0,1fr) minmax(0,1.14fr)}
+.ficha-mini .ficha-cuerpo{grid-template-columns:minmax(0,1fr) minmax(0,.7fr)}
+@media (max-width:860px){ .ficha-cuerpo.dos{grid-template-columns:1fr} .ficha{position:static} }
+
+.rasgos{list-style:none;margin-top:16px;display:grid;gap:9px}
+.rasgos li{position:relative;padding-left:20px;font-size:.93rem;line-height:1.55;color:var(--tinta-b)}
+.rasgos li::before{content:"";position:absolute;left:2px;top:.62em;width:8px;height:1px;background:var(--tinta-d)}
+.rasgos b{font-weight:600;color:var(--tinta)}
+.ficha-pie{margin-top:20px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.abrir{font-family:var(--mono);font-size:.71rem;text-transform:uppercase;letter-spacing:.1em;font-weight:700;
+  color:var(--morado);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:2px;
+  transition:border-color .18s ease}
+.abrir:hover{border-bottom-color:var(--morado)}
+.abrir .flecha{display:inline-block;transition:transform .22s var(--curva)}
+.abrir:hover .flecha{transform:translateX(4px)}
+.nota-pie{font-family:var(--mono);font-size:.63rem;text-transform:uppercase;letter-spacing:.09em;color:var(--tinta-d)}
+
+/* Visor: la hoja impresa asomando por el borde de la carpeta.
+   --papel-foto = el color de fondo REAL de cada captura, para que el degradado
+   de corte funda con la hoja y no meta una banda blanca encima. */
+.visor{position:relative;border:var(--pelo);background:var(--papel-foto,#FFF);overflow:hidden;
+  max-height:clamp(230px,38vh,380px)}
+.ficha-xl .visor{max-height:clamp(280px,48vh,520px)}
+.visor img{width:100%;height:auto;display:block}
+.visor::after{content:"";position:absolute;left:0;right:0;bottom:0;height:78px;
+  background:linear-gradient(to bottom,transparent,var(--papel-foto,#FFF) 84%)}
+.visor-pie{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--tinta-d);margin-top:8px}
+
+/* ══ 02 · DERECHO VERIFICABLE ═══════════════════════════════════════════ */
+.tesis{display:grid;grid-template-columns:minmax(0,.86fr) minmax(0,1.14fr);gap:clamp(28px,5vw,72px);align-items:start}
+/* La tesis se queda clavada mientras el índice de normas desfila al lado */
+.tesis-izq{position:sticky;top:clamp(80px,14vh,120px)}
+@media (max-width:900px){ .tesis{grid-template-columns:1fr} .tesis-izq{position:static} }
+.tesis .dicho{font-family:var(--serif);font-size:clamp(1.3rem,1.9vw,1.72rem);line-height:1.34;color:var(--tinta);letter-spacing:-.008em}
+.tesis .dicho b{font-weight:400;color:var(--morado)}
+
+.indice{display:grid;gap:26px}
+.indice .grupo>.tit{font-family:var(--mono);font-size:.63rem;text-transform:uppercase;letter-spacing:.14em;
+  color:var(--tinta-c);padding-bottom:7px;border-bottom:var(--pelo);margin-bottom:2px}
+.indice dl{display:grid;grid-template-columns:minmax(112px,auto) 1fr;column-gap:18px}
+.indice dt{font-family:var(--mono);font-size:.68rem;letter-spacing:.02em;color:var(--tinta);
+  padding:7px 0 6px;border-bottom:var(--pelo-suave);white-space:nowrap}
+.indice dd{font-size:.85rem;color:var(--tinta-c);padding:7px 0 6px;border-bottom:var(--pelo-suave);line-height:1.45}
+/* Disciplina del acento: el morado marca el GRUPO de jurisprudencia, no cada sentencia
+   (cuatro morados seguidos se comen el presupuesto de acento de la pantalla). */
+.indice .juris>.tit{color:var(--morado)}
+.indice .juris dt{color:var(--tinta)}
+@media (max-width:520px){
+  .indice dl{grid-template-columns:1fr}
+  .indice dt{padding-bottom:0;border-bottom:0}
+  .indice dd{padding-top:2px}
+}
+
+/* La hoja suelta que se sale del expediente y pisa la sección siguiente */
+.hoja-suelta{
+  position:relative;z-index:2;
+  width:min(620px,100%);margin-top:clamp(38px,6vh,64px);
+  margin-bottom:calc(-1 * clamp(38px,7vw,96px));
+  background:var(--carta);border:var(--pelo);padding:14px 14px 12px;
+  transform:rotate(-1.5deg);
+}
+.hoja-suelta img{width:100%;height:auto;display:block;border:var(--pelo-suave)}
+.hoja-suelta .rotulo{font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--tinta-c);margin-bottom:9px}
+.hoja-suelta .rotulo b{color:var(--tinta)}
+
+/* ══ 03 · MÉTODO ════════════════════════════════════════════════════════ */
+.pasos{list-style:none;counter-reset:p;display:grid;gap:0;margin-top:6px}
+.pasos li{counter-increment:p;display:grid;grid-template-columns:minmax(78px,auto) 1fr;
+  gap:clamp(16px,3vw,40px);padding:clamp(20px,3vh,28px) 0;border-top:var(--pelo)}
+.pasos li:last-child{border-bottom:var(--pelo)}
+.pasos li::before{content:"0" counter(p);font-family:var(--mono);font-size:.69rem;letter-spacing:.08em;
+  color:var(--tinta-d);font-weight:700;padding-top:.42em}
+.pasos h4{font-family:var(--serif);font-weight:400;font-size:clamp(1.14rem,1.8vw,1.42rem);
+  color:var(--tinta);letter-spacing:-.008em;margin-bottom:5px;line-height:1.2}
+.pasos p{font-size:.94rem;color:var(--tinta-b);max-width:62ch;line-height:1.6}
+@media (max-width:560px){ .pasos li{grid-template-columns:1fr;gap:8px} }
+
+.declaracion{margin-top:clamp(30px,5vh,48px);border-left:3px solid var(--morado);
+  background:var(--carta);padding:22px clamp(20px,3vw,30px)}
+.declaracion p{font-family:var(--serif);font-size:clamp(1.08rem,1.5vw,1.32rem);line-height:1.42;
+  color:var(--tinta);max-width:52ch;letter-spacing:-.005em}
+
+/* ══ 04 · VISIÓN ════════════════════════════════════════════════════════ */
+.vision{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:clamp(24px,5vw,64px);align-items:end}
+@media (max-width:760px){ .vision{grid-template-columns:1fr;align-items:start} }
+
+/* ══ PIE ════════════════════════════════════════════════════════════════ */
+.pie{border-top:var(--pelo);background:var(--carpeta);padding:clamp(40px,6vh,64px) 0 clamp(30px,4vh,44px)}
+.pie-rejilla{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr);
+  gap:clamp(24px,4vw,52px);align-items:start}
+@media (max-width:760px){ .pie-rejilla{grid-template-columns:1fr;gap:30px} }
+.pie h5{font-family:var(--mono);font-size:.63rem;text-transform:uppercase;letter-spacing:.14em;
+  color:var(--tinta-c);font-weight:400;margin-bottom:12px}
+.pie-lista{list-style:none;display:grid;gap:9px}
+.pie-lista a,.pie-lista span{font-size:.93rem;color:var(--tinta-b);text-decoration:none;
+  border-bottom:1px solid transparent;transition:color .18s ease,border-color .18s ease}
+.pie-lista a:hover{color:var(--morado);border-bottom-color:var(--morado)}
+.cruce{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:.71rem;
+  text-transform:uppercase;letter-spacing:.1em;color:var(--tinta);text-decoration:none;
+  border:1px solid rgba(28,27,34,.24);padding:11px 15px;transition:background .18s ease,border-color .18s ease}
+.cruce:hover{background:var(--carta);border-color:var(--tinta)}
+.pie-fin{margin-top:clamp(34px,5vh,52px);padding-top:16px;border-top:var(--pelo-suave);
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;color:var(--tinta-d)}
+</style>
+</head>
+<body>
+
+<!-- ═══ 00 · CARÁTULA ═══════════════════════════════════════════════════ -->
+<header class="sec caratula">
+  <div class="marco">
+    <div class="cabecera rev">
+      <p class="exp"><b>JV LEGAL</b><br>Expediente de herramientas · 2026</p>
+      <span class="sello" data-sello>En vivo · 3 de 4 herramientas</span>
+    </div>
+
+    <h1 class="titulo rev">JV <em>Legal</em></h1>
+
+    <p class="claim rev">Herramientas jurídicas deterministas: cada cálculo <b>cita el artículo que lo sostiene</b>.</p>
+
+    <p class="honesto rev">Las construye Pablo Andrés Martínez, estudiante de Derecho en la Universidad
+      Complutense de Madrid, dirigiendo el desarrollo con metodologías de IA agéntica. El proyecto está
+      en construcción; las herramientas publicadas funcionan hoy y se pueden usar ahora mismo.</p>
+
+    <div class="acciones rev">
+      <a class="cta" href="suite.html">Abrir la suite en vivo</a>
+      <a class="cta cta-b" href="https://github.com/pablolietor22/jvlegal" target="_blank" rel="noopener">Ver el código</a>
+    </div>
+
+    <div class="firma rev">
+      <span class="retrato"><img src="assets/pablo.png" alt="Retrato de Pablo Andrés Martínez" width="592" height="611" loading="lazy" decoding="async"></span>
+      <span class="quien">Construido y dirigido por<b>Pablo Andrés Martínez</b>Derecho · UCM</span>
+    </div>
+
+    <div class="banda rev">
+      <div><p class="cifra">5</p><p class="glosa">Vías de cómputo:<br>civil, contencioso, social, penal y LPAC</p></div>
+      <div><p class="cifra">6</p><p class="glosa">Modalidades de MASC<br>civiles y mercantiles</p></div>
+      <div><p class="cifra">18</p><p class="glosa">Obligaciones de lanzamiento,<br>cada una con su base legal</p></div>
+      <div><p class="cifra">0</p><p class="glosa">Datos que salen<br>de tu dispositivo</p></div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ 01 · HERRAMIENTAS ═══════════════════════════════════════════════ -->
+<section class="sec" id="herramientas">
+  <div class="marco">
+    <div class="reg rev"><span class="n">01</span><span class="t">Herramientas</span><span class="barra"></span></div>
+    <h2 class="rev">Cuatro motores. Tres se pueden usar ahora.</h2>
+
+    <div class="pila">
+
+      <!-- 1 · Reloj de plazos (la grande) -->
+      <article class="ficha ficha-xl rev" style="--i:0">
+        <div class="ficha-cab">
+          <span class="idx">01</span>
+          <span class="etiq etiq-viva">Demo viva</span>
+          <span class="etiq">LEC · LJCA · LJS · LECrim · LPAC</span>
+        </div>
+        <div class="ficha-cuerpo dos">
+          <div>
+            <h3>Reloj de plazos procesales</h3>
+            <p class="menudo">Introduces la notificación y el plazo; devuelve el vencimiento y el
+              razonamiento entero, paso a paso, con el artículo aplicable en cada uno de ellos.</p>
+            <ul class="rasgos">
+              <li>Cómputo en <b>cinco vías</b>: Civil (LEC), Contencioso (LJCA), Social (LJS), Penal (LECrim) y Administrativo común (LPAC).</li>
+              <li><b>Día de gracia del art. 135.5 LEC</b>: hasta las 15:00 del día hábil siguiente.</li>
+              <li><b>Agosto</b> resuelto orden por orden, con la doctrina del TS (STS 910/2020) para el contencioso.</li>
+              <li>Festivos reales de calendario, no fines de semana a ojo.</li>
+              <li>Notificación a procurador y LexNET (art. 151.2 LEC) como opción del cálculo.</li>
+            </ul>
+            <div class="ficha-pie">
+              <a class="abrir" href="suite.html">Abrir el reloj <span class="flecha">▸</span></a>
+              <span class="nota-pie">Se calcula en tu navegador</span>
+            </div>
+          </div>
+          <div>
+            <div class="visor" style="--papel-foto:#FBF8F1"><img src="assets/shots/reloj.webp" alt="Resultado del reloj de plazos: recurso contencioso notificado en agosto, con el razonamiento numerado citando el art. 128.2 LJCA y la STS 910/2020." width="820" height="1664" loading="lazy" decoding="async"></div>
+            <p class="visor-pie">Captura real · recurso contencioso notificado el 12/08/2026</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- 2 · Efecto MASC -->
+      <article class="ficha rev" style="--i:1">
+        <div class="ficha-cab">
+          <span class="idx">02</span>
+          <span class="etiq etiq-viva">Demo viva</span>
+          <span class="etiq">LO 1/2025</span>
+        </div>
+        <div class="ficha-cuerpo dos">
+          <div>
+            <h3>Efecto MASC</h3>
+            <p class="menudo">Qué le hace a tu plazo acudir a un medio adecuado de solución de
+              controversias: si se suspende, si se interrumpe y cuándo vuelve a correr.</p>
+            <ul class="rasgos">
+              <li><b>Prescripción frente a caducidad</b>: interrumpir y reiniciar no es lo mismo que suspender y reanudar.</li>
+              <li><b>Seis modalidades civiles</b>: negociación directa, mediación, conciliación privada, dictamen de experto, oferta vinculante y conciliación ante LAJ, notario o registrador.</li>
+              <li>Papeleta del orden social con el cómputo del Supremo (<b>STS 531/2022</b>).</li>
+              <li><b>Ventana de procedibilidad de un año</b> y plazo de las cautelares.</li>
+              <li>Bloque de <b>verificación manual</b>: declara el ±1 día que la doctrina discute, en vez de esconderlo.</li>
+            </ul>
+            <div class="ficha-pie">
+              <a class="abrir" href="suite.html">Abrir el efecto MASC <span class="flecha">▸</span></a>
+            </div>
+          </div>
+          <div>
+            <div class="visor" style="--papel-foto:#FBF8F1"><img src="assets/shots/masc.webp" alt="Resultado del efecto MASC en el orden social: congelación, reanudación y vencimiento de la acción de despido, con los pasos citando la STS 531/2022." width="820" height="1918" loading="lazy" decoding="async"></div>
+            <p class="visor-pie">Captura real · despido con papeleta de conciliación</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- 3 · Autodiagnóstico SaaS -->
+      <article class="ficha rev" style="--i:2">
+        <div class="ficha-cab">
+          <span class="idx">03</span>
+          <span class="etiq etiq-viva">Demo viva</span>
+          <span class="etiq">RGPD · LSSI · TRLGDCU · AI Act</span>
+        </div>
+        <div class="ficha-cuerpo dos">
+          <div>
+            <h3>Autodiagnóstico de lanzamiento SaaS</h3>
+            <p class="menudo">Nueve preguntas al fundador y el expediente queda sellado: qué le impide
+              lanzar hoy, qué puede cerrar después y qué no le aplica.</p>
+            <ul class="rasgos">
+              <li>Veredicto con <b>sello de expediente</b> y recuento de ramas críticas, importantes y aplazables.</li>
+              <li><b>Dieciocho obligaciones</b>, cada una con su artículo y su sanción detrás.</li>
+              <li>Rama de <b>dato de categoría especial (art. 9 RGPD)</b>, la que se cae de las plantillas estadounidenses.</li>
+              <li>España y UE: RGPD, LOPDGDD, LSSI, TRLGDCU y art. 50 del Reglamento de IA.</li>
+            </ul>
+            <div class="ficha-pie">
+              <a class="abrir" href="autodiagnostico.html">Abrir el autodiagnóstico <span class="flecha">▸</span></a>
+            </div>
+          </div>
+          <div>
+            <div class="visor" style="--papel-foto:#FFFFFF"><img src="assets/shots/autodiagnostico.webp" alt="Veredicto del autodiagnóstico: sello rojo «no lances aún, 5 puertas críticas», recuento de ramas y chips con las respuestas dadas." width="1720" height="1366" loading="lazy" decoding="async"></div>
+            <p class="visor-pie">Captura real · veredicto sobre un caso de sector salud</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- 4 · Semáforo (la pequeña, sin demo pública) -->
+      <article class="ficha ficha-mini rev" style="--i:3">
+        <div class="ficha-cab">
+          <span class="idx">04</span>
+          <span class="etiq">Demo con IA · en despliegue controlado</span>
+        </div>
+        <div class="ficha-cuerpo dos">
+          <div>
+            <h3>Semáforo de cláusulas</h3>
+            <p class="menudo">Triaje de una cláusula en verde, ámbar o rojo, con los riesgos detectados
+              y las preguntas que llevarle al abogado. A diferencia de las otras tres, esta piensa con
+              un modelo de lenguaje: necesita una clave de acceso, así que no se publica abierta.</p>
+            <div class="ficha-pie">
+              <span class="nota-pie">Sin enlace público · la salida siempre es un borrador para revisión</span>
+            </div>
+          </div>
+          <div>
+            <div class="visor" style="--papel-foto:#F2F3F0"><img src="assets/shots/semaforo.webp" alt="Interfaz del semáforo de cláusulas con el ejemplo de penalización a consumidor cargado, antes de analizar." width="1520" height="1190" loading="lazy" decoding="async"></div>
+            <p class="visor-pie">Captura real · ejemplo de penalización a consumidor cargado</p>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 02 · DERECHO VERIFICABLE ════════════════════════════════════════ -->
+<section class="sec" id="verificable">
+  <div class="marco">
+    <div class="reg rev"><span class="n">02</span><span class="t">Derecho verificable</span><span class="barra"></span></div>
+
+    <div class="tesis">
+      <div class="tesis-izq rev">
+        <h2>Nada de cajas negras.</h2>
+        <p class="dicho" style="margin-top:20px">Cada resultado <b>enseña su razonamiento y cita su
+          fuente</b>. Se puede comprobar línea a línea contra el BOE, discutir y corregir.</p>
+        <p class="menudo" style="margin-top:20px">Un plazo mal contado no se arregla pidiéndole más
+          confianza al usuario. Por eso los motores no devuelven una fecha: devuelven el camino
+          hasta la fecha. Y cuando la doctrina no es unánime, lo dicen en vez de elegir por su cuenta.</p>
+        <p class="menudo" style="margin-top:16px">Estas son las normas que citan hoy los motores,
+          tal y como salen en pantalla.</p>
+      </div>
+
+      <div class="indice rev">
+        <div class="grupo">
+          <p class="tit">Cómputo procesal y administrativo</p>
+          <dl>
+            <dt>LEC art. 130</dt><dd>Días y horas hábiles</dd>
+            <dt>LEC art. 131</dt><dd>Habilitación por urgencia</dd>
+            <dt>LEC art. 133</dt><dd>Cómputo y prórroga al día hábil siguiente</dd>
+            <dt>LEC art. 135.5</dt><dd>Presentación hasta las 15:00 del día siguiente</dd>
+            <dt>LEC art. 151.2</dt><dd>Notificación a procurador y LexNET</dd>
+            <dt>LEC art. 730.2</dt><dd>Demanda tras medidas cautelares previas</dd>
+            <dt>LJCA art. 46.1</dt><dd>Plazo de recurso, de fecha a fecha</dd>
+            <dt>LJCA art. 128.2</dt><dd>Agosto inhábil, salvo derechos fundamentales</dd>
+            <dt>LJS art. 43.4</dt><dd>Agosto hábil en materias exceptuadas</dd>
+            <dt>LJS art. 45.1</dt><dd>Día de gracia en el orden social</dd>
+            <dt>LJS art. 65</dt><dd>Efecto de la papeleta de conciliación</dd>
+            <dt>LOPJ art. 182</dt><dd>Inhábiles: también 24 y 31 de diciembre</dd>
+            <dt>LPAC art. 30</dt><dd>Cómputo en el procedimiento administrativo</dd>
+            <dt>CC art. 5</dt><dd>Plazos sustantivos de fecha a fecha</dd>
+          </dl>
+        </div>
+        <div class="grupo">
+          <p class="tit">MASC · Ley Orgánica 1/2025</p>
+          <dl>
+            <dt>art. 3.2</dt><dd>Órdenes excluidos: contencioso y penal</dd>
+            <dt>art. 7.1</dt><dd>Negociación directa: efecto desde el intento</dd>
+            <dt>art. 7.2</dt><dd>Mediación, conciliación privada y experto</dd>
+            <dt>art. 7.3</dt><dd>Ventana de un año y medidas cautelares</dd>
+            <dt>art. 14</dt><dd>Conciliación ante LAJ, notario o registrador</dd>
+            <dt>art. 17</dt><dd>Oferta vinculante confidencial</dd>
+            <dt>art. 18</dt><dd>Dictamen de experto independiente</dd>
+          </dl>
+        </div>
+        <div class="grupo juris">
+          <p class="tit">Jurisprudencia aplicada</p>
+          <dl>
+            <dt>STS 910/2020</dt><dd>Agosto en el orden contencioso</dd>
+            <dt>STS 531/2022</dt><dd>Cómputo de la papeleta en el orden social</dd>
+            <dt>STS 350/2022</dt><dd>Mismo criterio unificado del Supremo</dd>
+            <dt>STS 817/2020</dt><dd>Mismo criterio unificado del Supremo</dd>
+          </dl>
+        </div>
+        <div class="grupo">
+          <p class="tit">Lanzamiento de un SaaS en España y la UE</p>
+          <dl>
+            <dt>RGPD art. 9</dt><dd>Datos de categoría especial, como los de salud</dd>
+            <dt>LSSI art. 10</dt><dd>Información general del prestador</dd>
+            <dt>LSSI art. 22.2</dt><dd>Cookies y consentimiento</dd>
+            <dt>TRLGDCU 97 y ss.</dt><dd>Contratación a distancia y desistimiento</dd>
+            <dt>AI Act art. 50</dt><dd>Transparencia, aplicable desde el 2-08-2026</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <figure class="hoja-suelta rev">
+      <figcaption class="rotulo"><b>Lo que ninguna calculadora enseña:</b> el motor declara lo que no está cerrado</figcaption>
+      <img src="assets/shots/verificacion.webp" alt="Bloque «verificación manual (zonas a vigilar)» del efecto MASC: advierte del día de gracia del art. 45.1 LJS y del ±1 día discutido en la doctrina." width="736" height="418" loading="lazy" decoding="async">
+    </figure>
+  </div>
+</section>
+
+<!-- ═══ 03 · MÉTODO ═════════════════════════════════════════════════════ -->
+<section class="sec" id="metodo">
+  <div class="marco">
+    <div class="reg rev"><span class="n">03</span><span class="t">Cómo lo construyo</span><span class="barra"></span></div>
+    <h2 class="rev">Primero el dictamen. Después el código.</h2>
+    <p class="lede rev" style="margin-top:20px">No empiezo programando. Cada motor nace de un dictamen
+      jurídico escrito antes de que exista una sola línea de código: el de cómputo de plazos y el de
+      efecto MASC ocupan decenas de páginas de norma, doctrina y jurisprudencia contrastada.</p>
+
+    <ol class="pasos rev" style="margin-top:clamp(30px,5vh,46px)">
+      <li>
+        <div>
+          <h4>Dictamen jurídico</h4>
+          <p>Redacto el criterio antes de construir nada: qué dice la norma, dónde discrepa la doctrina
+            y qué ha unificado el Supremo. Es el documento que manda; el software solo lo ejecuta.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <h4>Especificación cerrada</h4>
+          <p>Traduzco el dictamen a un pliego técnico: entradas, salidas, casos límite y qué debe citar
+            cada paso. Si algo no está en el pliego, no se construye.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <h4>Construcción con agentes</h4>
+          <p>Los agentes de IA implementan contra ese pliego, sin margen para improvisar el criterio
+            jurídico. Es la parte mecánica, y es donde la velocidad se nota.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <h4>Verificación contra la ley</h4>
+          <p>Cada resultado se contrasta con el texto vigente y con la jurisprudencia citada, y la
+            herramienta declara en pantalla las zonas donde el cómputo admite discusión.</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="declaracion rev">
+      <p>La IA ejecuta a gran velocidad; el criterio jurídico, las decisiones y la responsabilidad son míos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 04 · VISIÓN ═════════════════════════════════════════════════════ -->
+<section class="sec" id="vision">
+  <div class="marco">
+    <div class="reg rev"><span class="n">04</span><span class="t">A dónde va</span><span class="barra"></span></div>
+    <div class="vision">
+      <div class="rev">
+        <h2>Automatizar lo repetitivo del despacho.</h2>
+        <p class="lede" style="margin-top:20px">Contar plazos, comprobar si un trámite es preceptivo,
+          leer una cláusula por primera vez: trabajo que consume horas y que un motor determinista hace
+          igual de bien y sin cansarse. El criterio se queda donde debe estar, con el jurista.</p>
+        <p class="menudo" style="margin-top:16px">JV Legal está en construcción. Lo que hay publicado
+          funciona hoy y se puede abrir ahora mismo; lo que falta, falta.</p>
+      </div>
+      <div class="rev"><span class="sello sello-b" data-sello>En construcción</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PIE ═════════════════════════════════════════════════════════════ -->
+<footer class="pie">
+  <div class="marco">
+    <div class="pie-rejilla">
+      <div>
+        <h5>JV Legal</h5>
+        <p class="menudo" style="font-size:.88rem">Herramientas jurídicas deterministas.
+          Todo se calcula en tu dispositivo: ni servidores, ni cuentas, ni datos guardados.</p>
+        <p style="margin-top:18px"><a class="cruce" href="https://pablolietor22.github.io/jv-fitness/showcase.html" target="_blank" rel="noopener">⚡ Ver también: JV Fitness</a></p>
+      </div>
+      <div>
+        <h5>Herramientas</h5>
+        <ul class="pie-lista">
+          <li><a href="suite.html">Reloj de plazos procesales</a></li>
+          <li><a href="suite.html">Efecto MASC (LO 1/2025)</a></li>
+          <li><a href="autodiagnostico.html">Autodiagnóstico de lanzamiento SaaS</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Contacto</h5>
+        <ul class="pie-lista">
+          <li><a id="correo" href="#">Correo</a><noscript><br><span class="menudo" style="font-size:.85rem">jvlegalpam (arroba) gmail.com</span></noscript></li>
+          <li><a href="https://www.linkedin.com/in/pablo-andres-martinez-ricote-8279b0384" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li><a href="https://github.com/pablolietor22/jvlegal" target="_blank" rel="noopener">Ver el código</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="pie-fin">
+      <span>Pablo Andrés Martínez · Derecho, UCM · 2026</span>
+      <span>Orientativo · no es asesoramiento jurídico</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* Correo pintado por JS (mismo criterio anti-scraping que la suite). */
+  (function(){
+    var a=document.getElementById('correo');
+    if(!a) return;
+    var d='jvlegalpam'+String.fromCharCode(64)+'gmail.com';
+    a.textContent=d; a.setAttribute('href','mailto:'+d);
+  })();
+
+  var quieto = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* El estado oculto SOLO existe si marcamos <html class="anim">: sin JS, o con "reducir
+     movimiento", la página se sirve entera visible y ningún fallo puede dejarla en blanco. */
+  if(!quieto) document.documentElement.classList.add('anim');
+
+  function revelarTodo(){
+    var i, n = document.querySelectorAll('.rev');
+    for(i=0;i<n.length;i++) n[i].classList.add('visto');
+    var s = document.querySelectorAll('[data-sello]');
+    for(i=0;i<s.length;i++) s[i].classList.add('estampado');
+  }
+
+  /* Failsafe: bots, prerenderizadores y capturas no hacen scroll. A los 6 s se revela todo
+     pase lo que pase, y también antes de imprimir. */
+  window.setTimeout(revelarTodo, 6000);
+  window.addEventListener('beforeprint', revelarTodo);
+  window.revelarTodo = revelarTodo;
+
+  if(quieto || !('IntersectionObserver' in window)){ revelarTodo(); return; }
+
+  var obs = new IntersectionObserver(function(entradas){
+    var retraso = 0;
+    for(var i=0;i<entradas.length;i++){
+      var e = entradas[i];
+      if(!e.isIntersecting) continue;
+      (function(el, ms){
+        window.setTimeout(function(){
+          el.classList.add('visto');
+          var sellos = el.matches('[data-sello]') ? [el] : el.querySelectorAll('[data-sello]');
+          for(var k=0;k<sellos.length;k++) sellos[k].classList.add('estampado');
+        }, ms);
+      })(e.target, retraso);
+      retraso += 70;
+      obs.unobserve(e.target);
+    }
+  }, { rootMargin:'0px 0px -8% 0px', threshold:0.06 });
+
+  var piezas = document.querySelectorAll('.rev');
+  for(var i=0;i<piezas.length;i++) obs.observe(piezas[i]);
+
+  /* El sello de la carátula está sobre el pliegue: se estampa al cargar, sin esperar scroll. */
+  window.setTimeout(function(){
+    var c = document.querySelector('.cabecera');
+    if(c){ c.classList.add('visto'); var s=c.querySelector('[data-sello]'); if(s) s.classList.add('estampado'); }
+  }, 260);
+})();
+</script>
+</body>
+</html>

@@ -2545,7 +2545,17 @@ try{ contactoSync(); }catch(e){ console.error(e); }
 (function(){
   var el=document.getElementById('cal-full');
   if(el) el.addEventListener('click', jvCalClick);
-  window.addEventListener('popstate', function(){ __jvCalHist=false; jvCalOcultar(); });
+  window.addEventListener('popstate', function(){
+    /* Capa a capa, como Escape: si la ficha de un día está abierta, «atrás» cierra SOLO la ficha
+       y re-arma el estado del calendario en la pila — el gesto del móvil no debe tragarse dos capas. */
+    var p=document.getElementById('cf-pop'), cal=document.getElementById('cal-full');
+    if(p && !p.hidden && cal && !cal.hidden){
+      jvCerrarPop();
+      try{ history.pushState({jvcal:1},''); __jvCalHist=true; }catch(_){ __jvCalHist=false; }
+      return;
+    }
+    __jvCalHist=false; jvCalOcultar();
+  });
 })();
 // Clic en el fondo difuminado (fuera de la tarjeta) cierra el modal de envío.
 (function(){ var mf=document.getElementById('modal-envio');

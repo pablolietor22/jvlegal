@@ -166,8 +166,37 @@ html.anim .reg.visto .t::after{content:"";position:absolute;left:100%;top:.1em;m
 html.anim .ficha .esq{transform:scale(0)}
 html.anim .ficha.visto .esq{transform:scale(1);transition:transform .2s var(--curva)}
 
+/* ── Interferencia breve (300 ms): SOLO en lo que todavía no ha salido ─── */
+.gl{position:relative;display:inline-block}
+.gl::before,.gl::after{content:attr(data-t);position:absolute;left:0;top:0;width:100%;opacity:0;pointer-events:none}
+html.anim .gl.on::before{opacity:.9;color:var(--morado);animation:gl1 .3s steps(1,end) 1}
+html.anim .gl.on::after{opacity:.9;color:#B3261E;animation:gl2 .3s steps(1,end) 1}
+@keyframes gl1{0%{clip-path:inset(8% 0 62% 0);transform:translate3d(-3px,0,0)}
+  33%{clip-path:inset(52% 0 22% 0);transform:translate3d(4px,0,0)}
+  66%{clip-path:inset(28% 0 44% 0);transform:translate3d(-2px,0,0)}
+  100%{clip-path:inset(0 0 100% 0);transform:none}}
+@keyframes gl2{0%{clip-path:inset(58% 0 16% 0);transform:translate3d(3px,0,0)}
+  33%{clip-path:inset(14% 0 58% 0);transform:translate3d(-4px,0,0)}
+  66%{clip-path:inset(40% 0 34% 0);transform:translate3d(2px,0,0)}
+  100%{clip-path:inset(0 0 100% 0);transform:none}}
+
+/* ── La hoja impresa aparece de abajo arriba: mismo revelado .rev, sin otro observador ── */
+html.anim .rev .visor img{clip-path:inset(100% 0 0 0)}
+html.anim .rev.visto .visor img{clip-path:inset(0 0 0 0);transition:clip-path .5s var(--curva) .06s}
+
+/* ── Base de las letras (paneles del sello, magnéticas del titular, ola del pie) ── */
+.palabra{display:inline-block;white-space:nowrap}
+.letra{display:inline-block}
+@media (hover:hover) and (prefers-reduced-motion:no-preference){
+  .cruce:hover .letra{animation:ola .6s cubic-bezier(.32,.72,.35,1) both;animation-delay:calc(var(--i) * 32ms)}
+}
+@keyframes ola{0%,100%{transform:translate3d(0,0,0)}45%{transform:translate3d(0,-7px,0)}}
+
 @media print{
   html.anim .rev{opacity:1!important;transform:none!important}
+  html.anim .rev .visor img{clip-path:none!important}
+  .gl::before,.gl::after{display:none!important}
+  .letra{transform:none!important;animation:none!important}
   html.anim .sello{opacity:1!important;transform:rotate(var(--rot))!important;animation:none!important}
   html.anim .raya path,html.anim .boli path{stroke-dashoffset:0!important}
   html.anim .reg .t{animation:none!important;clip-path:none!important}
@@ -946,6 +975,7 @@ html.anim .visto .boli path{stroke-dashoffset:0;transition:stroke-dashoffset .9s
           var sellos = el.matches('[data-sello]') ? [el] : el.querySelectorAll('[data-sello]');
           for(var k=0;k<sellos.length;k++) sellos[k].classList.add('estampado');
           contarDentro(el);
+          interferir(el);   // la sacudida de «lo que aún no ha salido», al asomar
         }, ms);
       })(e.target, retraso);
       retraso += 70;
@@ -983,7 +1013,208 @@ html.anim .visto .boli path{stroke-dashoffset:0;transition:stroke-dashoffset .9s
       h.addEventListener('pointerleave',function(){t.classList.remove('on');});
     })();
   }
+
+  /* ══ Movimiento con hogar ═══════════════════════════════════════════════════
+     Cada efecto vive en UN sitio y solo en uno, para que la página siga siendo
+     papel y no una feria: la interferencia marca lo que todavía no ha salido,
+     el recorte revela las capturas, los paneles componen el sello de la carátula,
+     el magnetismo y el huevo viven en el titular y la ola en el enlace del pie.
+     Todo esto cuelga del «return» de arriba: con «reducir movimiento» ni se
+     ejecuta, así que el documento sale entero, compuesto y quieto.
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+  /* Parte el texto en letras sin romper palabras ni los hijos que ya había (el <em>
+     del titular). El nombre accesible se conserva en aria-label del contenedor. */
+  function partir(el){
+    var letras=[], rotulo=el.textContent.replace(/\s+/g,' ').trim();
+    (function rec(nodo){
+      var hijos=[].slice.call(nodo.childNodes), i, n;
+      for(i=0;i<hijos.length;i++){
+        n=hijos[i];
+        if(n.nodeType===1){ n.setAttribute('aria-hidden','true'); rec(n); continue; }
+        if(n.nodeType!==3) continue;
+        var frag=document.createDocumentFragment(), pal=n.nodeValue.split(' '), p, c, w, s, cs;
+        for(p=0;p<pal.length;p++){
+          if(p) frag.appendChild(document.createTextNode(' '));
+          if(!pal[p]) continue;
+          w=document.createElement('span');
+          w.className='palabra'; w.setAttribute('aria-hidden','true');
+          cs=[].slice.call(pal[p]);
+          for(c=0;c<cs.length;c++){
+            s=document.createElement('span'); s.className='letra'; s.textContent=cs[c];
+            w.appendChild(s); letras.push(s);
+          }
+          frag.appendChild(w);
+        }
+        nodo.replaceChild(frag,n);
+      }
+    })(el);
+    el.setAttribute('aria-label', rotulo);
+    for(var k=0;k<letras.length;k++) letras[k].style.setProperty('--i',k);
+    return letras;
+  }
+
+  /* ── 1 · Interferencia: el sello «En construcción» y el chip del semáforo ── */
+  function interferencia(el){
+    if(!el) return;
+    var t=el.textContent.replace(/\s+/g,' ').trim(), temp=0;
+    var g=document.createElement('span');
+    g.className='gl'; g.setAttribute('data-t',t); g.textContent=t;
+    el.textContent=''; el.appendChild(g);
+    g.sacude=function(){
+      if(g.classList.contains('on')) return;
+      g.classList.add('on');
+      window.clearTimeout(temp);
+      temp=window.setTimeout(function(){ g.classList.remove('on'); },320);
+    };
+    el.addEventListener('pointerenter',g.sacude);
+    el.addEventListener('pointerdown',g.sacude);
+  }
+  interferencia(document.querySelector('.sello-b'));
+  interferencia(document.querySelector('.ficha-mini .ficha-cab .etiq'));
+
+  /* ── 2 · Paneles de aeropuerto en el sello de la carátula: una vez, ~840 ms,
+           y acaba clavado en el rótulo de siempre (el estampado sigue golpeando) ── */
+  (function(){
+    var s=document.querySelector('.cabecera .sello'); if(!s) return;
+    var L=partir(s), fin=[], sem=[], RING='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', k;
+    s.setAttribute('role','img');   // el sello se lee por su rótulo, no letra a letra
+    for(k=0;k<L.length;k++){ fin.push(L[k].textContent); sem.push((Math.random()*36)|0); }
+    var RET=22, GIRO=55, VUELTAS=4, t0=0;
+    function paso(t){
+      if(!t0) t0=t;
+      var p=t-t0, listo=true, i, d, v, f;
+      for(i=0;i<L.length;i++){
+        d=p-i*RET;
+        if(d<0){ L[i].style.transform='perspective(300px) rotateX(-86deg)'; listo=false; continue; }
+        v=Math.floor(d/GIRO);
+        if(v>=VUELTAS){
+          if(L[i].textContent!==fin[i]) L[i].textContent=fin[i];
+          L[i].style.transform=''; continue;
+        }
+        listo=false; f=(d%GIRO)/GIRO;
+        if(/[a-z0-9]/i.test(fin[i])) L[i].textContent=RING.charAt((sem[i]+v)%36);
+        L[i].style.transform='perspective(300px) rotateX('+(-80*(1-f)).toFixed(1)+'deg)';
+      }
+      if(listo){ for(i=0;i<L.length;i++){ L[i].textContent=fin[i]; L[i].style.transform=''; } return; }
+      window.requestAnimationFrame(paso);
+    }
+    window.setTimeout(function(){ window.requestAnimationFrame(paso); }, 470);
+  })();
+
+  /* ── 3 · Titular: letras magnéticas (solo con ratón) + huevo de Pascua al clic.
+           Sin pista visual: quien lo encuentre, lo encuentra. Todo va en transform,
+           así que las letras se mueven sin mover ni un píxel del maquetado. ── */
+  (function(){
+    var h=document.querySelector('.titulo'); if(!h) return;
+    var L=partir(h), n=L.length, cont=h.offsetParent||document.body;
+    var px=new Float32Array(n), py=new Float32Array(n), pr=new Float32Array(n);
+    var vx=new Float32Array(n), vy=new Float32Array(n), vr=new Float32Array(n);
+    var base=[], caida=40, estado='quieto', raf=0, ult=0, pd={x:0,y:0,dentro:false};
+    var R=120, F=13, G=1500, REB=.42, ROCE=.86;
+
+    function medir(){
+      base=[];
+      for(var i=0;i<n;i++) base.push({x:L[i].offsetLeft+L[i].offsetWidth/2, y:L[i].offsetTop+L[i].offsetHeight/2});
+      /* El suelo va justo bajo el titular: las letras saltan al aire libre de arriba y
+         se posan sin llegar a pisar el párrafo de debajo. */
+      caida=Math.max(18, Math.round(h.getBoundingClientRect().height*.28));
+    }
+    function pinta(i){
+      L[i].style.transform='translate3d('+px[i].toFixed(2)+'px,'+py[i].toFixed(2)+'px,0)'
+        +(pr[i]?' rotate('+pr[i].toFixed(1)+'deg)':'');
+    }
+    function limpia(){ for(var i=0;i<n;i++){ px[i]=0;py[i]=0;pr[i]=0;vx[i]=0;vy[i]=0;vr[i]=0;L[i].style.transform=''; } }
+    function bucle(t){
+      raf=0; var i, dx, dy, d, f, tx, ty, dt;
+      if(estado==='cayendo'){
+        dt=ult?Math.min((t-ult)/1000,.045):.016; ult=t;
+        var parados=0;
+        for(i=0;i<n;i++){
+          vy[i]+=G*dt; px[i]+=vx[i]*dt; py[i]+=vy[i]*dt; pr[i]+=vr[i]*dt;
+          if(py[i]>=caida){
+            py[i]=caida;
+            if(Math.abs(vy[i])<40){ vy[i]=0; vx[i]*=.7; vr[i]*=.7; }
+            else { vy[i]=-vy[i]*REB; vx[i]*=ROCE; vr[i]*=ROCE; }
+            if(Math.abs(vy[i])<1 && Math.abs(vx[i])<2) parados++;
+          }
+          pinta(i);
+        }
+        if(parados===n){ ult=0; return; }   // asentadas: el bucle se apaga solo
+      } else if(estado==='volviendo'){
+        var vuelto=true;
+        for(i=0;i<n;i++){
+          vx[i]=(vx[i]+(0-px[i])*.24)*.72; px[i]+=vx[i];
+          vy[i]=(vy[i]+(0-py[i])*.24)*.72; py[i]+=vy[i];
+          vr[i]=(vr[i]+(0-pr[i])*.24)*.72; pr[i]+=vr[i];
+          if(Math.abs(px[i])>.3||Math.abs(py[i])>.3||Math.abs(pr[i])>.3) vuelto=false;
+          pinta(i);
+        }
+        if(vuelto){ limpia(); estado='quieto'; return; }
+      } else {
+        var quietas=true;
+        for(i=0;i<n;i++){
+          tx=0; ty=0;
+          if(pd.dentro){
+            dx=pd.x-base[i].x; dy=pd.y-base[i].y; d=Math.sqrt(dx*dx+dy*dy)||.001;
+            if(d<R){ f=1-d/R; tx=(dx/d)*f*F; ty=(dy/d)*f*F*.8; }
+          }
+          vx[i]=(vx[i]+(tx-px[i])*.22)*.76; px[i]+=vx[i];
+          vy[i]=(vy[i]+(ty-py[i])*.22)*.76; py[i]+=vy[i];
+          if(Math.abs(px[i])>.05||Math.abs(py[i])>.05||Math.abs(vx[i])>.05||Math.abs(vy[i])>.05) quietas=false;
+          pinta(i);
+        }
+        if(quietas && !pd.dentro){ limpia(); return; }
+      }
+      raf=window.requestAnimationFrame(bucle);
+    }
+    function enciende(){ if(!raf) raf=window.requestAnimationFrame(bucle); }
+
+    h.addEventListener('click',function(){
+      medir();
+      if(estado==='cayendo'){ estado='volviendo'; for(var i=0;i<n;i++){ vx[i]=0;vy[i]=0;vr[i]=0; } }
+      else{
+        estado='cayendo'; ult=0;
+        for(var j=0;j<n;j++){
+          px[j]=0; py[j]=0; pr[j]=0;
+          vx[j]=(Math.random()-.5)*54; vy[j]=-60-Math.random()*130; vr[j]=(Math.random()-.5)*230;
+        }
+      }
+      enciende();
+    });
+    if(window.PointerEvent && window.matchMedia('(pointer:fine)').matches){
+      h.addEventListener('pointerenter',function(e){ pd.dentro=true; mueve(e); enciende(); });
+      h.addEventListener('pointermove',function(e){ if(pd.dentro){ mueve(e); enciende(); } });
+      h.addEventListener('pointerleave',function(){ pd.dentro=false; enciende(); });
+    }
+    function mueve(e){ var r=cont.getBoundingClientRect(); pd.x=e.clientX-r.left; pd.y=e.clientY-r.top; }
+    medir();
+    window.addEventListener('resize',function(){
+      window.clearTimeout(medir.t); medir.t=window.setTimeout(medir,200);
+    },{passive:true});
+  })();
+
+  /* ── 4 · Ola por letra en el enlace cruzado del pie (solo al pasar el ratón) ──
+         Va dentro de UN span: .cruce es inline-flex y sus letras sueltas serían
+         cajas del flex, con el hueco de 9 px metido entre cada letra. */
+  (function(){
+    var c=document.querySelector('.cruce'); if(!c) return;
+    var s=document.createElement('span');
+    while(c.firstChild) s.appendChild(c.firstChild);
+    c.appendChild(s); partir(s);
+    c.setAttribute('aria-label', s.getAttribute('aria-label'));
+    s.removeAttribute('aria-label'); s.setAttribute('aria-hidden','true');
+  })();
 })();
+
+/* Dispara la interferencia de los elementos que asoman (lo llama el observador de
+   revelados). Fuera del cierre de arriba para que exista aunque no haya movimiento:
+   sin efectos no encuentra ningún «.gl» y no hace nada. */
+function interferir(el){
+  if(!el || !el.querySelectorAll) return;
+  var g=el.querySelectorAll('.gl');
+  for(var k=0;k<g.length;k++) if(g[k].sacude) window.setTimeout(g[k].sacude,170);
+}
 </script>
 </body>
 </html>

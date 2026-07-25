@@ -323,6 +323,135 @@
   .cal-ley .ly-gra{border:2px dotted var(--ambar);background:rgba(194,135,29,.16)}
   .cal-no{font-size:.82rem;color:var(--gris);line-height:1.55}
 
+  /* ═══════════ v2.1 · TIRA DISPARADORA + CALENDARIO A PANTALLA COMPLETA ═══════════
+     Feedback de Pablo (25-07-2026): «que aparezca como cuando abres el calendario: cada día
+     coloreado según hábil o inhábil, MÁS GRANDE, que al pulsar salga a TODA LA PANTALLA y tenga
+     una tecla de volver atrás. Todo está muy pequeño: optimizas el espacio en vez de usar pop-ups
+     o pantallas más grandes. Como Word: clicas y aparece un pop-up. No encojas la información.»
+     → En pantalla, la rejilla diminuta desaparece: queda una FRANJA con el resumen y un botón
+       grande, y el calendario de verdad se abre a pantalla completa.
+     → La rejilla compacta NO se tira: sigue existiendo para el PAPEL (.solo-papel), que es donde
+       una rejilla de 3 meses por fila sí tiene sentido. La hoja impresa no cambia. */
+  .cal-tira{margin-top:20px}
+  .cal-tira-res{font-family:var(--serif);font-size:1.16rem;color:var(--tinta);line-height:1.5;margin-bottom:3px}
+  .cal-tira-res b{color:var(--azul);white-space:nowrap}
+  .cal-tira-meta{font-family:var(--mono);font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--gris);margin-bottom:15px;line-height:1.6}
+  .cf-abrir{width:100%;margin-top:0;padding:17px 18px;font-size:.8rem;line-height:1.3}
+  .cal-tira-pie{font-size:.8rem;color:var(--gris);margin-top:11px;line-height:1.5}
+  /* La rejilla compacta solo existe para el papel: en pantalla estorba (es justo lo que Pablo
+     rechazó). display:none aquí; @media print la devuelve a la vida. */
+  .solo-papel{display:none}
+
+  /* ---- El overlay ---- */
+  .cal-full{position:fixed;inset:0;z-index:80;display:none;flex-direction:column;background:var(--bg)}
+  .cal-full:not([hidden]){display:flex}
+  body.jv-cal-abierto{overflow:hidden}
+  .cf-cab{flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--panel);
+    border-bottom:1px solid var(--linea)}
+  .cf-volver{flex:0 0 auto;font-family:var(--mono);font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;
+    font-weight:700;background:var(--azul);color:#FFFFFF;border:0;border-radius:9px;padding:0 18px;cursor:pointer;
+    min-height:46px;display:inline-flex;align-items:center;gap:7px}
+  .cf-volver:hover{background:#51429F}
+  .cf-print{flex:0 0 auto;font-family:var(--mono);font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;
+    font-weight:600;background:transparent;color:var(--azul);border:1px solid var(--azul);border-radius:9px;
+    padding:0 15px;cursor:pointer;min-height:46px;display:inline-flex;align-items:center;gap:7px}
+  .cf-print:hover{background:rgba(99,84,200,.10)}
+  .cf-volver:focus-visible,.cf-print:focus-visible,.cf-pop-x:focus-visible{outline:2px solid var(--tinta);outline-offset:2px}
+  .cf-tit{flex:1 1 auto;min-width:0;text-align:center;font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--gris);line-height:1.5}
+  .cf-tit b{display:block;font-family:var(--serif);font-size:1.02rem;letter-spacing:0;text-transform:none;
+    color:var(--tinta);font-weight:700}
+  /* Móvil estrecho: el título se va bajo los botones para que «Volver» e «Imprimir» quepan enteros. */
+  @media(max-width:560px){
+    .cf-cab{flex-wrap:wrap;padding:9px 10px}
+    .cf-volver{flex:1 1 auto;justify-content:center}
+    .cf-tit{order:3;flex:1 1 100%;text-align:left;padding-top:2px}
+    .cf-tit b{font-size:.95rem}
+  }
+  .cf-cuerpo{flex:1 1 auto;overflow-y:auto;overflow-x:hidden;padding:16px 12px 22px;-webkit-overflow-scrolling:touch}
+  .cf-meses{display:grid;grid-template-columns:1fr;gap:16px;max-width:1180px;margin:0 auto}
+  @media(min-width:700px){ .cf-meses{grid-template-columns:repeat(2,1fr)} }
+  @media(min-width:1080px){ .cf-meses{grid-template-columns:repeat(3,1fr)} }
+  .cf-mes{border:1px solid var(--linea);border-radius:12px;background:var(--panel2);padding:12px 8px 10px}
+  .cf-mes table{width:100%;border-collapse:collapse;table-layout:fixed}
+  .cf-mes caption{font-family:var(--serif);font-size:1.14rem;font-weight:700;color:var(--tinta);text-align:left;
+    padding:0 4px 9px}
+  .cf-mes th{font-family:var(--mono);font-size:.72rem;letter-spacing:.04em;color:var(--gris);font-weight:700;
+    padding-bottom:7px;text-align:center}
+  .cf-mes td{padding:2px;text-align:center}
+  /* Objetivo táctil: 46px de alto SIEMPRE; el ancho lo reparte la tabla (a 375px salen ~46px por
+     celda). Nada de min-width fijo: forzaría scroll horizontal en pantallas de 320px. */
+  .cf-d{display:flex;align-items:center;justify-content:center;width:100%;min-height:46px;padding:0;
+    border-radius:9px;border:1px solid transparent;background:transparent;font-family:var(--mono);
+    font-size:1rem;font-weight:600;color:var(--gris2);line-height:1}
+  button.cf-d{cursor:pointer;transition:transform .08s ease-out}
+  button.cf-d:hover{transform:translateY(-1px)}
+  button.cf-d:focus-visible{outline:3px solid var(--tinta);outline-offset:2px}
+  @media(max-width:400px){
+    .cf-cuerpo{padding:12px 6px 18px}
+    .cf-mes{padding:11px 4px 9px}
+    .cf-mes td{padding:1px}
+  }
+  /* Colores por día: los MISMOS estados que la rejilla de papel (jvTokensDia), en versión grande y
+     con más contraste — el hábil pasa de tinte a morado macizo con el número en blanco. */
+  .cf-hab{background:var(--azul);color:#FFFFFF;border-color:#51429F}
+  .cf-inh{background:rgba(197,61,56,.13);color:#8A2A26;border-color:rgba(197,61,56,.30)}
+  .cf-off{background:rgba(110,102,87,.08);color:var(--gris);border-color:rgba(110,102,87,.18)}
+  .cf-nada{background:transparent;color:#C4BCAC;border-color:transparent}
+  .cf-fest{text-decoration:underline dotted;text-underline-offset:3px;text-decoration-thickness:2px}
+  .cf-notif{border:2px dashed var(--tinta);color:var(--tinta);font-weight:700}
+  .cf-efec{border:2px dashed var(--azul);color:var(--azul);font-weight:700}
+  .cf-gracia{background:rgba(194,135,29,.20);color:#6B4809;border:2px solid var(--ambar);
+    box-shadow:0 0 0 2px rgba(194,135,29,.38);font-weight:700}
+  .cf-venc{background:#3B2F86;color:#FFFFFF;border:2px solid #FFFFFF;box-shadow:0 0 0 2px #3B2F86;font-weight:700}
+  .cf-mes-f{font-family:var(--mono);font-size:.66rem;letter-spacing:.02em;color:var(--gris);line-height:1.7;
+    margin-top:10px;padding-top:8px;border-top:1px dotted var(--linea)}
+  .cf-mes-nod{border:1px dashed var(--ambar)}
+  .cf-mes-f-nod{color:#7A5310}
+  /* Leyenda fija al pie: grande y siempre a la vista (con tope de alto para móvil apaisado). */
+  .cf-ley{flex:0 0 auto;display:flex;flex-wrap:wrap;justify-content:center;gap:8px 18px;padding:11px 12px;
+    border-top:1px solid var(--linea);background:var(--panel);font-family:var(--mono);font-size:.68rem;
+    letter-spacing:.03em;text-transform:uppercase;color:var(--gris);max-height:32vh;overflow-y:auto}
+  .cf-ley span{display:inline-flex;align-items:center;gap:7px}
+  .cf-ley i{width:22px;height:22px;border-radius:6px;flex:0 0 22px;border:1px solid transparent}
+  .cf-ley .cfly-hab{background:var(--azul);border-color:#51429F}
+  .cf-ley .cfly-inh{background:rgba(197,61,56,.13);border-color:rgba(197,61,56,.30)}
+  .cf-ley .cfly-off{background:rgba(110,102,87,.08);border-color:rgba(110,102,87,.18)}
+  .cf-ley .cfly-not{border:2px dashed var(--tinta);background:var(--panel2)}
+  .cf-ley .cfly-efe{border:2px dashed var(--azul);background:var(--panel2)}
+  .cf-ley .cfly-ven{background:#3B2F86;border:2px solid #FFFFFF;box-shadow:0 0 0 2px #3B2F86}
+  .cf-ley .cfly-gra{background:rgba(194,135,29,.20);border:2px solid var(--ambar)}
+
+  /* ---- Pop-up de un día (el toque «Word»: clicas y aparece la ficha) ---- */
+  .cf-pop{position:fixed;z-index:90;width:min(340px,calc(100vw - 20px));background:var(--panel2);
+    border:1px solid var(--linea);border-radius:12px;box-shadow:0 18px 44px rgba(42,38,32,.28);
+    padding:15px 17px 14px;top:0;left:0;max-height:min(70vh,520px);overflow-y:auto}
+  .cf-pop[hidden]{display:none}
+  .cf-pop-x{position:absolute;top:7px;right:7px;width:30px;height:30px;border:0;border-radius:7px;cursor:pointer;
+    background:transparent;color:var(--gris);font-size:1.3rem;line-height:1;display:flex;align-items:center;justify-content:center}
+  .cf-pop-x:hover{background:rgba(42,38,32,.07);color:var(--tinta)}
+  .cf-pop-f{font-family:var(--mono);font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gris);
+    padding-right:30px;line-height:1.5}
+  .cf-pop-e{font-family:var(--serif);font-size:1.62rem;font-weight:700;line-height:1.15;margin:5px 0 3px;
+    letter-spacing:-.01em}
+  .cf-pop-e.es-hab{color:var(--azul)}
+  .cf-pop-e.es-inh{color:#A83430}
+  .cf-pop-e.es-off{color:var(--gris)}
+  .cf-pop-e.es-gra{color:#8A5E12}
+  .cf-pop-s{font-size:.9rem;color:var(--tinta);line-height:1.5}
+  .cf-pop-n{margin-top:10px;padding-top:9px;border-top:1px solid var(--linea);font-size:.82rem;color:var(--gris);
+    line-height:1.55}
+  .cf-pop-n+.cf-pop-n{margin-top:7px;padding-top:7px;border-top:1px dotted var(--linea)}
+  .cf-pop-n b{color:var(--tinta)}
+  /* Móvil: hoja inferior a lo ancho (nada de fichas diminutas ancladas en 375px). */
+  @media(max-width:560px){
+    .cf-pop{left:0!important;right:0!important;top:auto!important;bottom:0!important;width:auto!important;
+      max-width:none;border-radius:16px 16px 0 0;border-left:0;border-right:0;border-bottom:0;
+      padding:18px 20px 24px;box-shadow:0 -14px 40px rgba(42,38,32,.26)}
+    .cf-pop-e{font-size:1.75rem}
+  }
+
   /* ═══════════ v2 · MICRO-ANIMACIONES (transform/opacity; sobrias) ═══════════
      Solo existen bajo html.jv-anim, que el <head> únicamente pone si el usuario NO ha pedido
      «reducir movimiento». Con reduced-motion todo aparece instantáneo, sin código extra. */
@@ -332,6 +461,13 @@
   @keyframes jvMesIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
   html.jv-anim .d-venc{animation:jvSello .38s cubic-bezier(.2,1.7,.4,1) both;animation-delay:calc(var(--i,0)*65ms + 240ms)}
   @keyframes jvSello{from{transform:scale(1.75);opacity:0}to{transform:none;opacity:1}}
+  /* v2.1: el overlay entra con un fundido corto y los meses escalonados 40 ms. Sin html.jv-anim
+     («reducir movimiento») aparece instantáneo, que es justo lo que quiere quien lo pide. */
+  html.jv-anim .cal-full:not([hidden]){animation:jvCalIn .2s ease-out both}
+  @keyframes jvCalIn{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:none}}
+  html.jv-anim .cf-mes{animation:jvMesIn .34s cubic-bezier(.2,.9,.3,1) both;animation-delay:calc(var(--i,0)*40ms)}
+  html.jv-anim .cf-pop:not([hidden]){animation:jvPopIn .16s ease-out both}
+  @keyframes jvPopIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
 
   /* Piezas que SOLO existen en el papel (membrete y cita al pie del PDF). */
   .solo-print{display:none}
@@ -357,6 +493,12 @@
     *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     /* Ninguna animación puede dejar una pieza a opacity:0 en el papel. */
     html.jv-anim .rz-fecha,html.jv-anim .mes,html.jv-anim .d-venc{animation:none!important;opacity:1!important;transform:none!important}
+    /* --- v2.1: el papel es el papel --- Imprimir con el calendario a pantalla completa abierto
+       debe sacar la HOJA de siempre, no el overlay: este se retira y la rejilla compacta vuelve.
+       Y el bloqueo de scroll del overlay se levanta (con overflow:hidden el papel se cortaría). */
+    .cal-full,.cf-pop,.cal-tira{display:none!important}
+    .solo-papel{display:block!important}
+    body.jv-cal-abierto{overflow:visible!important}
     .membrete{border-bottom:2px solid #2A2620;padding-bottom:9px;margin-bottom:16px;
       font-family:var(--mono);font-size:.66rem;letter-spacing:.06em;color:#2A2620;line-height:1.8}
     .membrete b{font-family:var(--serif);font-size:1.15rem;letter-spacing:0}
@@ -621,6 +763,27 @@ try{
     contrastados con las leyes y la jurisprudencia, que citan el artículo aplicable en cada paso.</p>
     <p class="sobre">Motores verificados a 16/06/2026 · Página revisada el 18/07/2026 · Calendario de festivos: Madrid 2025-2026 · LO 1/2025 vigente</p>
   </footer>
+</div>
+
+<!-- ================= CALENDARIO DEL CÓMPUTO · PANTALLA COMPLETA =================
+     Lo rellena jvAbrirCal() con los MISMOS días derivados y verificados que ya se contaron
+     (JV_CAL). Vive fuera de .wrap porque es fijo a pantalla completa. Vuelta atrás triple:
+     botón «Volver», tecla Escape y el gesto/botón «atrás» del móvil (pushState + popstate). -->
+<div class="cal-full" id="cal-full" role="dialog" aria-modal="true" aria-labelledby="cf-tit" hidden>
+  <div class="cf-cab">
+    <button class="cf-volver" type="button" onclick="jvCerrarCal()"><span aria-hidden="true">←</span> Volver</button>
+    <p class="cf-tit" id="cf-tit"><b>Calendario del cómputo</b><span id="cf-tit-sub"></span></p>
+    <button class="cf-print" type="button" onclick="jvImprimir()"><span aria-hidden="true">🖨️</span> Imprimir</button>
+  </div>
+  <div class="cf-cuerpo" id="cf-cuerpo"></div>
+  <div class="cf-ley" id="cf-ley"></div>
+  <div class="cf-pop" id="cf-pop" role="dialog" aria-labelledby="cf-pop-f" hidden>
+    <button class="cf-pop-x" type="button" aria-label="Cerrar la ficha del día" onclick="jvCerrarPop()">&times;</button>
+    <p class="cf-pop-f" id="cf-pop-f"></p>
+    <p class="cf-pop-e" id="cf-pop-e"></p>
+    <p class="cf-pop-s" id="cf-pop-s"></p>
+    <div id="cf-pop-n"></div>
+  </div>
 </div>
 
 <!-- ================= MODAL · CÓMO ENVIAR EL CORREO ================= -->
@@ -1801,14 +1964,47 @@ function jvVerificar(dias, cont, inp, r){
   return { ok:p.length===0, problemas:p };
 }
 
-/* Rejilla mensual (L-D). Devuelve null si el periodo abarca demasiados meses. */
-function jvCalendarioHTML(dias){
+/* ── Estados visuales de un día: ÚNICA fuente para las DOS rejillas (papel y pantalla completa).
+     No decide nada — lee el objeto que ya fabricó jvDerivarDias. Cada renderizador prefija los
+     tokens con su familia de clases ('d-' la rejilla del papel, 'cf-' el calendario grande). */
+function jvTokensDia(x){
+  var t=[ x.enComputo ? (x.inhabil ? 'inh' : 'hab') : 'off' ];
+  if(x.festivo) t.push('fest');
+  if(x.esVenc) t.push('venc');
+  else if(x.esGracia) t.push('gracia');
+  else if(x.esNotif) t.push('notif');
+  else if(x.esEfectos) t.push('efec');   // marca PROPIA: en el papel el tooltip no existe
+  return t;
+}
+function jvClasesDia(x, pref){
+  return jvTokensDia(x).map(function(t){ return pref+t; }).join(' ');
+}
+/* Rótulo de un día: tooltip de la rejilla del papel y aria-label del calendario grande. */
+function jvTextoDia(x, nod){
+  var t=[JV_DOWL[x.dow]+' '+x.num+' de '+JV_MESES[x.mes]+' de '+x.anio];
+  if(x.esNotif)   t.push('notificación');
+  if(x.esEfectos) t.push('efectos de la notificación (art. 151.2 LEC)');
+  if(x.esVenc)    t.push('VENCIMIENTO');
+  if(x.esGracia)  t.push('día de gracia, hasta las 15:00 h');
+  if(x.enComputo) t.push(x.inhabil ? ('inhábil — '+(x.festivo||x.inhabil))
+    : (nod ? 'hábil según los datos cargados (festivos de '+x.anio+' sin cargar)' : 'hábil (cuenta)'));
+  else if(!x.esGracia) t.push('fuera del cómputo');
+  return t.join(' · ');
+}
+/* Agrupa los días en meses de calendario. Misma estructura para las dos rejillas. */
+function jvAgruparMeses(dias){
   var meses=[], idx={};
   for(var k=0;k<dias.length;k++){
     var x=dias[k], key=x.anio+'-'+x.mes;
     if(idx[key]===undefined){ idx[key]=meses.length; meses.push({anio:x.anio,mes:x.mes,dias:{}}); }
     meses[idx[key]].dias[x.num]=x;
   }
+  return meses;
+}
+
+/* Rejilla mensual (L-D). Devuelve null si el periodo abarca demasiados meses. */
+function jvCalendarioHTML(dias){
+  var meses=jvAgruparMeses(dias);
   if(meses.length>JV_MAX_MESES) return null;
   var out='';
   for(var m=0;m<meses.length;m++){
@@ -1823,21 +2019,9 @@ function jvCalendarioHTML(dias){
       if(!x2){
         cls+=' d-off';
       } else {
-        cls += x2.enComputo ? (x2.inhabil ? ' d-inh' : ' d-hab') : ' d-off';
-        if(x2.festivo){ cls+=' d-fest'; fest.push(d+' · '+x2.festivo); }
-        if(x2.esVenc) cls+=' d-venc';
-        else if(x2.esGracia) cls+=' d-gracia';
-        else if(x2.esNotif) cls+=' d-notif';
-        else if(x2.esEfectos) cls+=' d-efec';   // marca PROPIA: en el papel el tooltip no existe
-        var t=[JV_DOWL[x2.dow]+' '+d+' de '+JV_MESES[M.mes]+' de '+M.anio];
-        if(x2.esNotif)   t.push('notificación');
-        if(x2.esEfectos) t.push('efectos de la notificación (art. 151.2 LEC)');
-        if(x2.esVenc)    t.push('VENCIMIENTO');
-        if(x2.esGracia)  t.push('día de gracia, hasta las 15:00 h');
-        if(x2.enComputo) t.push(x2.inhabil ? ('inhábil — '+(x2.festivo||x2.inhabil))
-          : (nod ? 'hábil según los datos cargados (festivos de '+M.anio+' sin cargar)' : 'hábil (cuenta)'));
-        else if(!x2.esGracia) t.push('fuera del cómputo');
-        tip=t.join(' · ');
+        cls+=' '+jvClasesDia(x2,'d-');
+        if(x2.festivo) fest.push(d+' · '+x2.festivo);
+        tip=jvTextoDia(x2,nod);
       }
       celdas.push('<td><span class="'+cls+'"'+(tip?' title="'+semEsc(tip)+'" aria-label="'+semEsc(tip)+'"':'')+'>'+d+'</span></td>');
     }
@@ -1856,18 +2040,239 @@ function jvCalendarioHTML(dias){
   return '<div class="cal-meses">'+out+'</div>';
 }
 
+/* Claves de la leyenda: una sola lista para las DOS leyendas (papel y pantalla completa), para
+   que no puedan decir cosas distintas. El tercer campo marca las que solo salen con LexNET:
+   solo entonces hay DOS días marcados distintos y, sin la entrada, en el papel (sin tooltips)
+   serían dos marcas iguales con significados diferentes. */
+var JV_LEY = [
+  ['hab','Hábil del cómputo',0],
+  ['inh','Inhábil (sábado, domingo, festivo o periodo inhábil)',0],
+  ['off','Fuera del cómputo',0],
+  ['not','Notificación',0],
+  ['efe','Efectos de la notificación (art. 151.2 LEC)',1],
+  ['ven','Vencimiento',0],
+  ['gra','Día de gracia (15:00 h)',0]
+];
+function jvLeyendaLista(conEfectos, pref){
+  return JV_LEY.filter(function(e){ return !e[2] || conEfectos; })
+    .map(function(e){ return '<span><i class="'+pref+e[0]+'"></i>'+e[1]+'</span>'; }).join('');
+}
 function jvLeyendaHTML(conEfectos){
-  return '<div class="cal-ley">'
-    +'<span><i class="ly-hab"></i>Hábil del cómputo</span>'
-    +'<span><i class="ly-inh"></i>Inhábil (sábado, domingo, festivo o periodo inhábil)</span>'
-    +'<span><i class="ly-off"></i>Fuera del cómputo</span>'
-    +'<span><i class="ly-not"></i>Notificación</span>'
-    // Solo con LexNET hay DOS días marcados distintos; sin esta entrada, en el papel (sin
-    // tooltips) serían dos marcas iguales con significados diferentes.
-    +(conEfectos?'<span><i class="ly-efe"></i>Efectos de la notificación (art. 151.2 LEC)</span>':'')
-    +'<span><i class="ly-ven"></i>Vencimiento</span>'
-    +'<span><i class="ly-gra"></i>Día de gracia (15:00 h)</span>'
-    +'</div>';
+  return '<div class="cal-ley">'+jvLeyendaLista(conEfectos,'ly-')+'</div>';
+}
+
+/* ══════════════ v2.1 · CALENDARIO A PANTALLA COMPLETA ══════════════
+   Sigue rigiendo la REGLA DE ORO: aquí no se calcula nada. El overlay pinta EXACTAMENTE la misma
+   lista de días (JV_CAL.dias) que ya contó jvContar y aprobó jvVerificar; si el verificador dice
+   que no, calcularReloj() deja JV_CAL a null y ni la franja ni el botón existen. */
+var JV_CAL = null;          // foto del último cómputo VERIFICADO (días + contadores + entrada + salida)
+var __jvCalHist = false;    // ¿nuestro estado sigue en la pila del historial?
+var __jvFocoCal = null;     // a dónde devolver el foco al cerrar el calendario
+var __jvFocoDia = null;     // a dónde devolverlo al cerrar la ficha de un día
+
+function jvCapit(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+
+/* Posición de cada día DENTRO del cómputo: el ordinal que un jurista busca («día 7 de 20»).
+   Se cuenta sobre la misma lista pintada, en el mismo orden. */
+function jvOrdinales(dias){
+  var m={}, h=0, n=0;
+  for(var k=0;k<dias.length;k++){
+    var x=dias[k]; if(!x.enComputo) continue;
+    n++; if(!x.inhabil) h++;
+    m[x.iso]={h:h,n:n};
+  }
+  return m;
+}
+/* Paso del motor que menciona una fecha / un texto. Se reutiliza LITERALMENTE su redacción:
+   la ficha de un día no inventa fundamentación jurídica, cita la que ya produjo el motor. */
+function jvPasoConFecha(r,d){
+  if(!d) return null;
+  var s=window.RELOJ.esf(d), out=null;
+  for(var i=0;i<r.pasos.length;i++) if(r.pasos[i].indexOf(s)>=0) out=r.pasos[i];
+  return out;
+}
+function jvPasoConTexto(r,t){
+  var out=null;
+  for(var i=0;i<r.pasos.length;i++) if(r.pasos[i].indexOf(t)>=0) out=r.pasos[i];
+  return out;
+}
+
+/* Resumen de la franja: qué abarca el calendario, en una línea legible. */
+function jvResumenCal(dias, cont){
+  var a=dias[0], z=dias[dias.length-1], nm=jvAgruparMeses(dias).length;
+  var f1=a.num+' de '+JV_MESES[a.mes]+(a.anio!==z.anio?' de '+a.anio:'');
+  var f2=z.num+' de '+JV_MESES[z.mes]+' de '+z.anio;
+  return { texto:'Del <b>'+f1+'</b> al <b>'+f2+'</b>',
+    meta:nm+(nm===1?' mes':' meses')+' de calendario · '+cont.habiles+' días hábiles · '+cont.inhabiles+' inhábiles' };
+}
+
+/* Rejilla GRANDE (la que ve el usuario). Mismos estados y mismo rótulo que la del papel: lo único
+   que cambia es el tamaño y que cada día del periodo es un <button> con su ficha. */
+function jvCalGrandeHTML(dias){
+  var meses=jvAgruparMeses(dias);
+  if(meses.length>JV_MAX_MESES) return null;
+  var pos={}, k;
+  for(k=0;k<dias.length;k++) pos[dias[k].iso]=k;
+  var out='';
+  for(var m=0;m<meses.length;m++){
+    var M=meses[m];
+    var nod=!jvAniosFest()[String(M.anio)];
+    var ultimoDia=new Date(M.anio, M.mes+1, 0).getDate();
+    var hueco=(new Date(M.anio, M.mes, 1).getDay()+6)%7;   // 0 = lunes
+    var celdas=[], fest=[];
+    for(var b=0;b<hueco;b++) celdas.push('<td></td>');
+    for(var d=1;d<=ultimoDia;d++){
+      var x=M.dias[d];
+      if(!x){ celdas.push('<td><span class="cf-d cf-nada">'+d+'</span></td>'); continue; }
+      if(x.festivo) fest.push(d+' · '+x.festivo);
+      var lab=jvTextoDia(x,nod);
+      celdas.push('<td><button type="button" class="cf-d '+jvClasesDia(x,'cf-')+'" data-i="'+pos[x.iso]+'"'
+        +' aria-label="'+semEsc(lab)+'" title="'+semEsc(lab)+'">'+d+'</button></td>');
+    }
+    while(celdas.length%7) celdas.push('<td></td>');
+    var filas='';
+    for(var f=0;f<celdas.length;f+=7) filas+='<tr>'+celdas.slice(f,f+7).join('')+'</tr>';
+    var cab='<tr>'+JV_CAB.map(function(c){ return '<th scope="col" abbr="'+c[1]+'" title="'+c[1]+'">'+c[0]+'</th>'; }).join('')+'</tr>';
+    var notas=fest.map(function(t){return semEsc(t);});
+    if(nod) notas.push('<span class="cf-mes-f-nod">⚠ Sin festivos cargados de '+M.anio+': los días en morado no descartan los festivos de ese año</span>');
+    out += '<div class="cf-mes'+(nod?' cf-mes-nod':'')+'" style="--i:'+Math.min(m,11)+'">'
+         + '<table><caption>'+jvCapit(JV_MESES[M.mes])+' '+M.anio+'</caption>'
+         + '<thead>'+cab+'</thead><tbody>'+filas+'</tbody></table>'
+         + (notas.length ? '<div class="cf-mes-f">'+notas.join('<br>')+'</div>' : '')
+         + '</div>';
+  }
+  return '<div class="cf-meses">'+out+'</div>';
+}
+
+/* ---- Abrir / cerrar el calendario ---- */
+function jvPintarCal(){
+  var L=JV_CAL; if(!L) return;
+  var cuerpo=document.getElementById('cf-cuerpo'), ley=document.getElementById('cf-ley'), sub=document.getElementById('cf-tit-sub');
+  cuerpo.innerHTML=jvCalGrandeHTML(L.dias)||'';
+  ley.innerHTML=jvLeyendaLista(L.hayEfectos,'cfly-');
+  if(sub) sub.textContent='Vence el '+window.RELOJ.esf(L.r.vencimiento)+' · '+L.cont.habiles+' días hábiles';
+  cuerpo.scrollTop=0;
+}
+function jvAbrirCal(){
+  var el=document.getElementById('cal-full'); if(!el || !JV_CAL) return;
+  jvPintarCal();
+  __jvFocoCal=document.activeElement;
+  el.hidden=false;
+  document.body.classList.add('jv-cal-abierto');
+  /* Vuelta atrás del MÓVIL: metemos un estado en el historial, así el gesto/botón «atrás» cierra
+     el calendario en vez de sacar al usuario de la página (popstate lo recoge abajo). */
+  try{ history.pushState({jvcal:1},''); __jvCalHist=true; }catch(_){ __jvCalHist=false; }
+  document.addEventListener('keydown', jvCalTeclado);
+  try{ el.querySelector('.cf-volver').focus(); }catch(_){ }
+}
+/* Cierre pedido por el usuario (botón «Volver» o Escape): si nuestro estado sigue en la pila, se
+   deshace con history.back() y es el popstate quien cierra — así el historial no queda sucio. */
+function jvCerrarCal(){
+  var el=document.getElementById('cal-full'); if(!el || el.hidden) return;
+  if(__jvCalHist){ __jvCalHist=false; try{ history.back(); return; }catch(_){ } }
+  jvCalOcultar();
+}
+/* Cierre material (sin tocar el historial). */
+function jvCalOcultar(){
+  var el=document.getElementById('cal-full'); if(!el || el.hidden) return;
+  jvCerrarPop();
+  el.hidden=true;
+  document.body.classList.remove('jv-cal-abierto');
+  document.removeEventListener('keydown', jvCalTeclado);
+  if(__jvFocoCal && __jvFocoCal.focus){ try{ __jvFocoCal.focus(); }catch(_){ } }
+  __jvFocoCal=null;
+}
+function jvCalTeclado(e){
+  var el=document.getElementById('cal-full'); if(!el || el.hidden) return;
+  if(e.key==='Escape' || e.key==='Esc'){
+    if(!document.getElementById('cf-pop').hidden) jvCerrarPop(); else jvCerrarCal();
+    return;
+  }
+  if(e.key!=='Tab') return;   // trampa de foco: mientras el calendario ocupa la pantalla, el
+  var todos=el.querySelectorAll('button:not([disabled])'), vis=[];   // tabulador no se escapa detrás
+  for(var i=0;i<todos.length;i++) if(todos[i].getClientRects().length) vis.push(todos[i]);
+  if(!vis.length) return;
+  var pri=vis[0], ult=vis[vis.length-1];
+  if(e.shiftKey && document.activeElement===pri){ e.preventDefault(); ult.focus(); }
+  else if(!e.shiftKey && document.activeElement===ult){ e.preventDefault(); pri.focus(); }
+}
+/* Un solo manejador de clic para todo el overlay: día → ficha; fuera de la ficha → cerrarla. */
+function jvCalClick(e){
+  var t=e.target;
+  if(!t || !t.closest) return;
+  var b=t.closest('button.cf-d');
+  if(b){ jvAbrirPop(b); return; }
+  if(t.closest('#cf-pop')) return;
+  jvCerrarPop();
+}
+
+/* ---- Ficha de un día (el pop-up «como en Word») ---- */
+function jvAbrirPop(btn){
+  var L=JV_CAL; if(!L) return;
+  var i=parseInt(btn.getAttribute('data-i'),10);
+  var x=L.dias[i]; if(!x) return;
+  var R=window.RELOJ, inp=L.inp, r=L.r, ord=L.ord[x.iso]||{h:0,n:0};
+  var esSust = !!(R.JUR[inp.orden] && R.JUR[inp.orden].naturaleza) && inp.tipo==='sustantivo' && inp.unidad==='dias';
+  var porDias = (inp.unidad==='dias');
+  var estado, clase, sub;
+  if(x.esVenc){
+    estado='VENCIMIENTO'; clase='es-hab';
+    sub = porDias ? ('Último día del plazo: día '+(esSust?ord.n:ord.h)+' de '+inp.num+(esSust?' (días naturales)':'')+'.')
+                  : 'Último día del plazo.';
+  } else if(x.esGracia){
+    estado='DÍA DE GRACIA'; clase='es-gra';
+    sub='El plazo ya ha vencido, pero el escrito todavía puede presentarse hasta las 15:00 h de este día.';
+  } else if(!x.enComputo){
+    estado='FUERA DEL CÓMPUTO'; clase='es-off';
+    sub = x.esNotif ? 'El plazo aún no corre: se cuenta desde el día siguiente al acto de comunicación.'
+                    : 'Este día no forma parte del periodo que se cuenta.';
+  } else if(esSust){
+    estado='CUENTA'; clase='es-hab';
+    sub='Día '+ord.n+' de '+inp.num+' del plazo (días naturales).';
+  } else if(x.inhabil){
+    estado='INHÁBIL'; clase='es-inh';
+    sub='No cuenta: '+(x.festivo ? x.festivo+' — '+x.inhabil : x.inhabil)+'.';
+  } else {
+    estado='HÁBIL'; clase='es-hab';
+    sub = porDias ? ('Día '+ord.h+' de '+inp.num+' del plazo.')
+                  : ('Día hábil '+ord.h+' de '+L.cont.habiles+' del cómputo.');
+  }
+  var notas=[];
+  if(x.esNotif)   notas.push(['Notificación', r.pasos[0]]);
+  if(x.esEfectos) notas.push(['Efectos de la notificación', jvPasoConTexto(r,'151.2')]);
+  if(x.esVenc)    notas.push(['Del razonamiento', jvPasoConFecha(r,r.vencimiento)]);
+  if(x.esGracia)  notas.push(['Del razonamiento', jvPasoConFecha(r,r.gracia)]);
+  if(esSust && x.enComputo && x.inhabil) notas.push(['Por qué cuenta siendo inhábil ('+x.inhabil+')', jvPasoConTexto(r,'art. 5.2 CC')]);
+  if(x.enComputo && !x.inhabil && !jvAniosFest()[String(x.anio)])
+    notas.push(['Aviso', 'No hay festivos cargados de '+x.anio+': este día se marca hábil según los datos disponibles, que no los incluyen.']);
+
+  document.getElementById('cf-pop-f').textContent=jvCapit(JV_DOWL[x.dow])+', '+x.num+' de '+JV_MESES[x.mes]+' de '+x.anio;
+  var e1=document.getElementById('cf-pop-e');
+  e1.textContent=estado; e1.className='cf-pop-e '+clase;
+  document.getElementById('cf-pop-s').textContent=sub;
+  document.getElementById('cf-pop-n').innerHTML=notas.filter(function(n){return !!n[1];})
+    .map(function(n){ return '<p class="cf-pop-n"><b>'+semEsc(n[0])+'.</b> '+semEsc(n[1])+'</p>'; }).join('');
+
+  var pop=document.getElementById('cf-pop');
+  __jvFocoDia=btn;
+  pop.hidden=false;
+  /* Anclado al día en pantallas anchas; en móvil el CSS lo convierte en hoja inferior a lo ancho
+     (por eso estas coordenadas se sobreescriben allí con !important). */
+  try{
+    pop.style.left='0px'; pop.style.top='0px';
+    var rd=btn.getBoundingClientRect(), rp=pop.getBoundingClientRect();
+    var izq=Math.min(Math.max(8, rd.left+rd.width/2-rp.width/2), Math.max(8, window.innerWidth-rp.width-8));
+    var arr=rd.bottom+8;
+    if(arr+rp.height>window.innerHeight-8) arr=Math.max(8, rd.top-rp.height-8);
+    pop.style.left=izq+'px'; pop.style.top=arr+'px';
+  }catch(_){ }
+  try{ pop.querySelector('.cf-pop-x').focus(); }catch(_){ }
+}
+function jvCerrarPop(){
+  var p=document.getElementById('cf-pop'); if(!p || p.hidden) return;
+  p.hidden=true;
+  if(__jvFocoDia && __jvFocoDia.focus){ try{ __jvFocoDia.focus(); }catch(_){ } }
+  __jvFocoDia=null;
 }
 
 /* Odómetro con requestAnimationFrame. Con «reducir movimiento» (sin html.jv-anim) el número
@@ -2001,8 +2406,12 @@ function calcularReloj(){
     box.innerHTML=html;
     jvOdometro(box);
 
-    /* --- 4) Calendario visual del cómputo (ancho completo, bajo la rejilla de dos columnas) --- */
+    /* --- 4) Calendario visual del cómputo (v2.1) ---
+       En PANTALLA: una franja con el resumen y un botón grande; el calendario de verdad se abre
+       a pantalla completa (jvAbrirCal). En PAPEL: la rejilla compacta de siempre, intacta, que
+       aquí queda oculta con .solo-papel. Una sola derivación de días para las dos. */
     var cal=document.getElementById('r-cal');
+    JV_CAL=null;
     if(cal){
       var rejilla = dias ? jvCalendarioHTML(dias) : null;
       // El corte es por MESES DE CALENDARIO que pisa el periodo (un plazo de 14 meses puede
@@ -2011,10 +2420,21 @@ function calcularReloj(){
       if(rejilla){
         var hayEfectos=false;
         for(var kEf=0;kEf<dias.length;kEf++){ if(dias[kEf].esEfectos){ hayEfectos=true; break; } }
-        cal.innerHTML='<div class="card calwrap">'
+        // Foto para el calendario a pantalla completa: los MISMOS días ya contados y verificados.
+        JV_CAL={ dias:dias, cont:cont, inp:inp, r:r, ord:jvOrdinales(dias), hayEfectos:hayEfectos };
+        var res=jvResumenCal(dias,cont);
+        cal.innerHTML='<div class="card cal-tira">'
           +'<p class="cal-h">Calendario del cómputo</p>'
-          +'<p class="cal-sub">De la notificación al vencimiento'+(r.gracia?', con el día de gracia del art. 135.5 LEC':'')
-          +'. Pasa el cursor por cada día para ver por qué es hábil o inhábil.</p>'
+          +'<p class="cal-tira-res">'+res.texto+'</p>'
+          +'<p class="cal-tira-meta">'+semEsc(res.meta)+'</p>'
+          +'<button class="btn cf-abrir" type="button" onclick="jvAbrirCal()">📅 Ver calendario a pantalla completa</button>'
+          +'<p class="cal-tira-pie">Cada día, con su color: morado si cuenta, rojo si es inhábil. Pulsa un día y te dice por qué.</p>'
+          +'</div>'
+          // Copia para el PAPEL (invisible en pantalla): membrete + resultado + esta rejilla es la
+          // hoja archivable de siempre; el overlay no imprime nada distinto.
+          +'<div class="card calwrap solo-papel">'
+          +'<p class="cal-h">Calendario del cómputo</p>'
+          +'<p class="cal-sub">De la notificación al vencimiento'+(r.gracia?', con el día de gracia del art. 135.5 LEC':'')+'.</p>'
           +rejilla+jvLeyendaHTML(hayEfectos)+'</div>';
       } else {
         cal.innerHTML = sinCal ? '<div class="card calwrap"><p class="cal-h">Calendario del cómputo</p><p class="cal-no">'+semEsc(sinCal)+'</p></div>' : '';
@@ -2025,7 +2445,11 @@ function calcularReloj(){
 }
 /* Deja la zona del calendario en blanco (errores de entrada: un calendario viejo junto a un
    mensaje de error nuevo sería peor que no tener calendario). */
-function jvVaciarCal(){ var c=document.getElementById('r-cal'); if(c) c.innerHTML=''; }
+function jvVaciarCal(){
+  JV_CAL=null;                 // sin cómputo válido no hay calendario que abrir
+  try{ jvCalOcultar(); }catch(_){ }
+  var c=document.getElementById('r-cal'); if(c) c.innerHTML='';
+}
 
 /* El PDF NUNCA debe perder el razonamiento jurídico (la cadena de artículos es el activo del
    documento): antes de imprimir se despliega el plegable del razonamiento, tanto desde el botón
@@ -2116,6 +2540,13 @@ function calcularMasc(){
 try{ relojSync(); }catch(e){ console.error(e); }
 try{ mascInit(); }catch(e){ console.error(e); }
 try{ contactoSync(); }catch(e){ console.error(e); }
+/* v2.1 · Calendario a pantalla completa: un clic para todo el overlay (día → ficha, fuera → cerrar
+   la ficha) y el «atrás» del navegador/móvil cerrando el calendario en vez de salir de la página. */
+(function(){
+  var el=document.getElementById('cal-full');
+  if(el) el.addEventListener('click', jvCalClick);
+  window.addEventListener('popstate', function(){ __jvCalHist=false; jvCalOcultar(); });
+})();
 // Clic en el fondo difuminado (fuera de la tarjeta) cierra el modal de envío.
 (function(){ var mf=document.getElementById('modal-envio');
   if(mf) mf.addEventListener('click', function(e){ if(e.target===mf) cerrarModalEnvio(); }); })();

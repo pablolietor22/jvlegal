@@ -296,22 +296,31 @@
     font-family:var(--mono);font-size:.74rem;color:var(--gris2);border:1px solid transparent}
   .d-hab{background:rgba(99,84,200,.16);color:#3B2F86;font-weight:700;border-color:rgba(99,84,200,.34)}
   .d-inh{background:rgba(197,61,56,.11);color:#8A2A26;border-color:rgba(197,61,56,.26)}
+  .d-off{background:rgba(110,102,87,.09);border-color:rgba(110,102,87,.2)}
   .d-fest{text-decoration:underline dotted;text-underline-offset:2px}
   .d-notif{border:2px dashed var(--tinta);color:var(--tinta);font-weight:700}
+  .d-efec{border:2px dashed var(--azul);color:var(--azul);font-weight:700}
   .d-gracia{border:2px dotted var(--ambar);background:rgba(194,135,29,.16);color:#7A5310;font-weight:700}
   .d-venc{border:3px double #FFFFFF;background:var(--azul);color:#FFFFFF;font-weight:700;box-shadow:0 0 0 1px var(--azul)}
   .mes-f{font-family:var(--mono);font-size:.58rem;letter-spacing:.03em;color:var(--gris);line-height:1.7;
     margin-top:8px;padding-top:7px;border-top:1px dotted var(--linea)}
+  /* Mes de un año SIN festivos cargados: marco discontinuo ámbar + nota. El calendario no puede
+     afirmar «hábil» en años cuyo calendario de festivos no tiene. */
+  .mes-nod{border:1px dashed var(--ambar)}
+  .mes-f-nod{color:#7A5310}
   .cal-ley{display:flex;flex-wrap:wrap;gap:9px 16px;margin-top:16px;font-family:var(--mono);font-size:.62rem;
     letter-spacing:.04em;text-transform:uppercase;color:var(--gris)}
   .cal-ley span{display:inline-flex;align-items:center;gap:6px}
   .cal-ley i{width:15px;height:15px;border-radius:4px;flex:0 0 15px;border:1px solid transparent}
-  .ly-hab{background:rgba(99,84,200,.16);border-color:rgba(99,84,200,.34)}
-  .ly-inh{background:rgba(197,61,56,.11);border-color:rgba(197,61,56,.26)}
-  .ly-off{background:rgba(110,102,87,.09);border-color:var(--gris2)}
-  .ly-not{border:2px dashed var(--tinta);background:var(--panel2)}
-  .ly-ven{background:var(--azul);border-color:var(--azul)}
-  .ly-gra{border:2px dotted var(--ambar);background:rgba(194,135,29,.16)}
+  /* Con MÁS especificidad que el «.cal-ley i» genérico (0-1-1): sin el prefijo, su
+     border transparente ganaría y las claves Notificación / Día de gracia serían invisibles. */
+  .cal-ley .ly-hab{background:rgba(99,84,200,.16);border-color:rgba(99,84,200,.34)}
+  .cal-ley .ly-inh{background:rgba(197,61,56,.11);border-color:rgba(197,61,56,.26)}
+  .cal-ley .ly-off{background:rgba(110,102,87,.09);border-color:rgba(110,102,87,.2)}
+  .cal-ley .ly-not{border:2px dashed var(--tinta);background:var(--panel2)}
+  .cal-ley .ly-efe{border:2px dashed var(--azul);background:var(--panel2)}
+  .cal-ley .ly-ven{background:var(--azul);border-color:var(--azul)}
+  .cal-ley .ly-gra{border:2px dotted var(--ambar);background:rgba(194,135,29,.16)}
   .cal-no{font-size:.82rem;color:var(--gris);line-height:1.55}
 
   /* ═══════════ v2 · MICRO-ANIMACIONES (transform/opacity; sobrias) ═══════════
@@ -362,10 +371,13 @@
     .calwrap{margin-top:18px;break-inside:auto}
     .cal-meses{grid-template-columns:repeat(3,1fr);gap:10px}
     .mes{break-inside:avoid;border:1px solid #999}
+    /* El mes sin festivos cargados conserva su marco discontinuo también en el papel. */
+    .mes-nod{border:1px dashed #C2871D}
     .cal-ley{break-inside:avoid}
     details.jv-det{border:1px solid #999;break-inside:auto}
-    /* En papel, un plegable CERRADO solo sería un botón muerto: se imprime el razonamiento
-       si el usuario lo ha desplegado, y si no, no ocupa hoja. */
+    /* En papel un plegable cerrado sería un botón muerto, pero el razonamiento NO se tira:
+       jvAbrirRazonamiento() lo despliega antes de imprimir (botón y beforeprint). Esta regla
+       queda como red de seguridad: lo que aun así siga cerrado no gasta hoja. */
     details.jv-det:not([open]){display:none!important}
   }
 </style>
@@ -1693,6 +1705,25 @@ var JV_DOWL  = ['domingo','lunes','martes','miércoles','jueves','viernes','sáb
 var JV_CAB   = [['L','lunes'],['M','martes'],['X','miércoles'],['J','jueves'],['V','viernes'],['S','sábado'],['D','domingo']];
 var JV_MAX_MESES = 15;   // más allá, la rejilla dejaría de ser útil (y el PDF, inmanejable)
 
+/* Años con festivos REALMENTE cargados (derivado de la misma lista del motor, sin duplicarla).
+   Fuera de esos años el motor solo descarta fines de semana y periodos inhábiles generales:
+   ni el calendario ni los contadores pueden afirmar «hábil» con la misma autoridad, y se rotula. */
+var JV_ANIOS_FEST = null;
+function jvAniosFest(){
+  if(!JV_ANIOS_FEST){
+    JV_ANIOS_FEST = {};
+    window.RELOJ.FESTIVOS.forEach(function(s){ JV_ANIOS_FEST[s.slice(0,4)] = 1; });
+  }
+  return JV_ANIOS_FEST;
+}
+/* Años que pisa el periodo y para los que NO hay festivos cargados (orden ascendente). */
+function jvAniosSinFestivos(dias){
+  var vistos = {}, out = [], k;
+  for(k=0;k<dias.length;k++) vistos[dias[k].anio] = 1;
+  for(k in vistos) if(!jvAniosFest()[k]) out.push(k);
+  return out.sort();
+}
+
 /* Separador de millares DETERMINISTA (regex, no toLocaleString: el mismo número en cualquier
    navegador, idioma del sistema o servidor de pruebas). 12345 -> "12.345". */
 function jvMiles(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.'); }
@@ -1782,6 +1813,7 @@ function jvCalendarioHTML(dias){
   var out='';
   for(var m=0;m<meses.length;m++){
     var M=meses[m];
+    var nod=!jvAniosFest()[String(M.anio)];   // año sin festivos cargados: rotular, no afirmar
     var ultimoDia=new Date(M.anio, M.mes+1, 0).getDate();
     var hueco=(new Date(M.anio, M.mes, 1).getDay()+6)%7;   // 0 = lunes
     var celdas=[], fest=[];
@@ -1795,13 +1827,15 @@ function jvCalendarioHTML(dias){
         if(x2.festivo){ cls+=' d-fest'; fest.push(d+' · '+x2.festivo); }
         if(x2.esVenc) cls+=' d-venc';
         else if(x2.esGracia) cls+=' d-gracia';
-        else if(x2.esNotif||x2.esEfectos) cls+=' d-notif';
+        else if(x2.esNotif) cls+=' d-notif';
+        else if(x2.esEfectos) cls+=' d-efec';   // marca PROPIA: en el papel el tooltip no existe
         var t=[JV_DOWL[x2.dow]+' '+d+' de '+JV_MESES[M.mes]+' de '+M.anio];
         if(x2.esNotif)   t.push('notificación');
         if(x2.esEfectos) t.push('efectos de la notificación (art. 151.2 LEC)');
         if(x2.esVenc)    t.push('VENCIMIENTO');
         if(x2.esGracia)  t.push('día de gracia, hasta las 15:00 h');
-        if(x2.enComputo) t.push(x2.inhabil ? ('inhábil — '+(x2.festivo||x2.inhabil)) : 'hábil (cuenta)');
+        if(x2.enComputo) t.push(x2.inhabil ? ('inhábil — '+(x2.festivo||x2.inhabil))
+          : (nod ? 'hábil según los datos cargados (festivos de '+M.anio+' sin cargar)' : 'hábil (cuenta)'));
         else if(!x2.esGracia) t.push('fuera del cómputo');
         tip=t.join(' · ');
       }
@@ -1811,21 +1845,26 @@ function jvCalendarioHTML(dias){
     var filas='';
     for(var f=0;f<celdas.length;f+=7) filas+='<tr>'+celdas.slice(f,f+7).join('')+'</tr>';
     var cab='<tr>'+JV_CAB.map(function(c){ return '<th scope="col" abbr="'+c[1]+'" title="'+c[1]+'">'+c[0]+'</th>'; }).join('')+'</tr>';
-    out += '<div class="mes" style="--i:'+Math.min(m,11)+'">'
+    var notas=fest.map(function(t){return semEsc(t);});
+    if(nod) notas.push('<span class="mes-f-nod">⚠ Sin festivos cargados de '+M.anio+': los días en morado no descartan los festivos de ese año</span>');
+    out += '<div class="mes'+(nod?' mes-nod':'')+'" style="--i:'+Math.min(m,11)+'">'
          + '<table><caption>'+JV_MESES[M.mes]+' '+M.anio+'</caption>'
          + '<thead>'+cab+'</thead><tbody>'+filas+'</tbody></table>'
-         + (fest.length ? '<div class="mes-f">'+fest.map(function(t){return semEsc(t);}).join('<br>')+'</div>' : '')
+         + (notas.length ? '<div class="mes-f">'+notas.join('<br>')+'</div>' : '')
          + '</div>';
   }
   return '<div class="cal-meses">'+out+'</div>';
 }
 
-function jvLeyendaHTML(){
+function jvLeyendaHTML(conEfectos){
   return '<div class="cal-ley">'
     +'<span><i class="ly-hab"></i>Hábil del cómputo</span>'
     +'<span><i class="ly-inh"></i>Inhábil (sábado, domingo, festivo o periodo inhábil)</span>'
     +'<span><i class="ly-off"></i>Fuera del cómputo</span>'
     +'<span><i class="ly-not"></i>Notificación</span>'
+    // Solo con LexNET hay DOS días marcados distintos; sin esta entrada, en el papel (sin
+    // tooltips) serían dos marcas iguales con significados diferentes.
+    +(conEfectos?'<span><i class="ly-efe"></i>Efectos de la notificación (art. 151.2 LEC)</span>':'')
     +'<span><i class="ly-ven"></i>Vencimiento</span>'
     +'<span><i class="ly-gra"></i>Día de gracia (15:00 h)</span>'
     +'</div>';
@@ -1935,13 +1974,17 @@ function calcularReloj(){
         +'art. 135.5 LEC: el plazo termina en el vencimiento.</p>';
     }
     if(cont){
+      // Honestidad de los contadores: si el periodo pisa años sin festivos cargados, la cifra
+      // es exacta respecto a los DATOS, no respecto a la realidad de esos años — y se dice.
+      var sinFest=jvAniosSinFestivos(dias);
       html+='<div class="rz-cont">'
         +'<div class="rz-b"><span class="rz-n" data-n="'+cont.habiles+'">0</span><span class="rz-l">Días hábiles</span></div>'
         +'<div class="rz-b rz-b-inh"><span class="rz-n" data-n="'+cont.inhabiles+'">0</span><span class="rz-l">Días inhábiles</span></div>'
         +'<div class="rz-b rz-b-nat"><span class="rz-n" data-n="'+cont.naturales+'">0</span><span class="rz-l">Días naturales</span></div>'
-        +'</div><p class="rz-cont-pie">Del día siguiente a la notificación al vencimiento</p>';
+        +'</div><p class="rz-cont-pie">Del día siguiente a la notificación al vencimiento'
+        +(sinFest.length?' · ⚠ sin festivos cargados de '+sinFest.join(', ')+': cifras según los datos disponibles':'')+'</p>';
     }
-    html+='<button class="btn btn-print" type="button" onclick="window.print()">Imprimir / Guardar PDF</button>';
+    html+='<button class="btn btn-print" type="button" onclick="jvImprimir()">Imprimir / Guardar PDF</button>';
     // Cita al pie que SOLO sale en el papel: se reutiliza literalmente el paso del motor sobre el 135.5.
     var pie135 = r.pasos.filter(function(p){ return p.indexOf('135.5')>=0; }).pop();
     if(pie135) html+='<p class="solo-print pie-135">'+semEsc(pie135)+'</p>';
@@ -1962,13 +2005,17 @@ function calcularReloj(){
     var cal=document.getElementById('r-cal');
     if(cal){
       var rejilla = dias ? jvCalendarioHTML(dias) : null;
-      if(dias && !rejilla) sinCal='El cómputo abarca más de '+JV_MAX_MESES+' meses: el calendario visual se omite.';
+      // El corte es por MESES DE CALENDARIO que pisa el periodo (un plazo de 14 meses puede
+      // atravesar 16 meses naturales): el mensaje lo dice para no desconcertar.
+      if(dias && !rejilla) sinCal='El cómputo atraviesa más de '+JV_MAX_MESES+' meses de calendario (se cuentan los meses que pisa el periodo, no la duración del plazo): el calendario visual se omite.';
       if(rejilla){
+        var hayEfectos=false;
+        for(var kEf=0;kEf<dias.length;kEf++){ if(dias[kEf].esEfectos){ hayEfectos=true; break; } }
         cal.innerHTML='<div class="card calwrap">'
           +'<p class="cal-h">Calendario del cómputo</p>'
           +'<p class="cal-sub">De la notificación al vencimiento'+(r.gracia?', con el día de gracia del art. 135.5 LEC':'')
           +'. Pasa el cursor por cada día para ver por qué es hábil o inhábil.</p>'
-          +rejilla+jvLeyendaHTML()+'</div>';
+          +rejilla+jvLeyendaHTML(hayEfectos)+'</div>';
       } else {
         cal.innerHTML = sinCal ? '<div class="card calwrap"><p class="cal-h">Calendario del cómputo</p><p class="cal-no">'+semEsc(sinCal)+'</p></div>' : '';
       }
@@ -1979,6 +2026,17 @@ function calcularReloj(){
 /* Deja la zona del calendario en blanco (errores de entrada: un calendario viejo junto a un
    mensaje de error nuevo sería peor que no tener calendario). */
 function jvVaciarCal(){ var c=document.getElementById('r-cal'); if(c) c.innerHTML=''; }
+
+/* El PDF NUNCA debe perder el razonamiento jurídico (la cadena de artículos es el activo del
+   documento): antes de imprimir se despliega el plegable del razonamiento, tanto desde el botón
+   como en Ctrl+P / Archivo>Imprimir (beforeprint). La ayuda «¿Cómo funciona esto?» no se abre:
+   en papel sobra y el CSS de impresión ya la excluye. */
+function jvAbrirRazonamiento(){
+  Array.prototype.forEach.call(document.querySelectorAll('#r-res details.jv-det:not(.jv-det-ayuda)'),
+    function(d){ d.open=true; });
+}
+function jvImprimir(){ jvAbrirRazonamiento(); window.print(); }
+window.addEventListener('beforeprint', jvAbrirRazonamiento);
 
 /* ---- MASC: poblar órdenes y tipos desde el CONFIG del motor ---- */
 function mascInit(){

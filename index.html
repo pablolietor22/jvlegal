@@ -126,8 +126,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--morado);outline-off
 
 /* ── Sello de goma ─────────────────────────────────────────────────────── */
 .sello{
-  --rot:-2.2deg;
-  position:relative;
+  --rot:-2.2deg;position:relative;
   display:inline-block;font-family:var(--mono);font-weight:700;
   font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;
   padding:8px 15px;border:3px double currentColor;color:var(--morado);
@@ -147,19 +146,16 @@ html.anim .sello.estampado::after{animation:presion .36s linear}
 html.anim .rev{opacity:0;transform:translateY(10px)}
 html.anim .rev.visto{opacity:1;transform:none;transition:opacity .35s var(--curva),transform .35s var(--curva)}
 
-/* ── El rótulo se teclea ────────────────────────────────────────────
-   Monoespaciado: clip-path a pasos (uno por carácter, --n) revela letra a letra sin un
-   nodo extra ni un píxel de movimiento; el cursor cae fuera de la caja y por eso el
-   recorte se pasa 8px. Si steps(var()) no se entiende, no anima y el rótulo se ve. */
+/* ── Typewriter: clip-path a pasos (--n=carac.); +8px por el cursor; si steps(var()) falla, no anima y el rótulo se ve ── */
 html.anim .reg .t{position:relative}
-html.anim .reg.visto .t{animation:teclea calc(var(--n,14) * 18ms) steps(var(--n,14)) both}
+html.anim .reg.visto .t{animation:teclea calc(var(--n,14)*18ms) steps(var(--n,14)) both}
 @keyframes teclea{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 -8px 0 0)}}
 html.anim .reg.visto .t::after{content:"";position:absolute;left:100%;top:.1em;margin-left:2px;
   width:.5em;height:.95em;background:var(--tinta-c);opacity:0;
-  animation:parpadeo .3s steps(1,end) calc(var(--n,14) * 18ms) 2 both}
+  animation:parpadeo .3s steps(1,end) calc(var(--n,14)*18ms) 2 both}
 @keyframes parpadeo{0%{opacity:.8}50%,100%{opacity:0}}
 
-/* ── Corchetes de visor: dos trazos por esquina, desde el vértice ── */
+/* ── Corchetes de visor: desde el vértice ── */
 .esq{position:absolute;width:14px;height:14px;pointer-events:none;border:0 solid var(--tinta-d)}
 .esq-a,.esq-b{top:7px;border-top-width:1px}
 .esq-c,.esq-d{bottom:7px;border-bottom-width:1px}
@@ -182,7 +178,7 @@ html.anim .ficha.visto .esq{transform:scale(1);transition:transform .2s var(--cu
 /* ══ 00 · CARÁTULA ═══════════════════════════════════════════════════════ */
 .caratula{padding-top:clamp(26px,5vh,50px);padding-bottom:clamp(56px,8vh,96px);overflow:hidden}
 .caratula::before{display:none}
-/* Tinta al ratón. z-index:-1: sobre el papel y bajo TODO el texto. */
+/* z-index:-1: sobre el papel, bajo el texto */
 .tinta{position:absolute;top:0;left:0;z-index:-1;width:420px;height:420px;
   margin:-210px 0 0 -210px;border-radius:50%;pointer-events:none;opacity:0;
   background:radial-gradient(closest-side,rgba(99,84,200,.07),rgba(99,84,200,0) 72%);
@@ -287,8 +283,7 @@ html.anim .visto .boli path{stroke-dashoffset:0;transition:stroke-dashoffset .9s
 .etiq{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.11em;
   padding:4px 9px;border:1px solid rgba(28,27,34,.2);color:var(--tinta-c);white-space:nowrap}
 .etiq-viva{color:var(--morado);border-color:rgba(99,84,200,.4);background:var(--morado-agua)}
-.cita{font:inherit;letter-spacing:inherit;color:inherit;background:none;border:0;padding:0;
-  cursor:help;border-bottom:1px dotted rgba(28,27,34,.45)}
+.cita{font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;background:none;border:0;padding:0;cursor:help;border-bottom:1px dotted rgba(28,27,34,.45)}
 .cita:hover{color:var(--morado);border-bottom-color:var(--morado)}
 .pop{position:fixed;z-index:95;left:0;top:0;max-width:min(300px,88vw);pointer-events:none;
   background:var(--carta);border:1px solid rgba(28,27,34,.3);padding:11px 13px 12px;
@@ -297,15 +292,14 @@ html.anim .visto .boli path{stroke-dashoffset:0;transition:stroke-dashoffset .9s
 .pop.on{visibility:visible;opacity:1;transform:none;transition-delay:0s}
 .pop .nom{font-family:var(--serif);font-size:1rem;line-height:1.25;color:var(--tinta)}
 .pop .art{font-size:.62rem;line-height:1.55;margin-top:7px}
-@media (prefers-reduced-motion:reduce){ .pop{transition:none;transform:none} }
+@media (prefers-reduced-motion:reduce){.pop{transition:none;transform:none}}
 .ficha h3{margin-bottom:10px}
 .ficha-xl h3{font-size:clamp(1.62rem,3vw,2.5rem)}
 .ficha-cuerpo{display:grid;gap:clamp(20px,3vw,34px);align-items:start}
 .ficha-cuerpo.dos{grid-template-columns:minmax(0,1fr) minmax(0,.92fr)}
 .ficha-xl .ficha-cuerpo{grid-template-columns:minmax(0,1fr) minmax(0,1.14fr)}
 .ficha-mini .ficha-cuerpo{grid-template-columns:minmax(0,1fr) minmax(0,.7fr)}
-/* La ficha sigue posicionada (de ella cuelgan corchetes y línea de tinta), pero sin
-   `top:auto` el `top` del pegado la bajaría 56px. */
+/* posicionada (corchetes/línea a bordo); sin top:auto el pegado la bajaría 56px */
 @media (max-width:860px){ .ficha-cuerpo.dos{grid-template-columns:1fr} .ficha{position:relative;top:auto} }
 @media (hover:hover) and (prefers-reduced-motion:no-preference){
   .ficha::before{content:"";position:absolute;left:-1px;right:-1px;top:-1px;height:1px;
@@ -874,79 +868,70 @@ html.anim .visto .boli path{stroke-dashoffset:0;transition:stroke-dashoffset .9s
   window.addEventListener('beforeprint', revelarTodo);
   window.revelarTodo = revelarTodo;
 
-  /* ── Corchetes: cuatro por ficha ── */
+  /* ── Corchetes: 4 por ficha ── */
   (function(){
-    var f=document.querySelectorAll('.ficha'), l=['a','b','c','d'], i, k, q;
+    var f=document.querySelectorAll('.ficha'),l='abcd',i,k,q;
     for(i=0;i<f.length;i++) for(k=0;k<4;k++){
       q=document.createElement('i'); q.className='esq esq-'+l[k];
-      q.style.transitionDelay=(k*60)+'ms'; q.setAttribute('aria-hidden','true');
-      f[i].appendChild(q);
+      q.style.transitionDelay=(k*60)+'ms'; q.setAttribute('aria-hidden','true'); f[i].appendChild(q);
     }
   })();
 
-  /* ── Pop-up de cita ─────────────────────────────────────────────
-     Norma y artículo que YA están en el registro de la sección 02: no se cita nada que no
-     esté en la página, y LECrim —sin entrada allí— lo declara. Los botones salen del
-     texto del propio HTML: sin JS la etiqueta se lee igual. */
+  /* ── Pop-up de cita: SOLO normas del registro de §02; sin JS la etiqueta se lee igual ── */
   (function(){
     var CITAS = {
-      'LEC':['Ley de Enjuiciamiento Civil','art. 135.5 · presentación hasta las 15:00 del día siguiente'],
-      'LJCA':['Ley de la Jurisdicción Contencioso-administrativa','art. 128.2 · agosto inhábil, salvo derechos fundamentales'],
-      'LJS':['Ley reguladora de la Jurisdicción Social','art. 45.1 · día de gracia en el orden social'],
-      'LECrim':['Ley de Enjuiciamiento Criminal','vía penal del cómputo · sin artículo en el registro'],
-      'LPAC':['Ley del Procedimiento Administrativo Común','art. 30 · cómputo en el procedimiento administrativo'],
-      'LO 1/2025':['Ley Orgánica 1/2025','art. 7.3 · ventana de un año y medidas cautelares'],
-      'RGPD':['Reglamento General de Protección de Datos','art. 9 · datos de categoría especial, como los de salud'],
-      'LSSI':['Ley de Servicios de la Sociedad de la Información','art. 22.2 · cookies y consentimiento'],
-      'TRLGDCU':['Texto refundido de la Ley General para la Defensa de los Consumidores y Usuarios','arts. 97 y ss. · contratación a distancia y desistimiento'],
-      'AI Act':['Reglamento de IA','art. 50 · transparencia, aplicable desde el 2-08-2026']
+    LEC:['Ley de Enjuiciamiento Civil','art. 135.5 · presentación hasta las 15:00 del día siguiente'],
+    LJCA:['Ley de la Jurisdicción Contencioso-administrativa','art. 128.2 · agosto inhábil, salvo derechos fundamentales'],
+    LJS:['Ley reguladora de la Jurisdicción Social','art. 45.1 · día de gracia en el orden social'],
+    LECrim:['Ley de Enjuiciamiento Criminal','vía penal del cómputo · sin artículo en el registro'],
+    LPAC:['Ley del Procedimiento Administrativo Común','art. 30 · cómputo en el procedimiento administrativo'],
+    'LO 1/2025':['Ley Orgánica 1/2025','art. 7.3 · ventana de un año y medidas cautelares'],
+    RGPD:['Reglamento General de Protección de Datos','art. 9 · datos de categoría especial, como los de salud'],
+    LSSI:['Ley de Servicios de la Sociedad de la Información','art. 22.2 · cookies y consentimiento'],
+    TRLGDCU:['Texto refundido de la Ley General para la Defensa de los Consumidores y Usuarios','arts. 97 y ss. · contratación a distancia y desistimiento'],
+    'AI Act':['Reglamento de IA','art. 50 · transparencia, aplicable desde el 2-08-2026']
     };
     var pop=document.getElementById('cita-pop'), activo=null, fijado=null;
-
     function cerrar(){
       if(!pop) return;
-      pop.classList.remove('on');
-      if(activo){ activo.removeAttribute('aria-describedby'); activo=null; }
+      pop.classList.remove('on');fijado=null;
+      if(activo){activo.removeAttribute('aria-describedby');activo=null;}
     }
     function abrir(b){
-      var d=CITAS[b.textContent]; if(!d || !pop) return;
+      var d=CITAS[b.textContent]; if(!d||!pop)return;
+      if(activo&&activo!==b) activo.removeAttribute('aria-describedby'); // nunca dos a la vez
       pop.firstChild.textContent=d[0]; pop.lastChild.textContent=d[1];
-      var r=b.getBoundingClientRect(), m=pop.getBoundingClientRect();
-      var x=r.left+r.width/2-m.width/2, y=r.top-m.height-9;
-      if(x+m.width > window.innerWidth-10) x=window.innerWidth-m.width-10;
-      if(x<10) x=10;
-      if(y<8) y=r.bottom+9;
+      var r=b.getBoundingClientRect(),m=pop.getBoundingClientRect(),
+          x=r.left+r.width/2-m.width/2, y=r.top-m.height-9;
+      if(x+m.width>innerWidth-10)x=innerWidth-m.width-10;
+      if(x<10)x=10; if(y<8)y=r.bottom+9;
       pop.style.left=Math.round(x)+'px'; pop.style.top=Math.round(y)+'px';
-      pop.classList.add('on'); b.setAttribute('aria-describedby','cita-pop'); activo=b;
+      pop.classList.add('on');b.setAttribute('aria-describedby','cita-pop');activo=b;
     }
     function enchufa(b){
-      function ver(){ abrir(b); }
-      b.addEventListener('mouseenter',ver); b.addEventListener('focus',ver);
-      b.addEventListener('mouseleave',function(){ if(fijado!==b && activo===b) cerrar(); });
-      b.addEventListener('blur',function(){ fijado=null; cerrar(); });
-      b.addEventListener('click',function(){        // en táctil: un toque abre, otro cierra
-        if(fijado===b){ fijado=null; cerrar(); } else { fijado=b; abrir(b); }
+      function ver(){abrir(b);}
+      b.addEventListener('mouseenter',ver);b.addEventListener('focus',ver);
+      b.addEventListener('mouseleave',function(){if(fijado!==b&&activo===b)cerrar();});
+      b.addEventListener('blur',cerrar);
+      b.addEventListener('click',function(){ // en táctil: un toque abre, otro cierra
+        if(fijado===b)cerrar(); else{fijado=b;abrir(b);}
       });
     }
-
-    var chips=document.querySelectorAll('.etiq'), i, j, p, frag, b, hay;
+    var chips=document.querySelectorAll('.etiq'),i,j,p,frag,b,hay;
     for(i=0;i<chips.length;i++){
-      p=chips[i].textContent.split(' · '); frag=document.createDocumentFragment(); hay=false;
+      p=chips[i].textContent.split(' · ');frag=document.createDocumentFragment();hay=false;
       for(j=0;j<p.length;j++){
         if(j) frag.appendChild(document.createTextNode(' · '));
         if(CITAS[p[j]]){
           hay=true; b=document.createElement('button');
-          b.type='button'; b.className='cita'; b.textContent=p[j];
-          enchufa(b); frag.appendChild(b);
-        } else frag.appendChild(document.createTextNode(p[j]));
+          b.type='button';b.className='cita';b.textContent=p[j];
+          enchufa(b);frag.appendChild(b);
+        }else frag.appendChild(document.createTextNode(p[j]));
       }
-      if(hay){ chips[i].textContent=''; chips[i].appendChild(frag); }
+      if(hay){chips[i].textContent='';chips[i].appendChild(frag);}
     }
-
-    document.addEventListener('keydown',function(e){
-      if(e.key==='Escape' || e.keyCode===27){ fijado=null; cerrar(); }
-    });
-    window.addEventListener('scroll',function(){ if(activo) abrir(activo); },{passive:true});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'||e.keyCode===27)cerrar();});
+    window.addEventListener('scroll',function(){if(activo)abrir(activo);},{passive:true});
   })();
 
   if(quieto || !('IntersectionObserver' in window)){ revelarTodo(); return; }
@@ -978,29 +963,25 @@ html.anim .visto .boli path{stroke-dashoffset:0;transition:stroke-dashoffset .9s
     if(c){ c.classList.add('visto'); var s=c.querySelector('[data-sello]'); if(s) s.classList.add('estampado'); }
   }, 260);
 
-  /* La banda 5 · 6 · 9 rueda al cargar, sin esperar scroll. */
-  window.setTimeout(function(){
-    var b = document.querySelector('.banda');
-    if(b){ b.classList.add('visto'); contarDentro(b); }
-  }, 560);
+  /* La banda 5·6·9 rueda al cargar */
+  window.setTimeout(function(){ var b=document.querySelector('.banda'); if(b){b.classList.add('visto');contarDentro(b);} },560);
 
-  /* ── Tinta al ratón (solo carátula, solo puntero fino): un div con transform en rAF ── */
+  /* ── Tinta: carátula + puntero fino; transform en rAF ── */
   if(window.PointerEvent && window.matchMedia('(pointer:fine)').matches){
     (function(){
-      var h=document.querySelector('.caratula'); if(!h) return;
+      var h=document.querySelector('.caratula'); if(!h)return;
       var t=document.createElement('div');
-      t.className='tinta'; t.setAttribute('aria-hidden','true'); h.insertBefore(t,h.firstChild);
-      var ox=h.offsetLeft, oy=h.offsetTop, x=0, y=0, pide=false;
+      t.className='tinta';t.setAttribute('aria-hidden','true');h.insertBefore(t,h.firstChild);
+      var x=0,y=0,pide=false;
       h.addEventListener('pointermove',function(e){
-        x=e.pageX-ox; y=e.pageY-oy;
-        if(pide) return;
-        pide=true;
+        var r=h.getBoundingClientRect(); // no cachear: la carátula puede moverse
+        x=e.clientX-r.left;y=e.clientY-r.top;
+        if(pide)return; pide=true;
         window.requestAnimationFrame(function(){
-          pide=false;
-          t.style.transform='translate3d('+x+'px,'+y+'px,0)'; t.classList.add('on');
+          pide=false;t.style.transform='translate3d('+x+'px,'+y+'px,0)';t.classList.add('on');
         });
       });
-      h.addEventListener('pointerleave',function(){ t.classList.remove('on'); });
+      h.addEventListener('pointerleave',function(){t.classList.remove('on');});
     })();
   }
 })();

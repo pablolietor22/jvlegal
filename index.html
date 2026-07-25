@@ -142,8 +142,8 @@ html.anim .sello-b{transform:rotate(1.6deg) scale(1.15)}
 html.anim .sello-b.estampado{transform:rotate(1.6deg) scale(1)}
 
 /* ── Revelado al entrar en pantalla ────────────────────────────────────── */
-html.anim .rev{opacity:0;transform:translateY(14px)}
-html.anim .rev.visto{opacity:1;transform:none;transition:opacity .6s var(--curva),transform .6s var(--curva)}
+html.anim .rev{opacity:0;transform:translateY(10px)}
+html.anim .rev.visto{opacity:1;transform:none;transition:opacity .35s var(--curva),transform .35s var(--curva)}
 @media print{
   html.anim .rev{opacity:1!important;transform:none!important}
   html.anim .sello{opacity:1!important;transform:rotate(-2.2deg)!important}
@@ -395,8 +395,7 @@ html.anim .visto .boli path{stroke-dashoffset:0;transition:stroke-dashoffset .9s
     <p class="claim rev">Herramientas jurídicas deterministas: cada cálculo <b><span class="circulado">cita el artículo<svg class="boli" viewBox="0 0 200 60" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M16 41C5 23 41 8 100 7 160 6 195 20 192 32c-3 14-44 23-96 22C44 53 10 46 12 31 14 17 53 8 105 9c53 1 85 12 84 25-1 13-49 23-101 21-36-1-64-6-75-13"/></svg></span> que lo sostiene</b>.</p>
 
     <p class="honesto rev">Las construye Pablo Andrés Martínez, estudiante de Derecho en la
-      Universidad Complutense de Madrid,
-      dirigiendo el desarrollo con metodologías de IA agéntica. El proyecto está en construcción;
+      Universidad Complutense de Madrid. El proyecto está en construcción;
       lo que ya está publicado funciona hoy.</p>
 
     <div class="acciones rev">
@@ -839,7 +838,7 @@ html.anim .visto .boli path{stroke-dashoffset:0;transition:stroke-dashoffset .9s
       retraso += 70;
       obs.unobserve(e.target);
     }
-  }, { rootMargin:'0px 0px -8% 0px', threshold:0.06 });
+  }, { rootMargin:'0px 0px 18% 0px', threshold:0 });
 
   var piezas = document.querySelectorAll('.rev');
   for(var i=0;i<piezas.length;i++) obs.observe(piezas[i]);

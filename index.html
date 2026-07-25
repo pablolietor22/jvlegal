@@ -166,11 +166,15 @@ html.anim .reg.visto .t::after{content:"";position:absolute;left:100%;top:.1em;m
 html.anim .ficha .esq{transform:scale(0)}
 html.anim .ficha.visto .esq{transform:scale(1);transition:transform .2s var(--curva)}
 
-/* ── Interferencia (300 ms): SOLO en lo que todavía no ha salido ────────── */
+/* ── Interferencia (300 ms): SOLO en lo que todavía no ha salido ──────────
+   Las dos capas son <span aria-hidden> REALES, no ::before/::after: el contenido generado con
+   content:attr() SÍ entra en el árbol de accesibilidad (el lector anunciaba cada distintivo
+   por triplicado) y los pseudo-elementos no admiten aria-hidden. En reposo van
+   visibility:hidden: ni se leen, ni engordan innerText, ni salen en papel. */
 .gl{position:relative;display:inline-block}
-.gl::before,.gl::after{content:attr(data-t);position:absolute;left:0;top:0;width:100%;opacity:0;pointer-events:none}
-html.anim .gl.on::before{opacity:.9;color:var(--morado);animation:gl1 .3s steps(1,end) 1}
-html.anim .gl.on::after{opacity:.9;color:#B3261E;animation:gl2 .3s steps(1,end) 1}
+.gl>span{position:absolute;left:0;top:0;width:100%;visibility:hidden;pointer-events:none}
+html.anim .gl.on>span:first-child{visibility:visible;opacity:.9;color:var(--morado);animation:gl1 .3s steps(1,end) 1}
+html.anim .gl.on>span:last-child{visibility:visible;opacity:.9;color:#B3261E;animation:gl2 .3s steps(1,end) 1}
 @keyframes gl1{0%{clip-path:inset(8% 0 62% 0);transform:translate3d(-3px,0,0)}33%{clip-path:inset(52% 0 22% 0);transform:translate3d(4px,0,0)}66%{clip-path:inset(28% 0 44% 0);transform:translate3d(-2px,0,0)}100%{clip-path:inset(0 0 100% 0);transform:none}}
 @keyframes gl2{0%{clip-path:inset(58% 0 16% 0);transform:translate3d(3px,0,0)}33%{clip-path:inset(14% 0 58% 0);transform:translate3d(-4px,0,0)}66%{clip-path:inset(40% 0 34% 0);transform:translate3d(2px,0,0)}100%{clip-path:inset(0 0 100% 0);transform:none}}
 
@@ -189,7 +193,7 @@ html.anim .rev.visto .visor img{clip-path:inset(0 0 0 0);transition:clip-path .5
 @media print{
   html.anim .rev{opacity:1!important;transform:none!important}
   html.anim .rev .visor img{clip-path:none!important}
-  .gl::before,.gl::after{display:none!important}
+  .gl>span{display:none!important}
   .letra{transform:none!important;animation:none!important}
   html.anim .sello{opacity:1!important;transform:rotate(var(--rot))!important;animation:none!important}
   html.anim .raya path,html.anim .boli path{stroke-dashoffset:0!important}
@@ -1044,8 +1048,9 @@ html.anim .visto .boli path{stroke-dashoffset:0;transition:stroke-dashoffset .9s
   /* 1 · Interferencia en lo que aún no ha salido: el sello «En construcción» y el chip. */
   function interferencia(el){
     if(!el) return;
-    var t=el.textContent.replace(/\s+/g,' ').trim(), tm=0, g=document.createElement('span');
-    g.className='gl'; g.setAttribute('data-t',t); g.textContent=t;
+    var t=el.textContent.replace(/\s+/g,' ').trim(), tm=0, g=document.createElement('span'), a, k;
+    g.className='gl'; g.textContent=t;
+    for(k=0;k<2;k++){ a=document.createElement('span'); a.setAttribute('aria-hidden','true'); a.textContent=t; g.appendChild(a); }
     el.textContent=''; el.appendChild(g);
     g.sacude=function(){
       if(g.classList.contains('on')) return;
@@ -1061,10 +1066,15 @@ html.anim .visto .boli path{stroke-dashoffset:0;transition:stroke-dashoffset .9s
      panel, 4 vueltas de 55 ms) y cada uno para EN SU letra; el estampado sigue golpeando. */
   (function(){
     var s=document.querySelector('.cabecera .sello'); if(!s) return;
-    var L=partir(s), fin=[], sem=[], RING='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', k, t0=0;
+    var L=partir(s), fin=[], sem=[], RING='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', k, t0=0, fijo=false;
     s.setAttribute('role','img');   // se lee por su rótulo, no letra a letra
     for(k=0;k<L.length;k++){ fin.push(L[k].textContent); sem.push((Math.random()*36)|0); }
+    /* Papel: imprimir en plena voltereta (~300-900 ms) sacaría las letras sustituidas revueltas
+       y el CSS de impresión no puede deshacer texto; beforeprint las deja en su rótulo final. */
+    function fija(){ fijo=true; for(var i=0;i<L.length;i++){ L[i].textContent=fin[i]; L[i].style.transform=''; } }
+    window.addEventListener('beforeprint', fija);
     function paso(t){
+      if(fijo) return;
       if(!t0) t0=t;
       var p=t-t0, listo=true, i, d, v;
       for(i=0;i<L.length;i++){

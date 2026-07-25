@@ -2498,9 +2498,10 @@ function calcularReloj(){
 
 /* ══ Focos guía del resultado (círculo a boli, rotulador y subrayado) ═══════════════════════
    Llevan la mirada de un sitio al siguiente y NUNCA se solapan: el dato (400 ms), el matiz del
-   135.5 (1200 ms) y el siguiente paso (1900 ms). Una vez por cálculo. Con «reducir movimiento»
-   el rotulador y el subrayado salen puestos y quietos, y el círculo —puro énfasis— no aparece. */
-var JV_FOCOS=[], JV_FOCOS_T=[], JV_FOCOS_R=0, JV_NS='http://www.w3.org/2000/svg';
+   135.5 (1200 ms) y el siguiente paso (desde 1900 ms, cuando el botón entra en pantalla). Una
+   vez por cálculo. Con «reducir movimiento» el rotulador y el subrayado salen puestos y
+   quietos, y el círculo —puro énfasis— no aparece. */
+var JV_FOCOS=[], JV_FOCOS_T=[], JV_FOCOS_R=0, JV_FOCOS_O=null, JV_NS='http://www.w3.org/2000/svg';
 /* Los trazos se generan EN PÍXELES y el viewBox se iguala a la caja: escala 1, sin deformar. Con
    viewBox fijo y preserveAspectRatio="none" el trazo se estira a lo ancho y el «se va dibujando»
    (stroke-dashoffset sobre pathLength=1) se quedaba a media vuelta. */
@@ -2553,6 +2554,7 @@ function jvFocoVa(f){
 }
 function jvFocos(){
   for(var k=0;k<JV_FOCOS_T.length;k++) clearTimeout(JV_FOCOS_T[k]);
+  if(JV_FOCOS_O){ JV_FOCOS_O.disconnect(); JV_FOCOS_O=null; }
   JV_FOCOS_T=[]; JV_FOCOS=[];   // el resultado se repinta entero: los adornos viejos se van con él
   var anima=document.documentElement.classList.contains('jv-anim');
   var rz=document.querySelector('#r-res .rz'); if(!rz) return;
@@ -2565,10 +2567,21 @@ function jvFocos(){
   }, 400);
   // 2 · Rotulador barriendo la línea del día de gracia del art. 135.5 (1200 ms → ~1,7 s).
   if(gracia){ gracia.classList.add('jv-rot'); luego(function(){ gracia.classList.add('jv-va'); }, 1200); }
-  // 3 · Subrayado bajo «Ver calendario a pantalla completa»: el siguiente paso (1900 ms → ~2,4 s).
-  if(boton && boton.parentNode) luego(function(){
-    jvFocoVa({el:jvFocoSVG('jv-sub',1), trazo:JV_TRAZO.sub, host:boton.parentNode, ref:boton, i:[0,2,0,0], alto:8, bajo:1});
-  }, 1900);
+  // 3 · Subrayado bajo «Ver calendario a pantalla completa»: el siguiente paso. A los 1900 ms se
+  //     ARMA, pero solo se dibuja con el botón EN PANTALLA (IntersectionObserver): con un reloj
+  //     ciego nacía bajo el pliegue (1280x800, 1440x900, móviles) y la guía moría sin verse. Si el
+  //     botón ya está a la vista el observador dispara al instante y el ritmo (~2,4 s) se conserva;
+  //     si no, el trazo se dibuja justo cuando el usuario baja hasta él.
+  if(boton && boton.parentNode){
+    var sub=function(){ jvFocoVa({el:jvFocoSVG('jv-sub',1), trazo:JV_TRAZO.sub, host:boton.parentNode, ref:boton, i:[0,2,0,0], alto:8, bajo:1}); };
+    if(anima && window.IntersectionObserver) luego(function(){
+      JV_FOCOS_O=new IntersectionObserver(function(en){
+        if(!en[0].isIntersecting) return;
+        JV_FOCOS_O.disconnect(); JV_FOCOS_O=null; sub();
+      },{threshold:.9});
+      JV_FOCOS_O.observe(boton);
+    }, 1900); else luego(sub, 1900);
+  }
 }
 /* Al redimensionar o girar el móvil los adornos se RECOLOCAN (no se vuelven a animar). */
 window.addEventListener('resize', function(){

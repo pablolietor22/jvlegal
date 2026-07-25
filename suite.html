@@ -469,6 +469,31 @@
   html.jv-anim .cf-pop:not([hidden]){animation:jvPopIn .16s ease-out both}
   @keyframes jvPopIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
 
+  /* ═══════════ v2.2 · FOCOS GUÍA DEL RESULTADO (marcas de lápiz sobre el papel) ═══════════
+     Tres marcas encadenadas que llevan la vista: círculo a boli sobre la FECHA, rotulador sobre
+     el DÍA DE GRACIA y subrayado bajo el botón del CALENDARIO. Van en position:absolute sobre
+     lo ya pintado: el resultado no se mueve ni un píxel. Solo stroke-dashoffset y background-size. */
+  .rz,.cal-tira{position:relative}
+  .jv-foco{position:absolute;overflow:visible;pointer-events:none;z-index:1}
+  .jv-foco path{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:0}
+  .jv-circ path{stroke:#C0392B;stroke-width:1.9;opacity:.82}
+  .jv-sub path{stroke:var(--azul);stroke-width:2.2}
+  /* Rotulador: morado agua de la casa (nada de amarillo chillón sobre papel crema). */
+  .rz-gracia.jv-rot{background-image:linear-gradient(rgba(99,84,200,.15),rgba(99,84,200,.15));
+    background-repeat:no-repeat;background-position:0 0;background-size:100% 100%}
+  /* Sin html.jv-anim («reducir movimiento») lo de arriba ya es el estado final: puesto y quieto.
+     El círculo, que es puro énfasis, ni se inserta (lo decide el JS). */
+  html.jv-anim .jv-foco path{stroke-dashoffset:1}
+  html.jv-anim .jv-foco.jv-va path{stroke-dashoffset:0}
+  html.jv-anim .jv-circ path{transition:stroke-dashoffset .7s cubic-bezier(.3,.7,.3,1)}
+  html.jv-anim .jv-circ path.jv-rabo{transition-duration:.22s;transition-delay:.46s}
+  html.jv-anim .jv-sub path{transition:stroke-dashoffset .5s cubic-bezier(.25,.7,.25,1)}
+  html.jv-anim .rz-gracia.jv-rot{background-size:0% 100%;transition:background-size .5s cubic-bezier(.3,.7,.3,1)}
+  html.jv-anim .rz-gracia.jv-rot.jv-va{background-size:100% 100%}
+  /* Cambio de herramienta: la que entra hace un fundido corto de 8 px. */
+  html.jv-anim .tool.jv-entra{animation:jvToolIn .2s ease-out both}
+  @keyframes jvToolIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
   /* Piezas que SOLO existen en el papel (membrete y cita al pie del PDF). */
   .solo-print{display:none}
 
@@ -493,6 +518,9 @@
     *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     /* Ninguna animación puede dejar una pieza a opacity:0 en el papel. */
     html.jv-anim .rz-fecha,html.jv-anim .mes,html.jv-anim .d-venc{animation:none!important;opacity:1!important;transform:none!important}
+    /* Los focos guía son de pantalla: el papel sale limpio, sin boli, rotulador ni subrayado. */
+    .jv-foco{display:none!important}
+    .rz-gracia.jv-rot{background-image:none!important}
     /* --- v2.1: el papel es el papel --- Imprimir con el calendario a pantalla completa abierto
        debe sacar la HOJA de siempre, no el overlay: este se retira y la rejilla compacta vuelve.
        Y el bloqueo de scroll del overlay se levanta (con overflow:hidden el papel se cortaría). */
@@ -1612,7 +1640,16 @@ function abrir(id){
     tab.setAttribute('aria-selected', t===id?'true':'false');
     tab.setAttribute('tabindex', t===id?'0':'-1'); // roving tabindex (patrón WAI-ARIA tablist)
   });
+  if(id!==__jvTabPrevia) jvEntra(document.getElementById('tool-'+id));
   __jvTabPrevia=id;
+}
+/* Cambio de herramienta: la sección que ENTRA hace un fundido de 8 px en 200 ms. La clase se
+   retira al terminar para no dejar transform vivo (crearía bloque contenedor a lo fijo). */
+function jvEntra(el){
+  if(!el || !document.documentElement.classList.contains('jv-anim')) return;
+  el.classList.remove('jv-entra'); void el.offsetWidth; el.classList.add('jv-entra');
+  clearTimeout(jvEntra._t);
+  jvEntra._t=setTimeout(function(){ el.classList.remove('jv-entra'); }, 260);
 }
 /* Navegación de pestañas con teclado: ←/→/Inicio/Fin (patrón WAI-ARIA tablist). */
 (function(){
@@ -2454,9 +2491,101 @@ function calcularReloj(){
         cal.innerHTML = sinCal ? '<div class="card calwrap"><p class="cal-h">Calendario del cómputo</p><p class="cal-no">'+semEsc(sinCal)+'</p></div>' : '';
       }
     }
+    /* --- 5) Focos guía: círculo → rotulador → subrayado, encadenados sobre lo ya pintado --- */
+    jvFocos();
   }catch(e){ box.innerHTML='<p class="vac-err">Error en el cálculo: '+semEsc(e.message)+'</p>'; jvVaciarCal(); console.error(e); }
   finally{ jvIrA(box); }
 }
+
+/* ══ Focos guía del resultado (marcas de lápiz: círculo a boli, rotulador y subrayado) ══════
+   Llevan la mirada de un sitio al siguiente y NUNCA se solapan: primero el dato (la fecha, a los
+   400 ms), luego el matiz (el día de gracia del 135.5, a los 1200 ms) y por último el siguiente
+   paso (el botón del calendario, a los 1900 ms). Una vez por cálculo; recalcular reinicia la
+   cadena. Con «reducir movimiento» el rotulador y el subrayado salen ya puestos y quietos, y el
+   círculo —que es puro énfasis, no información— no aparece. Nada de esto toca el flujo del
+   documento: los SVG van absolutos sobre lo pintado, así que el resultado no se mueve. */
+var JV_FOCOS=[], JV_FOCOS_T=[], JV_FOCOS_R=0, JV_NS='http://www.w3.org/2000/svg';
+/* Los trazos se generan EN PÍXELES del hueco real y el viewBox se iguala a la caja: escala 1, sin
+   deformar. Con un viewBox fijo y preserveAspectRatio="none" el trazo se estira a lo ancho y el
+   «se va dibujando» (stroke-dashoffset sobre pathLength=1) se quedaba a media vuelta. */
+var JV_TRAZO={
+  circ:function(w,h){                                   // óvalo a mano alzada + rabito de salida
+    var n=Math.round, x=n(w/2), y=n(h/2), a=x-2, b=y-2, ka=n(a*.56), kb=n(b*.56);
+    return ['M'+x+' 2C'+(x+ka)+' 1 '+(w-2)+' '+(y-kb)+' '+(w-2)+' '+y
+           +'C'+(w-2)+' '+(y+kb)+' '+(x+ka)+' '+(h-2)+' '+(x-3)+' '+(h-2)
+           +'C'+(x-ka)+' '+(h-3)+' 2 '+(y+kb)+' 2 '+(y-2)
+           +'C2 '+(y-kb)+' '+(x-ka)+' 3 '+x+' 2',
+      'M'+x+' 2C'+n(x+a*.3)+' 1 '+n(x+a*.56)+' 3 '+n(x+a*.74)+' 7'];
+  },
+  sub:function(w,h){                                    // subrayado ondulado de una pasada
+    var n=Math.round;
+    return ['M2 '+(h-3)+'C'+n(w*.22)+' 2 '+n(w*.42)+' '+(h-1)+' '+n(w*.6)+' '+n(h-5)
+           +'S'+n(w*.86)+' '+(h-2)+' '+(w-2)+' 3'];
+  }
+};
+function jvFocoSVG(cls, trazos){
+  var s=document.createElementNS(JV_NS,'svg');
+  s.setAttribute('class','jv-foco '+cls);
+  s.setAttribute('aria-hidden','true'); s.setAttribute('focusable','false');
+  for(var i=0;i<trazos;i++){
+    var p=document.createElementNS(JV_NS,'path');
+    p.setAttribute('pathLength','1');
+    if(i) p.setAttribute('class','jv-rabo');   // el rabito del boli sale al final del trazo
+    s.appendChild(p);
+  }
+  return s;
+}
+/* Encaja el adorno sobre el TEXTO (Range: la caja real de las letras, no la línea entera) o
+   sobre la caja de un elemento, en coordenadas del contenedor. Devuelve false si aún no mide.
+   f.i=[dx,dy,dancho,dalto] · f.alto fuerza la altura · f.bajo ancla al borde INFERIOR del ref. */
+function jvFocoPon(f){
+  var h=f.host.getBoundingClientRect(), r;
+  if(f.txt){ var g=document.createRange(); g.selectNodeContents(f.ref); r=g.getBoundingClientRect(); }
+  else r=f.ref.getBoundingClientRect();
+  if(!r.width) return false;
+  var w=Math.round(r.width+f.i[2]), a=Math.round(f.alto||(r.height+f.i[3]));
+  f.el.style.left  =(r.left-h.left+f.i[0])+'px';
+  f.el.style.top   =((f.bajo?r.bottom:r.top)-h.top+f.i[1])+'px';
+  f.el.style.width =w+'px'; f.el.style.height=a+'px';
+  f.el.setAttribute('viewBox','0 0 '+w+' '+a);
+  var d=f.trazo(w,a), ps=f.el.childNodes;
+  for(var k=0;k<ps.length && k<d.length;k++) ps[k].setAttribute('d',d[k]);
+  return true;
+}
+/* Coloca y lanza. Se hace en el INSTANTE del foco, no al pintar el resultado: así se mide sobre
+   la maquetación ya asentada (la fecha entra con su propio «pop» y a mitad mide un 86 %). */
+function jvFocoVa(f){
+  f.host.appendChild(f.el);
+  if(!jvFocoPon(f)){ f.host.removeChild(f.el); return; }
+  JV_FOCOS.push(f);
+  f.el.classList.add('jv-va');   // el rect de arriba ya ha forzado el cálculo de estilo: hay transición
+}
+function jvFocos(){
+  for(var k=0;k<JV_FOCOS_T.length;k++) clearTimeout(JV_FOCOS_T[k]);
+  JV_FOCOS_T=[]; JV_FOCOS=[];   // el resultado se repinta entero: los adornos viejos se van con él
+  var anima=document.documentElement.classList.contains('jv-anim');
+  var rz=document.querySelector('#r-res .rz'); if(!rz) return;
+  var fecha=rz.querySelector('.rz-fecha'), gracia=rz.querySelector('.rz-gracia'),
+      boton=document.querySelector('#r-cal .cf-abrir');
+  function luego(fn, ms){ if(anima) JV_FOCOS_T.push(setTimeout(fn, ms)); else fn(); }
+  /* 1 · Círculo a boli rojo rodeando la fecha de vencimiento (400 ms → dibujado a ~1,1 s). */
+  if(anima && fecha) luego(function(){
+    jvFocoVa({ el:jvFocoSVG('jv-circ',2), trazo:JV_TRAZO.circ,
+      host:rz, ref:fecha, i:[-14,-9,28,18], txt:1 });
+  }, 400);
+  /* 2 · Rotulador barriendo la línea del día de gracia del art. 135.5 (1200 ms → ~1,7 s). */
+  if(gracia){ gracia.classList.add('jv-rot'); luego(function(){ gracia.classList.add('jv-va'); }, 1200); }
+  /* 3 · Subrayado de tinta bajo «Ver calendario a pantalla completa» (1900 ms → ~2,4 s). */
+  if(boton && boton.parentNode) luego(function(){
+    jvFocoVa({ el:jvFocoSVG('jv-sub',1), trazo:JV_TRAZO.sub,
+      host:boton.parentNode, ref:boton, i:[0,2,0,0], alto:8, bajo:1 });
+  }, 1900);
+}
+/* Al redimensionar o girar el móvil los adornos se RECOLOCAN (no se vuelven a animar). */
+window.addEventListener('resize', function(){
+  clearTimeout(JV_FOCOS_R);
+  JV_FOCOS_R=setTimeout(function(){ for(var k=0;k<JV_FOCOS.length;k++) jvFocoPon(JV_FOCOS[k]); }, 200);
+}, {passive:true});
 /* Deja la zona del calendario en blanco (errores de entrada: un calendario viejo junto a un
    mensaje de error nuevo sería peor que no tener calendario). */
 function jvVaciarCal(){

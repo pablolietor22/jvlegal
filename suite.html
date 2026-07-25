@@ -1967,8 +1967,16 @@ function jvVerificar(dias, cont, inp, r){
 /* ── Estados visuales de un día: ÚNICA fuente para las DOS rejillas (papel y pantalla completa).
      No decide nada — lee el objeto que ya fabricó jvDerivarDias. Cada renderizador prefija los
      tokens con su familia de clases ('d-' la rejilla del papel, 'cf-' el calendario grande). */
+/* v2.2 · ¿Plazo sustantivo por días (naturales, art. 5 CC)? Ahí no existe hábil/inhábil: cuentan
+   TODOS los días del periodo, así que se pintan TODOS del color «cuenta» (decisión de Pablo 25-07;
+   la excepción del último día la resuelve el motor y se explica en su paso). */
+function jvSustActivo(){
+  try{ var L=JV_CAL, inp=L.inp;
+    return !!(RELOJ.JUR[inp.orden] && RELOJ.JUR[inp.orden].naturaleza) && inp.tipo==='sustantivo' && inp.unidad==='dias';
+  }catch(_){ return false; }
+}
 function jvTokensDia(x){
-  var t=[ x.enComputo ? (x.inhabil ? 'inh' : 'hab') : 'off' ];
+  var t=[ x.enComputo ? ((x.inhabil && !jvSustActivo()) ? 'inh' : 'hab') : 'off' ];
   if(x.festivo) t.push('fest');
   if(x.esVenc) t.push('venc');
   else if(x.esGracia) t.push('gracia');
@@ -1986,8 +1994,10 @@ function jvTextoDia(x, nod){
   if(x.esEfectos) t.push('efectos de la notificación (art. 151.2 LEC)');
   if(x.esVenc)    t.push('VENCIMIENTO');
   if(x.esGracia)  t.push('día de gracia, hasta las 15:00 h');
-  if(x.enComputo) t.push(x.inhabil ? ('inhábil — '+(x.festivo||x.inhabil))
-    : (nod ? 'hábil según los datos cargados (festivos de '+x.anio+' sin cargar)' : 'hábil (cuenta)'));
+  if(x.enComputo) t.push(jvSustActivo()
+    ? ('cuenta — día natural'+(x.inhabil ? (' ('+(x.festivo||x.inhabil)+'; cuenta igualmente, art. 5.2 CC)') : ''))
+    : (x.inhabil ? ('inhábil — '+(x.festivo||x.inhabil))
+      : (nod ? 'hábil según los datos cargados (festivos de '+x.anio+' sin cargar)' : 'hábil (cuenta)')));
   else if(!x.esGracia) t.push('fuera del cómputo');
   return t.join(' · ');
 }
@@ -2054,8 +2064,12 @@ var JV_LEY = [
   ['gra','Día de gracia (15:00 h)',0]
 ];
 function jvLeyendaLista(conEfectos, pref){
-  return JV_LEY.filter(function(e){ return !e[2] || conEfectos; })
-    .map(function(e){ return '<span><i class="'+pref+e[0]+'"></i>'+e[1]+'</span>'; }).join('');
+  var sust=jvSustActivo();
+  return JV_LEY.filter(function(e){ return (!e[2] || conEfectos) && !(sust && e[0]==='inh'); })
+    .map(function(e){
+      var rot = (sust && e[0]==='hab') ? 'Día del cómputo (naturales: cuentan todos, art. 5 CC)' : e[1];
+      return '<span><i class="'+pref+e[0]+'"></i>'+rot+'</span>';
+    }).join('');
 }
 function jvLeyendaHTML(conEfectos){
   return '<div class="cal-ley">'+jvLeyendaLista(conEfectos,'ly-')+'</div>';

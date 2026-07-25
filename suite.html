@@ -234,6 +234,99 @@
   /* Al imprimir, todo visible aunque no se haya hecho scroll (los juristas imprimen). */
   @media print{ html.jv-anim .jv-reveal{opacity:1 !important;transform:none !important} }
 
+  /* ═══════════ v2 · RESULTADO SIMPLE-FIRST (capa de PRESENTACIÓN, no de cálculo) ═══════════
+     Lo primero y GRANDE: la fecha de vencimiento. Debajo, el día de gracia y tres contadores.
+     El desglose completo sigue existiendo, plegado en un <details>. */
+  .rz{border:1px solid var(--linea);border-radius:10px;background:var(--panel2);padding:18px}
+  .rz-cab{font-family:var(--mono);font-size:.64rem;letter-spacing:.09em;text-transform:uppercase;color:var(--gris);
+    line-height:1.6;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--linea)}
+  .rz-k{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gris)}
+  .rz-fecha{display:block;font-family:var(--serif);font-size:2.7rem;line-height:1.08;font-weight:700;color:var(--azul);
+    letter-spacing:-.015em;margin-top:2px;font-variant-numeric:tabular-nums}
+  @media(max-width:400px){ .rz-fecha{font-size:2.15rem} }
+  .rz-dow{display:block;font-family:var(--mono);font-size:.72rem;color:var(--gris);letter-spacing:.05em;margin-top:5px}
+  .rz-gracia{margin-top:14px;padding:10px 12px;border-left:3px solid var(--ambar);background:rgba(194,135,29,.11);
+    border-radius:0 5px 5px 0;font-size:.85rem;color:#7A5310;line-height:1.55}
+  .rz-gracia b{color:#5E3F0C}
+  .rz-gracia.rz-nogracia{border-left-color:var(--gris);background:rgba(110,102,87,.09);color:var(--gris)}
+  .rz-gracia.rz-nogracia b{color:var(--tinta)}
+  .rz-cont{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+  .rz-b{border:1px solid var(--linea);border-radius:7px;padding:10px 5px 8px;text-align:center;background:var(--panel)}
+  .rz-n{display:block;font-family:var(--mono);font-size:1.5rem;font-weight:700;line-height:1.12;color:var(--azul);
+    font-variant-numeric:tabular-nums}
+  .rz-b-inh .rz-n{color:var(--rojo)}
+  .rz-b-nat .rz-n{color:var(--tinta)}
+  .rz-l{display:block;font-family:var(--mono);font-size:.56rem;letter-spacing:.07em;text-transform:uppercase;
+    color:var(--gris);margin-top:4px;line-height:1.35}
+  .rz-cont-pie{font-family:var(--mono);font-size:.6rem;letter-spacing:.05em;text-transform:uppercase;color:var(--gris);
+    text-align:center;margin-top:7px}
+  .btn-print{margin-top:16px;padding:11px 20px;font-size:.74rem;background:transparent;color:var(--azul);
+    border:1px solid var(--azul)}
+  .btn-print:hover{background:rgba(99,84,200,.10);color:var(--azul)}
+
+  /* Plegables del resultado: el razonamiento completo no se borra, se pliega. */
+  details.jv-det{margin-top:14px;border:1px solid var(--linea);border-radius:8px;background:var(--panel2);padding:11px 14px}
+  details.jv-det summary{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--azul);cursor:pointer;font-weight:600}
+  details.jv-det summary:hover{color:#51429F}
+  details.jv-det summary:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
+  details.jv-det[open] summary{margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--linea)}
+  .jv-ayuda{list-style:none}
+  .jv-ayuda li{font-size:.84rem;color:var(--tinta);padding-left:16px;position:relative;margin-bottom:7px;line-height:1.55}
+  .jv-ayuda li::before{content:"—";position:absolute;left:0;color:var(--gris2)}
+  .jv-ayuda b{color:var(--azul)}
+
+  /* ═══════════ v2 · CALENDARIO VISUAL DEL CÓMPUTO ═══════════
+     Estética de expediente: papel, tinta, morado de la casa para lo hábil y rojo tinta para lo
+     inhábil. Diseño propio; nada que ver con la rejilla verde/teal de otras calculadoras. */
+  .calwrap{margin-top:20px}
+  .cal-h{font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;
+    color:var(--tinta);margin-bottom:5px}
+  .cal-sub{font-size:.82rem;color:var(--gris);margin-bottom:16px;line-height:1.55}
+  .cal-meses{display:grid;grid-template-columns:1fr;gap:14px}
+  @media(min-width:560px){ .cal-meses{grid-template-columns:repeat(auto-fill,minmax(226px,1fr))} }
+  .mes{border:1px solid var(--linea);border-radius:8px;background:var(--panel2);padding:11px 11px 9px}
+  .mes table{width:100%;border-collapse:collapse;table-layout:fixed}
+  .mes caption{font-family:var(--mono);font-size:.66rem;letter-spacing:.11em;text-transform:uppercase;
+    color:var(--tinta);font-weight:700;text-align:left;padding-bottom:8px}
+  .mes th{font-family:var(--mono);font-size:.58rem;letter-spacing:.05em;color:var(--gris);font-weight:600;
+    padding-bottom:5px;text-align:center}
+  .mes td{padding:1px;text-align:center}
+  .d{display:flex;align-items:center;justify-content:center;height:27px;border-radius:5px;
+    font-family:var(--mono);font-size:.74rem;color:var(--gris2);border:1px solid transparent}
+  .d-hab{background:rgba(99,84,200,.16);color:#3B2F86;font-weight:700;border-color:rgba(99,84,200,.34)}
+  .d-inh{background:rgba(197,61,56,.11);color:#8A2A26;border-color:rgba(197,61,56,.26)}
+  .d-fest{text-decoration:underline dotted;text-underline-offset:2px}
+  .d-notif{border:2px dashed var(--tinta);color:var(--tinta);font-weight:700}
+  .d-gracia{border:2px dotted var(--ambar);background:rgba(194,135,29,.16);color:#7A5310;font-weight:700}
+  .d-venc{border:3px double #FFFFFF;background:var(--azul);color:#FFFFFF;font-weight:700;box-shadow:0 0 0 1px var(--azul)}
+  .mes-f{font-family:var(--mono);font-size:.58rem;letter-spacing:.03em;color:var(--gris);line-height:1.7;
+    margin-top:8px;padding-top:7px;border-top:1px dotted var(--linea)}
+  .cal-ley{display:flex;flex-wrap:wrap;gap:9px 16px;margin-top:16px;font-family:var(--mono);font-size:.62rem;
+    letter-spacing:.04em;text-transform:uppercase;color:var(--gris)}
+  .cal-ley span{display:inline-flex;align-items:center;gap:6px}
+  .cal-ley i{width:15px;height:15px;border-radius:4px;flex:0 0 15px;border:1px solid transparent}
+  .ly-hab{background:rgba(99,84,200,.16);border-color:rgba(99,84,200,.34)}
+  .ly-inh{background:rgba(197,61,56,.11);border-color:rgba(197,61,56,.26)}
+  .ly-off{background:rgba(110,102,87,.09);border-color:var(--gris2)}
+  .ly-not{border:2px dashed var(--tinta);background:var(--panel2)}
+  .ly-ven{background:var(--azul);border-color:var(--azul)}
+  .ly-gra{border:2px dotted var(--ambar);background:rgba(194,135,29,.16)}
+  .cal-no{font-size:.82rem;color:var(--gris);line-height:1.55}
+
+  /* ═══════════ v2 · MICRO-ANIMACIONES (transform/opacity; sobrias) ═══════════
+     Solo existen bajo html.jv-anim, que el <head> únicamente pone si el usuario NO ha pedido
+     «reducir movimiento». Con reduced-motion todo aparece instantáneo, sin código extra. */
+  html.jv-anim .rz-fecha{animation:jvPop .34s cubic-bezier(.2,1.7,.4,1) both}
+  @keyframes jvPop{from{transform:scale(.86);opacity:0}to{transform:none;opacity:1}}
+  html.jv-anim .mes{animation:jvMesIn .42s cubic-bezier(.2,.9,.3,1) both;animation-delay:calc(var(--i,0)*65ms)}
+  @keyframes jvMesIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  html.jv-anim .d-venc{animation:jvSello .38s cubic-bezier(.2,1.7,.4,1) both;animation-delay:calc(var(--i,0)*65ms + 240ms)}
+  @keyframes jvSello{from{transform:scale(1.75);opacity:0}to{transform:none;opacity:1}}
+
+  /* Piezas que SOLO existen en el papel (membrete y cita al pie del PDF). */
+  .solo-print{display:none}
+
   /* ---- Impresión: resultado limpio (los juristas imprimen) ---- */
   @media print{
     body{background:#fff;color:#000}
@@ -248,6 +341,32 @@
     .verif li{background:#fff;border:1px solid #6354C8}
     footer{color:#333}
     footer b{color:#000}
+    /* --- v2: PDF archivable (membrete + resultado + calendario + cita al pie) --- */
+    header,.tagline,.jv-det-ayuda{display:none!important}
+    .solo-print{display:block!important}
+    /* Los fondos de la rejilla son INFORMACIÓN (hábil vs inhábil): deben imprimirse. */
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    /* Ninguna animación puede dejar una pieza a opacity:0 en el papel. */
+    html.jv-anim .rz-fecha,html.jv-anim .mes,html.jv-anim .d-venc{animation:none!important;opacity:1!important;transform:none!important}
+    .membrete{border-bottom:2px solid #2A2620;padding-bottom:9px;margin-bottom:16px;
+      font-family:var(--mono);font-size:.66rem;letter-spacing:.06em;color:#2A2620;line-height:1.8}
+    .membrete b{font-family:var(--serif);font-size:1.15rem;letter-spacing:0}
+    .membrete span{display:block;text-transform:uppercase;color:#4A443A}
+    /* La tarjeta de resultado del reloj es más alta que una página: si hereda el
+       break-inside:avoid genérico de .card, el salto la empuja entera y deja la primera hoja
+       en blanco con solo el membrete. Aquí SÍ puede partirse; lo que no se parte es la caja
+       del vencimiento (.rz) y cada mes del calendario. */
+    #tool-reloj .card{break-inside:auto}
+    .rz{border:1px solid #666;break-inside:avoid}
+    .pie-135{margin-top:14px;padding-top:9px;border-top:1px solid #999;font-size:.72rem;color:#333;line-height:1.5}
+    .calwrap{margin-top:18px;break-inside:auto}
+    .cal-meses{grid-template-columns:repeat(3,1fr);gap:10px}
+    .mes{break-inside:avoid;border:1px solid #999}
+    .cal-ley{break-inside:avoid}
+    details.jv-det{border:1px solid #999;break-inside:auto}
+    /* En papel, un plegable CERRADO solo sería un botón muerto: se imprime el razonamiento
+       si el usuario lo ha desplegado, y si no, no ocupa hoja. */
+    details.jv-det:not([open]){display:none!important}
   }
 </style>
 <script>
@@ -291,6 +410,12 @@ try{
 
   <!-- ================= RELOJ DE PLAZOS ================= -->
   <section class="tool activa" id="tool-reloj" role="tabpanel" aria-labelledby="tab-reloj">
+    <!-- Membrete: solo se ve en el papel / PDF. Va DENTRO de la pestaña para que no aparezca
+         encabezando la impresión de las otras herramientas. -->
+    <div class="solo-print membrete">
+      <b>JV Legal</b> · Tu despacho electrónico
+      <span>Cómputo de plazos procesales — salida orientativa, no constituye asesoramiento jurídico</span>
+    </div>
     <p class="tagline jv-reveal">Cómputo de plazos procesales y sustantivos · 4 órdenes jurisdiccionales + procedimiento administrativo común</p>
     <div class="grid dos">
       <div class="card jv-reveal">
@@ -332,6 +457,9 @@ try{
         <div class="res" id="r-res" tabindex="-1"><p class="vac">Introduce los datos y pulsa «Calcular plazo».</p></div>
       </div>
     </div>
+    <!-- Calendario visual del cómputo: fuera de la rejilla de dos columnas para que ocupe todo el
+         ancho (y para que la impresión lo saque completo bajo el resultado). Lo rellena calcularReloj(). -->
+    <div id="r-cal" class="jv-cal-zona"></div>
   </section>
 
   <!-- ================= EFECTO MASC ================= -->
@@ -1535,6 +1663,204 @@ function fechaLargaISO(iso){ // 'YYYY-MM-DD' -> 'dd/mm/YYYY'
   if(!iso) return '—'; var p=iso.split('-'); return p[2]+'/'+p[1]+'/'+p[0];
 }
 
+/* ══════════════ v2 · CAPA DE PRESENTACIÓN DEL RELOJ DE PLAZOS ══════════════
+   REGLA DE ORO: aquí NO se calcula ningún plazo. Todo lo de abajo LEE el resultado que ya ha
+   devuelto window.RELOJ.computar() y reutiliza sus funciones EXPORTADAS (esInhabil, JUR, parse,
+   iso, FESTIVOS) sin tocarlas ni duplicar su lógica de cómputo:
+     · el final del periodo pintado es LITERALMENTE r.vencimiento (lo que decidió el motor);
+     · la habilidad de cada día la decide RELOJ.esInhabil, la misma función que usa el motor;
+     · un verificador compara lo PINTADO con lo CONTADO y con los invariantes del motor. Si algo
+       no cuadra, no se enseña el calendario (mejor sin calendario que un calendario que miente).
+*/
+
+/* Etiquetas de cortesía de los festivos YA cargados en CAL_FESTIVOS. Es SOLO texto para el
+   tooltip y la leyenda del mes: no interviene en ningún cálculo y no añade ni quita fechas.
+   Si una fecha no está aquí, el día se rotula con el motivo genérico del propio motor. */
+var CAL_FESTIVOS_NOMBRES = {
+  '2025-01-01':'Año Nuevo','2025-01-06':'Epifanía del Señor','2025-04-17':'Jueves Santo',
+  '2025-04-18':'Viernes Santo','2025-05-01':'Fiesta del Trabajo','2025-05-02':'Fiesta de la Comunidad de Madrid',
+  '2025-05-15':'San Isidro (Madrid capital)','2025-07-25':'Santiago Apóstol','2025-08-15':'Asunción de la Virgen',
+  '2025-11-10':'La Almudena (traslado)','2025-12-08':'Inmaculada Concepción','2025-12-25':'Natividad del Señor',
+  '2026-01-01':'Año Nuevo','2026-01-06':'Epifanía del Señor','2026-04-02':'Jueves Santo',
+  '2026-04-03':'Viernes Santo','2026-05-01':'Fiesta del Trabajo','2026-05-15':'San Isidro (Madrid capital)',
+  '2026-10-12':'Fiesta Nacional de España','2026-11-02':'Todos los Santos (traslado)',
+  '2026-11-09':'La Almudena (Madrid capital)','2026-12-07':'Día de la Constitución (traslado)',
+  '2026-12-08':'Inmaculada Concepción','2026-12-25':'Natividad del Señor'
+};
+
+var JV_MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+var JV_DOWL  = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+var JV_CAB   = [['L','lunes'],['M','martes'],['X','miércoles'],['J','jueves'],['V','viernes'],['S','sábado'],['D','domingo']];
+var JV_MAX_MESES = 15;   // más allá, la rejilla dejaría de ser útil (y el PDF, inmanejable)
+
+/* Separador de millares DETERMINISTA (regex, no toLocaleString: el mismo número en cualquier
+   navegador, idioma del sistema o servidor de pruebas). 12345 -> "12.345". */
+function jvMiles(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.'); }
+
+function jvAddD(d,n){ var r=new Date(d); r.setDate(r.getDate()+n); return r; }
+
+/* «Siguiente día hábil» apoyado en la MISMA esInhabil exportada por el motor. Solo se usa para
+   saber desde qué día pinta el calendario cuando la opción LexNET desplaza los efectos. */
+function jvSigHabil(d,cfg,opts){
+  var c=jvAddD(d,1), g=0;
+  while(window.RELOJ.esInhabil(c,cfg,opts) && g<4000){ c=jvAddD(c,1); g++; }
+  return c;
+}
+
+/* FUNCIÓN PURA NUEVA: devuelve la lista de días etiquetados entre la notificación y el día de
+   gracia (o el vencimiento si no lo hay). No calcula plazos: el tope es r.vencimiento. */
+function jvDerivarDias(inp, r){
+  var R=window.RELOJ, cfg=R.JUR[inp.orden];
+  if(!cfg || !r || !r.vencimiento) return null;
+  var opts=inp.opts||{};
+  var orig=R.parse(inp.fecha);
+  var notif=(opts.lexnet && inp.orden!=='administrativo') ? jvSigHabil(orig,cfg,opts) : orig;
+  var fin=r.vencimiento, ultimo=r.gracia||r.vencimiento;
+  var span=Math.round((ultimo.getTime()-orig.getTime())/86400000);
+  if(!isFinite(span) || span<0 || span>3000) return null;   // periodos absurdos: sin rejilla
+  var isoN=R.iso(orig), isoE=R.iso(notif), isoV=R.iso(fin), isoG=r.gracia?R.iso(r.gracia):null;
+  var dias=[], c=new Date(orig);
+  for(var i=0;i<=span;i++){
+    var s=R.iso(c);
+    dias.push({
+      iso:s, dow:c.getDay(), num:c.getDate(), anio:c.getFullYear(), mes:c.getMonth(),
+      enComputo:(c.getTime()>notif.getTime() && c.getTime()<=fin.getTime()),
+      inhabil:R.esInhabil(c,cfg,opts),
+      festivo:(R.FESTIVOS.has(s) ? (CAL_FESTIVOS_NOMBRES[s]||'Festivo (Madrid capital)') : null),
+      esNotif:(s===isoN), esEfectos:(isoE!==isoN && s===isoE),
+      esVenc:(s===isoV), esGracia:(isoG!==null && s===isoG)
+    });
+    c=jvAddD(c,1);
+  }
+  return dias;
+}
+
+/* Contadores: se calculan SOBRE LA MISMA LISTA que se pinta (por construcción no pueden divergir;
+   el verificador de abajo lo comprueba igualmente). */
+function jvContar(dias){
+  var h=0,i=0;
+  for(var k=0;k<dias.length;k++){ if(!dias[k].enComputo) continue; if(dias[k].inhabil) i++; else h++; }
+  return { habiles:h, inhabiles:i, naturales:h+i };
+}
+
+/* VERIFICADOR (función pura): pintado == contado, y contado coherente con el motor.
+   Devuelve {ok, problemas[]}. Si ok=false, ni calendario ni contadores. */
+function jvVerificar(dias, cont, inp, r){
+  var R=window.RELOJ, p=[], h=0, i=0, n=0, ultimo=null;
+  for(var k=0;k<dias.length;k++){
+    var x=dias[k]; if(!x.enComputo) continue;
+    n++; if(x.inhabil) i++; else h++; ultimo=x;
+  }
+  if(h!==cont.habiles)    p.push('hábiles pintados '+h+' ≠ contador '+cont.habiles);
+  if(i!==cont.inhabiles)  p.push('inhábiles pintados '+i+' ≠ contador '+cont.inhabiles);
+  if(n!==cont.naturales)  p.push('naturales pintados '+n+' ≠ contador '+cont.naturales);
+  if(h+i!==n)             p.push('hábiles+inhábiles ('+(h+i)+') ≠ naturales ('+n+')');
+  if(!ultimo || ultimo.iso!==R.iso(r.vencimiento)) p.push('el último día del periodo no es el vencimiento del motor');
+  var hayV=false, hayG=false;
+  for(var j=0;j<dias.length;j++){ if(dias[j].esVenc) hayV=true; if(dias[j].esGracia) hayG=true; }
+  if(!hayV) p.push('el vencimiento del motor no aparece en el calendario');
+  if(r.gracia && !hayG) p.push('el día de gracia del motor no aparece en el calendario');
+  // Invariante fuerte contra el motor: en plazos por DÍAS el periodo debe contener exactamente
+  // el número de días del plazo (hábiles si es procesal, naturales si es sustantivo).
+  if(inp.unidad==='dias'){
+    var esSust = !!(R.JUR[inp.orden] && R.JUR[inp.orden].naturaleza) && inp.tipo==='sustantivo';
+    if(esSust){ if(n!==inp.num) p.push('días naturales del periodo '+n+' ≠ plazo sustantivo '+inp.num); }
+    else if(h!==inp.num){ p.push('días hábiles del periodo '+h+' ≠ plazo de '+inp.num); }
+  }
+  return { ok:p.length===0, problemas:p };
+}
+
+/* Rejilla mensual (L-D). Devuelve null si el periodo abarca demasiados meses. */
+function jvCalendarioHTML(dias){
+  var meses=[], idx={};
+  for(var k=0;k<dias.length;k++){
+    var x=dias[k], key=x.anio+'-'+x.mes;
+    if(idx[key]===undefined){ idx[key]=meses.length; meses.push({anio:x.anio,mes:x.mes,dias:{}}); }
+    meses[idx[key]].dias[x.num]=x;
+  }
+  if(meses.length>JV_MAX_MESES) return null;
+  var out='';
+  for(var m=0;m<meses.length;m++){
+    var M=meses[m];
+    var ultimoDia=new Date(M.anio, M.mes+1, 0).getDate();
+    var hueco=(new Date(M.anio, M.mes, 1).getDay()+6)%7;   // 0 = lunes
+    var celdas=[], fest=[];
+    for(var b=0;b<hueco;b++) celdas.push('<td></td>');
+    for(var d=1;d<=ultimoDia;d++){
+      var x2=M.dias[d], cls='d', tip='';
+      if(!x2){
+        cls+=' d-off';
+      } else {
+        cls += x2.enComputo ? (x2.inhabil ? ' d-inh' : ' d-hab') : ' d-off';
+        if(x2.festivo){ cls+=' d-fest'; fest.push(d+' · '+x2.festivo); }
+        if(x2.esVenc) cls+=' d-venc';
+        else if(x2.esGracia) cls+=' d-gracia';
+        else if(x2.esNotif||x2.esEfectos) cls+=' d-notif';
+        var t=[JV_DOWL[x2.dow]+' '+d+' de '+JV_MESES[M.mes]+' de '+M.anio];
+        if(x2.esNotif)   t.push('notificación');
+        if(x2.esEfectos) t.push('efectos de la notificación (art. 151.2 LEC)');
+        if(x2.esVenc)    t.push('VENCIMIENTO');
+        if(x2.esGracia)  t.push('día de gracia, hasta las 15:00 h');
+        if(x2.enComputo) t.push(x2.inhabil ? ('inhábil — '+(x2.festivo||x2.inhabil)) : 'hábil (cuenta)');
+        else if(!x2.esGracia) t.push('fuera del cómputo');
+        tip=t.join(' · ');
+      }
+      celdas.push('<td><span class="'+cls+'"'+(tip?' title="'+semEsc(tip)+'" aria-label="'+semEsc(tip)+'"':'')+'>'+d+'</span></td>');
+    }
+    while(celdas.length%7) celdas.push('<td></td>');
+    var filas='';
+    for(var f=0;f<celdas.length;f+=7) filas+='<tr>'+celdas.slice(f,f+7).join('')+'</tr>';
+    var cab='<tr>'+JV_CAB.map(function(c){ return '<th scope="col" abbr="'+c[1]+'" title="'+c[1]+'">'+c[0]+'</th>'; }).join('')+'</tr>';
+    out += '<div class="mes" style="--i:'+Math.min(m,11)+'">'
+         + '<table><caption>'+JV_MESES[M.mes]+' '+M.anio+'</caption>'
+         + '<thead>'+cab+'</thead><tbody>'+filas+'</tbody></table>'
+         + (fest.length ? '<div class="mes-f">'+fest.map(function(t){return semEsc(t);}).join('<br>')+'</div>' : '')
+         + '</div>';
+  }
+  return '<div class="cal-meses">'+out+'</div>';
+}
+
+function jvLeyendaHTML(){
+  return '<div class="cal-ley">'
+    +'<span><i class="ly-hab"></i>Hábil del cómputo</span>'
+    +'<span><i class="ly-inh"></i>Inhábil (sábado, domingo, festivo o periodo inhábil)</span>'
+    +'<span><i class="ly-off"></i>Fuera del cómputo</span>'
+    +'<span><i class="ly-not"></i>Notificación</span>'
+    +'<span><i class="ly-ven"></i>Vencimiento</span>'
+    +'<span><i class="ly-gra"></i>Día de gracia (15:00 h)</span>'
+    +'</div>';
+}
+
+/* Odómetro con requestAnimationFrame. Con «reducir movimiento» (sin html.jv-anim) el número
+   aparece ya puesto: cero espera para leer el dato. */
+function jvOdometro(raiz){
+  var anim = document.documentElement.classList.contains('jv-anim') && !!window.requestAnimationFrame;
+  Array.prototype.forEach.call(raiz.querySelectorAll('.rz-n'), function(el){
+    var fin=parseInt(el.getAttribute('data-n'),10); if(!isFinite(fin)) fin=0;
+    if(!anim || fin<=0){ el.textContent=jvMiles(fin); return; }
+    var t0=null, dur=620;
+    el.textContent=jvMiles(0);
+    window.requestAnimationFrame(function paso(t){
+      if(t0===null) t0=t;
+      var p=Math.min(1,(t-t0)/dur), e=1-Math.pow(1-p,3);
+      el.textContent=jvMiles(Math.round(fin*e));
+      if(p<1) window.requestAnimationFrame(paso); else el.textContent=jvMiles(fin);
+    });
+  });
+}
+
+/* Texto de ayuda breve: qué hace el cómputo. Reutiliza lo que ya dice la propia herramienta. */
+function jvComoFuncionaHTML(){
+  return '<details class="jv-det jv-det-ayuda"><summary>¿Cómo funciona esto?</summary><ul class="jv-ayuda">'
+   +'<li><b>Cinco vías.</b> Civil (LEC), contencioso-administrativo (LJCA), social (LJS), penal (LECrim/LOPJ) y procedimiento administrativo común (LPAC). Cada una tiene sus propias reglas de días inhábiles.</li>'
+   +'<li><b>Días hábiles.</b> No cuentan sábados, domingos ni festivos (art. 130.2 LEC / 30.2 LPAC). El plazo empieza a correr el día siguiente al acto de comunicación (art. 133.2 LEC).</li>'
+   +'<li><b>Festivos.</b> Calendario de Madrid capital 2025-2026 (nacionales + autonómicos + locales). Si tu partido judicial está en otro municipio, verifica sus festivos.</li>'
+   +'<li><b>Agosto.</b> Inhábil en sede judicial, salvo las excepciones que puedes marcar en el formulario (urgencia del art. 131 LEC, materia del art. 43.4 LJS, instrucción penal, derechos fundamentales). En vía administrativa agosto es hábil.</li>'
+   +'<li><b>Meses y años.</b> Se computan «de fecha a fecha» (art. 5 CC / 133.3 LEC / 30.4 LPAC). Si el vencimiento cae en día inhábil, se prorroga al siguiente hábil (art. 133.4 LEC / 30.5 LPAC).</li>'
+   +'<li><b>Día de gracia.</b> En sede judicial el escrito puede presentarse hasta las 15:00 h del día hábil siguiente al vencimiento (art. 135.5 LEC). En vía administrativa no existe.</li>'
+   +'</ul></details>';
+}
+
 /* ---- Reloj: mostrar/ocultar opciones por orden ---- */
 function relojSync(){
   var o=elv('r-orden');
@@ -1564,23 +1890,95 @@ function calcularReloj(){
         materiaExceptuada:(o==='social') && document.getElementById('r-materia').checked,
         instruccion:(o==='penal') && document.getElementById('r-instr').checked,
         ddff:(o==='contencioso') && document.getElementById('r-ddff').checked } };
-    if(!inp.fecha){ box.innerHTML='<p class="vac-err">Falta la fecha de la notificación / acto de comunicación.</p>'; return; }
-    if(!inp.num||inp.num<1){ box.innerHTML='<p class="vac-err">Indica una duración del plazo válida.</p>'; return; }
+    if(!inp.fecha){ box.innerHTML='<p class="vac-err">Falta la fecha de la notificación / acto de comunicación.</p>'; jvVaciarCal(); return; }
+    if(!inp.num||inp.num<1){ box.innerHTML='<p class="vac-err">Indica una duración del plazo válida.</p>'; jvVaciarCal(); return; }
     var r=window.RELOJ.computar(inp);
     // Foto del cálculo para la casilla "incluir mi último cálculo" del contacto (entrada + salida, sin datos personales)
     window.__jvUltimoCalculo='Reloj de plazos · '+r.label+' · '+inp.num+' '+inp.unidad+' ('+inp.tipo+') · notificación '+inp.fecha+
       ' · opciones: '+(Object.keys(inp.opts).filter(function(k){return inp.opts[k];}).join(', ')||'ninguna')+
       ' → vencimiento '+window.RELOJ.esf(r.vencimiento);
-    var html='<div class="dato"><span class="k">Orden</span><span class="v">'+semEsc(r.label)+'</span></div>'+
-      '<div class="dato"><span class="k">Vencimiento</span><span class="v big">'+window.RELOJ.esf(r.vencimiento)+'</span></div>';
-    if(r.gracia) html+='<div class="dato"><span class="k">Día de gracia (15:00 h)</span><span class="v">'+window.RELOJ.esf(r.gracia)+'</span></div>';
-    html+='<div class="blq"><h3>Razonamiento</h3><ol class="pasos">'+r.pasos.map(function(p){return '<li>'+semEsc(p)+'</li>';}).join('')+'</ol></div>';
+
+    /* --- Desglose día a día (capa de presentación) + verificador --- */
+    var dias=null, cont=null, sinCal='';
+    try{
+      dias=jvDerivarDias(inp,r);
+      if(!dias) sinCal='El periodo es demasiado largo para dibujarlo día a día.';
+    }catch(e2){ dias=null; sinCal='No se ha podido derivar el detalle día a día.'; console.warn('[JV] derivación del calendario fallida:', e2); }
+    if(dias){
+      cont=jvContar(dias);
+      var ver=jvVerificar(dias,cont,inp,r);
+      if(!ver.ok){
+        console.warn('[JV] calendario y contadores DESCARTADOS: lo pintado no cuadra con el cómputo → '+ver.problemas.join(' | '));
+        dias=null; cont=null;
+        sinCal='El desglose día a día no cuadra con el cómputo, así que no se muestra. El vencimiento y el razonamiento de arriba siguen siendo válidos.';
+      }
+    }
+
+    /* --- 1) Resultado simple-first: lo primero y grande, la fecha --- */
+    var esf=window.RELOJ.esf, venc=r.vencimiento;
+    var unid = inp.unidad==='dias'  ? (inp.num===1?'día':'días')
+             : inp.unidad==='meses' ? (inp.num===1?'mes':'meses')
+             :                        (inp.num===1?'año':'años');
+    var expira24 = r.pasos.some(function(p){ return p.indexOf('24:00')>=0; });
+    var html='<div class="rz">'
+      +'<p class="rz-cab">'+semEsc(r.label)+' · plazo de '+inp.num+' '+unid
+      +(inp.unidad==='dias' && inp.tipo==='sustantivo' ? ' (sustantivo)' : '')
+      +' · notificación del '+fechaLargaISO(inp.fecha)+'</p>'
+      +'<span class="rz-k">Vence</span>'
+      +'<strong class="rz-fecha">'+esf(venc)+'</strong>'
+      +'<span class="rz-dow">'+JV_DOWL[venc.getDay()]+(expira24?' · expira a las 24:00 h':'')+'</span>';
+    if(r.gracia){
+      html+='<p class="rz-gracia"><b>Día de gracia (art. 135.5 LEC):</b> el escrito puede presentarse hasta las '
+        +'<b>15:00 h</b> del '+esf(r.gracia)+' ('+JV_DOWL[r.gracia.getDay()]+').</p>';
+    } else {
+      html+='<p class="rz-gracia rz-nogracia"><b>Sin día de gracia.</b> En vía administrativa no se aplica el '
+        +'art. 135.5 LEC: el plazo termina en el vencimiento.</p>';
+    }
+    if(cont){
+      html+='<div class="rz-cont">'
+        +'<div class="rz-b"><span class="rz-n" data-n="'+cont.habiles+'">0</span><span class="rz-l">Días hábiles</span></div>'
+        +'<div class="rz-b rz-b-inh"><span class="rz-n" data-n="'+cont.inhabiles+'">0</span><span class="rz-l">Días inhábiles</span></div>'
+        +'<div class="rz-b rz-b-nat"><span class="rz-n" data-n="'+cont.naturales+'">0</span><span class="rz-l">Días naturales</span></div>'
+        +'</div><p class="rz-cont-pie">Del día siguiente a la notificación al vencimiento</p>';
+    }
+    html+='<button class="btn btn-print" type="button" onclick="window.print()">Imprimir / Guardar PDF</button>';
+    // Cita al pie que SOLO sale en el papel: se reutiliza literalmente el paso del motor sobre el 135.5.
+    var pie135 = r.pasos.filter(function(p){ return p.indexOf('135.5')>=0; }).pop();
+    if(pie135) html+='<p class="solo-print pie-135">'+semEsc(pie135)+'</p>';
+    html+='</div>';
+
+    /* --- 2) Avisos del motor (siguen a la vista, no se pliegan) --- */
     if(r.avisos&&r.avisos.length) html+='<div class="blq"><h3>Avisos</h3><ul class="avisos">'+r.avisos.map(function(a){return '<li>'+semEsc(a)+'</li>';}).join('')+'</ul></div>';
+
+    /* --- 3) El desglose paso a paso COMPLETO no se borra: se pliega --- */
+    html+='<details class="jv-det"><summary>Ver el razonamiento paso a paso</summary>'
+      +'<ol class="pasos">'+r.pasos.map(function(p){return '<li>'+semEsc(p)+'</li>';}).join('')+'</ol></details>';
+    html+=jvComoFuncionaHTML();
     html+='<p class="hint">¿Te gustaría que tu despacho automatizara cómputos como este? <a href="https://cal.com/pablo-jvlegal/15min" target="_blank" rel="noopener">Agenda una reunión gratuita de 15 min</a>.</p>';
     box.innerHTML=html;
-  }catch(e){ box.innerHTML='<p class="vac-err">Error en el cálculo: '+semEsc(e.message)+'</p>'; console.error(e); }
+    jvOdometro(box);
+
+    /* --- 4) Calendario visual del cómputo (ancho completo, bajo la rejilla de dos columnas) --- */
+    var cal=document.getElementById('r-cal');
+    if(cal){
+      var rejilla = dias ? jvCalendarioHTML(dias) : null;
+      if(dias && !rejilla) sinCal='El cómputo abarca más de '+JV_MAX_MESES+' meses: el calendario visual se omite.';
+      if(rejilla){
+        cal.innerHTML='<div class="card calwrap">'
+          +'<p class="cal-h">Calendario del cómputo</p>'
+          +'<p class="cal-sub">De la notificación al vencimiento'+(r.gracia?', con el día de gracia del art. 135.5 LEC':'')
+          +'. Pasa el cursor por cada día para ver por qué es hábil o inhábil.</p>'
+          +rejilla+jvLeyendaHTML()+'</div>';
+      } else {
+        cal.innerHTML = sinCal ? '<div class="card calwrap"><p class="cal-h">Calendario del cómputo</p><p class="cal-no">'+semEsc(sinCal)+'</p></div>' : '';
+      }
+    }
+  }catch(e){ box.innerHTML='<p class="vac-err">Error en el cálculo: '+semEsc(e.message)+'</p>'; jvVaciarCal(); console.error(e); }
   finally{ jvIrA(box); }
 }
+/* Deja la zona del calendario en blanco (errores de entrada: un calendario viejo junto a un
+   mensaje de error nuevo sería peor que no tener calendario). */
+function jvVaciarCal(){ var c=document.getElementById('r-cal'); if(c) c.innerHTML=''; }
 
 /* ---- MASC: poblar órdenes y tipos desde el CONFIG del motor ---- */
 function mascInit(){

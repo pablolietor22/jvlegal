@@ -549,7 +549,7 @@ function veredicto(){
   if(nRojo>0){
     sello.classList.add('s-rojo');
     sello.textContent='No lances aún · '+nRojo+(nRojo===1?' puerta crítica':' puertas críticas');
-    st.innerHTML='Hay <b>'+nRojo+'</b> rama'+(nRojo===1?'':'s')+' en rojo: son las puertas que deben cerrarse <b>antes</b> de captar usuarios reales (o de seguir cobrando, según el caso). No es papeleo decorativo: cada una tiene artículo y sanción detrás. Empieza por las rojas, en orden.';
+    st.innerHTML='Hay <b>'+nRojo+'</b> rama'+(nRojo===1?'':'s')+' en rojo: son las puertas que deben cerrarse <b>antes</b> de captar usuarios reales (o de seguir cobrando, según el caso). No es papeleo decorativo: cada una tiene su base jurídica detrás. Empieza por las rojas, en orden.';
   } else if(nAmbar>0){
     sello.classList.add('s-ambar');
     sello.textContent='Lanzable con deberes · '+nAmbar+' en ámbar';

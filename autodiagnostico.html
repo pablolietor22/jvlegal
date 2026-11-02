@@ -114,11 +114,11 @@
   <p class="sub">¿Puedo lanzar ya mi SaaS? · Responde 9 preguntas y se encienden tus deberes</p>
 
   <div class="aviso"><b>Orientativo, no asesoramiento jurídico.</b> Herramienta de triaje para saber QUÉ te aplica y preparar la consulta con un abogado/a. No introduzcas datos reales de clientes. Los importes y artículos son los vigentes a la fecha de corte; verifica la norma antes de actuar. Tus respuestas quedan solo en este navegador (localStorage); nada se envía a ningún servidor.</div>
-  <p class="corte">Base: checklist España/UE de <b>18 puntos</b>, re-analizado <b>12-07-2026</b> · Origen: reel «5 requisitos legales para lanzar un SaaS» (@eriktaveras) · Diferencial: la rama de <b>dato de salud (art. 9 RGPD)</b> que el reel US omite.</p>
+  <p class="corte">Base: checklist España/UE de <b>18 puntos</b>, re-analizado <b>12-07-2026</b> · Diferencial: la rama de <b>dato de salud (art. 9 RGPD)</b> que se cae de las plantillas estadounidenses.</p>
 
   <!-- ================= BLOQUE A · ÁRBOL DE DECISIÓN ================= -->
   <h2><span class="n">A</span>El interrogatorio: 9 preguntas al fundador</h2>
-  <p class="lede">Responde sobre <b>tu</b> SaaS (o el que quieres lanzar). Cada respuesta enciende o apaga ramas del checklist. Regla transversal del propio reel, y es correcta: <b>la jurisdicción la marca dónde vendes y dónde están tus usuarios, no dónde vives tú</b> (art. 3 RGPD).</p>
+  <p class="lede">Responde sobre <b>tu</b> SaaS (o el que quieres lanzar). Cada respuesta enciende o apaga ramas del checklist. Regla transversal: <b>la jurisdicción la marca dónde vendes y dónde están tus usuarios, no dónde vives tú</b> (art. 3 RGPD).</p>
 
   <div class="fila-acciones no-print">
     <button class="btn" onclick="reiniciar()">↺ Empezar de cero</button>
@@ -250,7 +250,7 @@
       <div class="contadores" id="contadores"></div>
       <h4>Tu foto (respuestas dadas)</h4>
       <div class="recap" id="recap"></div>
-      <div class="dif" id="dif-salud" style="display:none"><b>La rama que el reel omite:</b> tratas dato de salud, y eso es <b>categoría especial del art. 9 RGPD</b>: consentimiento EXPLÍCITO + una condición del art. 9 <em>además</em> de la base del art. 6. El listón está muy por encima de la «política de privacidad genérica» de las plantillas US. Aquí es donde un checklist de reel se queda corto y un jurista no.</div>
+      <div class="dif" id="dif-salud" style="display:none"><b>La rama que se cae de las plantillas estadounidenses:</b> tratas dato de salud, y eso es <b>categoría especial del art. 9 RGPD</b>: consentimiento EXPLÍCITO + una condición del art. 9 <em>además</em> de la base del art. 6. El listón está muy por encima de la «política de privacidad genérica» de las plantillas US. Aquí es donde un checklist genérico se queda corto y un jurista no.</div>
       <div class="fila-acciones no-print" style="margin-top:16px">
         <button class="btn" onclick="reiniciar()">↺ Cambiar respuestas</button>
         <button class="btn" onclick="window.print()">⎙ Imprimir expediente</button>
@@ -262,23 +262,6 @@
     <p class="lede">Cada rama trae su artículo, por qué se te enciende, qué hacer y <b>quién lo hace</b>. Marca «cerrada» cuando esté hecha de verdad (hecho ≠ redactado: hecho es publicado/firmado/decidido).</p>
     <div class="leyenda"><b>Marcas de reparto:</b> 🧑‍⚖️ criterio o acción jurídica <b>tuya</b> · 🖐️ trámite o panel que solo puedes tocar tú · 🤖 borrador que redacta/genera Claude (y luego validas tú). <b>Prioridad:</b> <span class="t-rojo tag">crítico ya</span> antes de lanzar/captar · <span class="t-ambar tag">importante</span> en el primer tramo · <span class="t-pausa tag">cuando toque</span> se enciende sola al crecer.</div>
     <div id="ramas"></div>
-  </div>
-
-  <!-- ================= BLOQUE C · CONTRASTE CON EL REEL ================= -->
-  <h2><span class="n">C</span>De dónde sale esto: los 5 del reel vs el checklist ES/UE</h2>
-  <p class="lede">El reel de @eriktaveras (verificado entero, 113 s) da 5 requisitos correctos… para el <b>suelo mínimo US/genérico</b>. Esta tabla muestra qué cubre y qué se deja. Lo que se deja es exactamente el diferencial de este autodiagnóstico.</p>
-  <div class="scroll">
-  <table class="tabla">
-    <thead><tr><th>El reel (US/genérico)</th><th>Aquí (España/UE)</th><th>¿Qué le falta al reel?</th></tr></thead>
-    <tbody>
-      <tr><td>1 · Estructura legal</td><td>Rama #1 (autónomo vs SL)</td><td>— (correcto)</td></tr>
-      <tr><td>2 · Términos de uso</td><td>Rama #6 (TRLGDCU)</td><td>El régimen del consumidor UE: botón «pedido con obligación de pago» y desistimiento de 14 días</td></tr>
-      <tr><td>3 · Política de privacidad</td><td>Ramas #3, #9 y #11</td><td>El Aviso Legal LSSI (#4) y las cookies AEPD (#5), que en España son piezas aparte</td></tr>
-      <tr><td>4 · Seguridad</td><td>Rama #12</td><td>La notificación de brecha en 72 h a la AEPD (arts. 33-34 RGPD)</td></tr>
-      <tr><td>5 · Pagos + marketing</td><td>Ramas #14 y #6/#11</td><td>— (correcto: Stripe descarga PCI; marketing con consentimiento + baja)</td></tr>
-      <tr><td><em>(no lo dice)</em></td><td><b>#2 art. 9 salud · #7 DPA · #8 transferencias · #17 disclaimers · #18 AI Act</b></td><td><b>Todo el diferencial jurista ES/UE está aquí</b></td></tr>
-    </tbody>
-  </table>
   </div>
 
   <!-- ================= BLOQUE D · NORMATIVA ================= -->
@@ -379,7 +362,7 @@ var RAMAS = [
     quien:'🤖 borrador → 🧑‍⚖️ validas tú (las cláusulas de responsabilidad, sobre todo)',
     ev:function(a){
       var b2c=(a.clientes==='b2c'||a.clientes==='ambos');
-      if(b2c && a.cobro==='ya') return {e:'rojo', p:'Ya cobras a consumidores: sin el régimen TRLGDCU bien puesto, cada cobro es impugnable y «cada usuario molesto es una bomba de tiempo» (en esto el reel acierta).'};
+      if(b2c && a.cobro==='ya') return {e:'rojo', p:'Ya cobras a consumidores: sin el régimen TRLGDCU bien puesto, cada cobro es impugnable y «cada usuario molesto es una bomba de tiempo».'};
       if(b2c && a.cobro==='pronto') return {e:'ambar', p:'Antes del primer cobro B2C: botón «pedido con obligación de pago», desistimiento de 14 días y precios con impuestos claros. Va junto a la pasarela (rama #14).'};
       if(a.cobro==='ya') return {e:'ambar', p:'Cobras solo a empresas: sin régimen de consumidor, pero el contrato B2B necesita SLA, límites de responsabilidad y propiedad intelectual por escrito.'};
       if(a.cobro==='pronto') return {e:'ambar', p:'Prepara el contrato antes de monetizar: es mucho más fácil ponerlo el día uno que renegociarlo con usuarios ya dentro.'};
@@ -437,7 +420,7 @@ var RAMAS = [
     }},
   { n:12, t:'Seguridad (art. 32) + protocolo de brecha en 72 h',
     base:'Arts. 32-34 RGPD.',
-    hacer:'Medidas «apropiadas al riesgo»: HTTPS en todo, contraseñas con hash fuerte, backups probados, mínimo privilegio, secretos fuera del código. Y el protocolo de brecha ESCRITO ANTES del incidente: detectar → evaluar riesgo → notificar a la AEPD en 72 h si hay riesgo → avisar a los afectados si el riesgo es alto. El reel dice «seguridad»; se deja las 72 h, que es lo que te multa.',
+    hacer:'Medidas «apropiadas al riesgo»: HTTPS en todo, contraseñas con hash fuerte, backups probados, mínimo privilegio, secretos fuera del código. Y el protocolo de brecha ESCRITO ANTES del incidente: detectar → evaluar riesgo → notificar a la AEPD en 72 h si hay riesgo → avisar a los afectados si el riesgo es alto. «Seguridad» a secas no basta: faltan las 72 h, que es lo que te multa.',
     quien:'🤖 código + protocolo escrito · 🖐️ tuyos e indelegables: 2FA en todos los paneles y tope DURO de gasto en las APIs',
     ev:function(a){
       if(a.salud==='si') return {e:'ambar', p:'Con dato de salud el listón del art. 32 sube: lo «apropiado al riesgo» es más. Una brecha con dato de salud es escenario de notificación casi seguro, con reloj de 72 h.'};
@@ -456,7 +439,7 @@ var RAMAS = [
     }},
   { n:14, t:'Pagos — PCI-DSS por descarga',
     base:'PCI-DSS (estándar de seguridad de las marcas de tarjeta, exigido por contrato con la pasarela).',
-    hacer:'La tarjeta NUNCA pasa por tu servidor ni queda almacenada en tu base de datos: checkout de Stripe/PayPal (o equivalente) para que el número viaje directo a la pasarela. Así descargas casi todo el PCI-DSS en ellos. En esto el reel acierta 1:1.',
+    hacer:'La tarjeta NUNCA pasa por tu servidor ni queda almacenada en tu base de datos: checkout de Stripe/PayPal (o equivalente) para que el número viaje directo a la pasarela. Así descargas casi todo el PCI-DSS en ellos.',
     quien:'🤖 integración del checkout (sin tocar PAN/CVV jamás)',
     ev:function(a){
       if(a.cobro==='ya') return {e:'ambar', p:'Ya cobras: verifica que el dato de tarjeta ni pasa ni queda almacenado en tu infraestructura. Si hoy pasa por tu servidor, esto salta a crítico.'};
